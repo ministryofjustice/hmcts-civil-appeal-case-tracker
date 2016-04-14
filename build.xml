@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     14 Oct 2011 09:35:53                                                        
+
+     Project    listing_calendar 
+     descriptionlisting_calendar Public application                                                                
+     ====================================================================== -->
+<project name="Listing Calendar" default="development_build" basedir=".">
+	<property file="LC.antuser.properties" />
+	<property environment="env"/>
+	
+	<!-- ================================= 
+          target: Development_Build              
+         ================================= -->
+	<target name="development_build" depends="compile, copy_resources_dev" description="Unloads previous application version and deploys a new one">
+		<echo>Starting a development build - this will compile the code,jar it, then load it in tomcat</echo>
+		<echo>*****************************************************************************</echo>
+		<echo>If anything odd happens (like it isn't deploying ) make sure you close any references to any files in the app</echo>
+		<echo>Please enjoy the flight and ensure all luggage is safely stowed</echo>
+		<tstamp>
+			<format property="time" pattern="dd/MM/yyyy hh:mm:ss aa" unit="hour" />
+		</tstamp>
+		<echo>*****************************************************************************</echo>
+		<echo>Time started: ${time} - action occuring in build directoy!</echo>
+		<antcall target="stop_tomcat"/>
+		<sleep seconds="10"/>
+		<antcall target="war"/>
+		<antcall target="remove_app"/>
+		<antcall target="copy_to_tomcat"/>
+		<antcall target="start_tomcat"/>
+		<sleep seconds="15"/>
+		<antcall target="start_browser" />
+	</target>
+
+	<path id="build_classpath">
+		<fileset dir="WEB-INF/lib">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+
+	<path id="test_classpath">
+		<pathelement location="build/WEB-INF/classes"/>
+		<pathelement path="${env.Path}"/>
+		<pathelement path="${graphvizbin}"/>
+		<fileset dir="test/lib">
+			<include name="*.jar"/>
+		</fileset>
+		<fileset dir="WEB-INF/lib">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: start_browser                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="start_browser">
+		<echo>Starting your browser</echo>
+		<antcall target="start_ie"/>
+		<antcall target="start_firefox"/>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: start_ie                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="start_ie" if="ie.true">
+		<echo>Yay Microsoft</echo>
+		<exec executable="C:\Program Files\Internet Explorer\iexplore.exe" os="Windows 7" spawn="true">
+			<arg line="${ie_arg}"/>
+		</exec>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: start_firefox                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="start_firefox" if="firefox.true">
+		<echo>Yay Mozilla</echo>
+		<exec executable="C:\Program Files\Mozilla Firefox\firefox.exe" os="Windows XP" spawn="true">
+			<arg line="${ie_arg}"/>
+		</exec>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: info                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="info">
+		<echo>ant.version=${ant.version}</echo>
+		<echo>ant.home=${ant.home}</echo>
+	</target>
+
+
+
+
+
+	<!-- ================================= 
+          target: deployment_build              
+         ================================= -->
+	<target name="prod_build" depends="compile, copy_resources_live" description="description">
+		<echo>Starting a full build - this will compile the code and jar it ready for deployment</echo>
+		<echo>*****************************************************************************</echo>
+		<echo>This may be a good time to go get something to drink - while the tests run...</echo>
+		<tstamp>
+			<format property="time" pattern="dd/MM/yyyy hh:mm:ss aa" unit="hour" />
+		</tstamp>
+		<echo>*****************************************************************************</echo>
+		<echo>Time started: ${time} - action occuring in deploy directoy!</echo>
+		<antcall target="war"/>
+		<zip basedir="deploy" destfile="listing_calendar.zip" />
+
+	</target>
+	<target name="staging_build" depends="compile, copy_resources_staging" description="description">
+			<echo>Starting a full build - this will compile the code and jar it ready for deployment</echo>
+			<echo>*****************************************************************************</echo>
+			<echo>This may be a good time to go get something to drink - while the tests run...</echo>
+			<tstamp>
+				<format property="time" pattern="dd/MM/yyyy hh:mm:ss aa" unit="hour" />
+			</tstamp>
+			<echo>*****************************************************************************</echo>
+			<echo>Time started: ${time} - action occuring in deploy directoy!</echo>
+			<antcall target="war"/>
+			<zip basedir="deploy" destfile="listing_calendar.zip" />
+
+		</target>
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: stop_tomcat                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="stop_tomcat">
+		<echo>Down she goes (tomcat is dying)</echo>
+		<java jar="${tomcat_path}/bin/bootstrap.jar" fork="true">
+			<jvmarg value="-Dcatalina.home=${tomcat_path}"/>
+			<arg line="stop"/>
+		</java>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+	          target: start_tomcat                      
+	         - - - - - - - - - - - - - - - - - -->
+	<target name="start_tomcat">
+		<echo>Like a Phoenix (tomcat lives again)</echo>
+		<java jar="${tomcat_path}/bin/bootstrap.jar" fork="true" spawn="true">
+			<jvmarg value="-Dcatalina.home=${tomcat_path}"/>
+			<jvmarg value="-Xdebug" />
+			<jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=1044"/>
+		</java>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: war                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="war">
+		<echo>Create a deployable war</echo>
+		<war destfile="deploy/listing_calendar.war" webxml="WEB-INF/web.xml">
+			<fileset dir="build"/>
+		</war>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: remove_app                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="remove_app">
+		<echo>Begone deployed MoJusticeLive app</echo>
+		<delete dir="${tomcat_path}/webapps/listing_calendar" quiet="true"/>
+		<delete dir="${tomcat_path}/webapps/listing_calendar.war" quiet="true"/>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: copy_to_tomcat                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="copy_to_tomcat">
+		<echo>Copy war to tomcat</echo>
+		<copy todir="${tomcat_path}/webapps">
+			<fileset dir="deploy">
+				<include name="**/*.war"/>
+			</fileset>
+		</copy>
+	</target>
+
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: build_javadoc                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="build_javadoc" description="generates javadoc and also UML Diagram">
+		<echo>Creating JavaDocs and copying to the deployment directory</echo>
+		<property name="myclasspath" refid="test_classpath"/>
+		<pathconvert pathsep="${line.separator}|   |-- "
+		    			             property="echo.path.compile"
+		    			             refid="test_classpath">
+		</pathconvert>
+		<echo message="Classpath = ${echo.path.compile}"/>
+		<mkdir dir="./docs/javadocs"/>
+		<javadoc sourcepath="src" packagenames="com.MOJICT.*" destdir="./docs/javadocs"
+			        	classpathref="test_classpath" private="true">
+			<doclet name="org.umlgraph.doclet.UmlGraphDoc" path="./test/lib/UMLGraph.jar">
+				<param name="-attributes" />
+				<param name="-operations" />
+				<param name="-qualify" />
+				<param name="-types" />
+				<param name="-visibility" />
+			</doclet>
+		</javadoc>
+		<apply executable="dot" dest="./docs/javadocs" parallel="false">
+			<arg value="-Tpng"/>
+			<arg value="-o"/>
+			<targetfile/>
+			<srcfile/>
+			<fileset dir="docs/javadocs" includes="*.dot"/>
+			<mapper type="glob" from="*.dot" to="*.png"/>
+		</apply>
+	</target>
+
+
+	<!-- ================================= 
+          target: compile              
+         ================================= -->
+	<target name="compile" depends="make_move_directories" description="compile source files">
+		<javac srcdir="WEB-INF/src" destdir="build/WEB-INF/classes" debug="on">
+			<classpath refid="build_classpath" />
+		</javac>
+	</target>
+
+
+
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: copy_resources                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="copy_resources_dev">
+		<echo>Copying all files that exist external to the jar files but are needed for deployment</echo>
+		<copy todir="build">
+			<fileset dir=".">
+				<include name="error.jsp"/>
+				<include name="index.jsp"/>
+				<include name="search.jsp"/>
+				<include name="detail.jsp"/>
+				<include name="Version.txt"/>
+				<include name="HTMLCalendar.htm"/>
+			</fileset>
+		</copy>
+		<copy todir="build/WEB-INF/classes" overwrite="true">
+											
+					<fileset dir="dev">
+						<include name="hibernate.cfg.xml"/>
+					</fileset>
+
+					</copy>
+			
+		
+	</target>
+	
+	<target name="copy_resources_live">
+			<echo>Copying all files that exist external to the jar files but are needed for deployment</echo>
+			<copy todir="build">
+				<fileset dir=".">
+					<include name="error.jsp"/>
+									<include name="index.jsp"/>
+									<include name="search.jsp"/>
+									<include name="detail.jsp"/>
+									<include name="Version.txt"/>
+					<include name="HTMLCalendar.htm"/>
+				</fileset>
+			</copy>
+		<copy todir="build/WEB-INF/classes" overwrite="true">
+													
+							<fileset dir="live">
+								<include name="hibernate.cfg.xml"/>
+							</fileset>
+
+							</copy>
+		
+		</target>
+
+	<target name="copy_resources_staging">
+			<echo>Copying all files that exist external to the jar files but are needed for deployment</echo>
+			<copy todir="build">
+				<fileset dir=".">
+					<include name="error.jsp"/>
+									<include name="index.jsp"/>
+									<include name="search.jsp"/>
+									<include name="detail.jsp"/>
+									<include name="Version.txt"/>
+					<include name="HTMLCalendar.htm"/>
+				</fileset>
+			</copy>
+		<copy todir="build/WEB-INF/classes" overwrite="true">
+													
+							<fileset dir="staging">
+								<include name="hibernate.cfg.xml"/>
+							</fileset>
+
+							</copy>
+		
+		</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: SetUpLogging                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="setup_logging">
+		<copy todir="${tomcat_path}/common/lib">
+			<fileset dir="WEB-INF/lib">
+				<include name="**/commons-logging-1.0.4.jar"/>
+				<include name="**/log4j-1.2.11.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="${tomcat_path}/common/classes">
+			<fileset dir=".">
+				<include name="**/log4j.properties"/>
+			</fileset>
+		</copy>
+
+		<copy todir="WEB-INF/classes">
+			<fileset dir=".">
+				<include name="**/log4j.properties"/>
+			</fileset>
+		</copy>
+	</target>
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: copy_test_resources                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="copy_test_resources">
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: clean                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="clean" depends="info">
+		<delete dir="build" quiet="true" />
+		<delete dir="testresult" quiet="true" />
+		<delete dir="deploy" quiet="true" />
+		<delete includeemptydirs="true">
+			<fileset dir="bin" includes="**/.svn/" defaultexcludes="false">
+			</fileset>
+		</delete>
+		<delete includeemptydirs="true">
+			<fileset dir="WEB-INF/classes" includes="**/.svn/" defaultexcludes="false">
+				<exclude name="**/lib/**" />
+				<exclude name="**/*.class" />
+				<include name="**/.svn/" />
+			</fileset>
+		</delete>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: make_move_directories                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="make_move_directories" depends="clean">
+		<echo>Make directories in the build directory</echo>
+		<mkdir dir="build" />
+		
+		<mkdir dir="deploy" />
+	
+		<echo>Move (copy!) directories to the build directory</echo>
+		<copy todir="build">
+			<fileset dir=".">
+				<include name="WEB-INF/**" />
+				<include name="admin/**" />
+				<include name="Templates/**" />
+				<include name="css/**" />
+				<include name="files/**" />
+			    <include name="justice/**"/>
+				<include name="js/**"/>
+				<include name="images/**"/>
+				<include name="common/**"/>
+				<exclude name="WEB-INF/**/*.class" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- ================================= 
+          target: run_shakedown_tests              
+         ================================= -->
+	
+	<!-- ================================= 
+          target: run_selenium_tests              
+         ================================= -->
+	<target name="run_selenium_tests" description="run the selected selenium test" >
+		<java classname="selenium.IAFT_EndToEndFullTest" fork="true">
+			<classpath refid="test_classpath"/>
+		</java>
+	</target>
+
+	<!-- ================================= 
+          target: run_junit_tests              
+         ================================= -->
+	<target name="run_junit_tests" description="run the selected junit tests">
+		<delete quiet="true">
+			<fileset dir="./testreport/xml"  />
+		</delete>
+		<mkdir dir="./testreport"/>
+		<mkdir dir="./testreport/xml"/>
+
+		<junit fork="no" printsummary="yes" haltonfailure="no" showoutput="yes" dir=".">
+			<classpath refid="test_classpath"/>
+			<classpath>
+				<pathelement path="build" />
+			</classpath>
+			<formatter type="xml"/>
+			<batchtest todir="./testreport/xml">
+				<fileset dir="test">
+					<include name="**/IAFT_EndToEndFullTest.java"/>
+					<include name="**/DemoTest.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
+		<junitreport todir="./testreport">
+			<fileset dir="./testreport/xml">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="./testreport" />
+		</junitreport>
+	</target>
+</project>
