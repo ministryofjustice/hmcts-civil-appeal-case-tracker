@@ -3,3 +3,8 @@ WEB-INF/classes/hibernate.cfg.xml
 
 #ignore build files
 build/*
+#ignore deploy
+deploy/*
+
+#ignore NPM modules
+node_modules/*
