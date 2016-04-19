@@ -1,17 +1,38 @@
+'use strict';
+
 var gulp = require('gulp');
 var cleanCSS = require('gulp-clean-css');
 var uglify = require('gulp-uglify');
 var del = require('del');
 var rename = require('gulp-rename');
 var eslint = require('gulp-eslint');
-var sass = require('gulp-sass')
+var sass = require('gulp-sass');
 
-var assetsSource = '';
+var assetsSource = 'assets/';
 var buildDestination = 'build/' + assetsSource;
 var cssSource = assetsSource + 'css';
 var cssDestination = buildDestination + 'css';
 var jsSource = assetsSource + 'js';
 var jsDestination = buildDestination + 'js';
+
+
+//for govuk
+var repo_root = __dirname + '/';
+var govuk_frontend_toolkit_root =  repo_root + 'node_modules/govuk_frontend_toolkit/stylesheets';
+var govuk_elements_sass_root =  repo_root + 'node_modules/govuk-elements-sass/public/sass';
+
+// Step by step instructions here
+// http://ryanchristiani.com/getting-started-with-gulp-and-sass/
+
+// Compile scss files to css
+gulp.task('styles', function () {
+  return gulp.src('./assets/css/**/*.scss')
+    .pipe(sass({includePaths: [
+      govuk_frontend_toolkit_root,
+      govuk_elements_sass_root
+    ]}).on('error', sass.logError))
+    .pipe(gulp.dest('./build/assets/css'));
+});
 
 //delete the build folders
 gulp.task('delete' , function(){
@@ -37,7 +58,7 @@ gulp.task('uglify', function() {
 });
 
 gulp.task('sass', function () {
-  return gulp.src(cssSource + '/*.scss')
+  return gulp.src(cssSource + '/**/*.scss')
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest(cssDestination));
 });
