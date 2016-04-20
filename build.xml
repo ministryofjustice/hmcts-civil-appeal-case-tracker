@@ -335,6 +335,7 @@
 		</delete>
 		<delete dir="testresult" quiet="true" />
 		<delete dir="deploy" quiet="true" />
+		
 		<delete includeemptydirs="true">
 			<fileset dir="bin" includes="**/.svn/" defaultexcludes="false">
 			</fileset>
@@ -362,7 +363,7 @@
 			<fileset dir=".">
 				<include name="WEB-INF/**" />
 				<include name="admin/**" />
-				<include name="Templates/**" />
+				<include name="includes/**" />
 				<include name="css/**" />
 				<include name="files/**" />
 				<include name="js/**"/>
