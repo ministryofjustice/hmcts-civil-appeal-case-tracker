@@ -31,7 +31,7 @@ gulp.task('styles', function () {
       govuk_frontend_toolkit_root,
       govuk_elements_sass_root
     ]}).on('error', sass.logError))
-    .pipe(gulp.dest('./build/assets/css'));
+    .pipe(gulp.dest('./build/assets/stylesheets'));
 });
 
 //delete the build folders
