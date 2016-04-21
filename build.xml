@@ -8,7 +8,7 @@
 <project name="Listing Calendar" default="development_build" basedir=".">
 	<property environment="env"/>
 	<property file="LC.antuser.properties" />
-
+	<property name="build.dir" value="build" />
 
 	<!-- =================================
           target: Development_Build
@@ -40,7 +40,7 @@
 	</path>
 
 	<path id="test_classpath">
-		<pathelement location="build/WEB-INF/classes"/>
+		<pathelement location="${build.dir}/WEB-INF/classes"/>
 		<pathelement path="${env.Path}"/>
 		<pathelement path="${graphvizbin}"/>
 		<fileset dir="test/lib">
@@ -150,7 +150,7 @@
 	<target name="war">
 		<echo>Create a deployable war</echo>
 		<war destfile="deploy/listing_calendar.war" webxml="WEB-INF/web.xml">
-			<fileset dir="build"/>
+			<fileset dir="${build.dir}"/>
 		</war>
 	</target>
 
@@ -214,7 +214,7 @@
           target: compile
          ================================= -->
 	<target name="compile" depends="make_move_directories" description="compile source files">
-		<javac srcdir="WEB-INF/src" destdir="build/WEB-INF/classes" debug="on">
+		<javac srcdir="WEB-INF/src" destdir="${build.dir}/WEB-INF/classes" debug="on">
 			<classpath refid="build_classpath" />
 		</javac>
 	</target>
@@ -228,7 +228,7 @@
          - - - - - - - - - - - - - - - - - -->
 	<target name="copy_resources_dev">
 		<echo>Copying all files that exist external to the jar files but are needed for deployment</echo>
-		<copy todir="build">
+		<copy todir="${build.dir}">
 			<fileset dir=".">
 				<include name="error.jsp"/>
 				<include name="index.jsp"/>
@@ -238,7 +238,7 @@
 				<include name="HTMLCalendar.htm"/>
 			</fileset>
 		</copy>
-		<copy todir="build/WEB-INF/classes" overwrite="true">
+		<copy todir="${build.dir}/WEB-INF/classes" overwrite="true">
 
 					<fileset dir="dev">
 						<include name="hibernate.cfg.xml"/>
@@ -251,17 +251,17 @@
 
 	<target name="copy_resources_live">
 			<echo>Copying all files that exist external to the jar files but are needed for deployment</echo>
-			<copy todir="build">
+			<copy todir="${build.dir}">
 				<fileset dir=".">
 					<include name="error.jsp"/>
-									<include name="index.jsp"/>
-									<include name="search.jsp"/>
-									<include name="detail.jsp"/>
-									<include name="Version.txt"/>
+					<include name="index.jsp"/>
+					<include name="search.jsp"/>
+					<include name="detail.jsp"/>
+					<include name="Version.txt"/>
 					<include name="HTMLCalendar.htm"/>
 				</fileset>
 			</copy>
-		<copy todir="build/WEB-INF/classes" overwrite="true">
+		<copy todir="${build.dir}/WEB-INF/classes" overwrite="true">
 
 							<fileset dir="live">
 								<include name="hibernate.cfg.xml"/>
@@ -273,17 +273,17 @@
 
 	<target name="copy_resources_staging">
 			<echo>Copying all files that exist external to the jar files but are needed for deployment</echo>
-			<copy todir="build">
+			<copy todir="${build.dir}">
 				<fileset dir=".">
 					<include name="error.jsp"/>
-									<include name="index.jsp"/>
-									<include name="search.jsp"/>
-									<include name="detail.jsp"/>
-									<include name="Version.txt"/>
+					<include name="index.jsp"/>
+					<include name="search.jsp"/>
+					<include name="detail.jsp"/>
+					<include name="Version.txt"/>
 					<include name="HTMLCalendar.htm"/>
 				</fileset>
 			</copy>
-		<copy todir="build/WEB-INF/classes" overwrite="true">
+		<copy todir="${build.dir}/WEB-INF/classes" overwrite="true">
 
 							<fileset dir="staging">
 								<include name="hibernate.cfg.xml"/>
@@ -327,19 +327,10 @@
           target: clean
          - - - - - - - - - - - - - - - - - -->
 	<target name="clean" depends="info">
-		<!--<delete dir="build" quiet="true" />-->
-		<delete includeemptydirs="true">
-			<fileset dir="build">
-				<exclude name="assets/**" />
-			</fileset>
-		</delete>
+		<delete dir="${build.dir}" quiet="true" />
 		<delete dir="testresult" quiet="true" />
 		<delete dir="deploy" quiet="true" />
-		
-		<delete includeemptydirs="true">
-			<fileset dir="bin" includes="**/.svn/" defaultexcludes="false">
-			</fileset>
-		</delete>
+
 		<delete includeemptydirs="true">
 			<fileset dir="WEB-INF/classes" includes="**/.svn/" defaultexcludes="false">
 				<exclude name="**/lib/**" />
@@ -354,12 +345,13 @@
          - - - - - - - - - - - - - - - - - -->
 	<target name="make_move_directories" depends="clean">
 		<echo>Make directories in the build directory</echo>
-		<mkdir dir="build" />
+		<mkdir dir="${build.dir}" />
 
 		<mkdir dir="deploy" />
 
 		<echo>Move (copy!) directories to the build directory</echo>
-		<copy todir="build">
+
+		<copy todir="${build.dir}">
 			<fileset dir=".">
 				<include name="WEB-INF/**" />
 				<include name="admin/**" />
@@ -369,9 +361,13 @@
 				<include name="js/**"/>
 				<include name="images/**"/>
 				<include name="common/**"/>
+				<include name="assets/images/**" />
+				<include name="assets/stylesheets/**" />
 				<exclude name="WEB-INF/**/*.class" />
 			</fileset>
+
 		</copy>
+
 	</target>
 
 	<!-- =================================
@@ -400,7 +396,7 @@
 		<junit fork="no" printsummary="yes" haltonfailure="no" showoutput="yes" dir=".">
 			<classpath refid="test_classpath"/>
 			<classpath>
-				<pathelement path="build" />
+				<pathelement path="${build.dir}" />
 			</classpath>
 			<formatter type="xml"/>
 			<batchtest todir="./testreport/xml">
