@@ -60,6 +60,7 @@ var Today = new Date();
 var Day = Today.getDay();
 var Month = Today.getMonth();
 var Year = Today.getYear();
+
 var strDays = "Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday";
 var arrDays = strDays.split(",");
 var strMonths = "January,February,March,April,May,June,July,August,September,October,November,December";
@@ -95,19 +96,21 @@ CalendarForm.cboMonth.options[Month].selected = true;
 }
 
 function FillYears(START_YEAR,END_YEAR){
-START_YEAR = parseInt(START_YEAR);
-END_YEAR = parseInt(END_YEAR);
-var i =0;
-while(START_YEAR <= END_YEAR){
-CalendarForm.cboYear.options[i] = new Option(START_YEAR, START_YEAR);
-if(START_YEAR==Year){
-CalendarForm.cboYear.options[i].selected = true;
-}
+	START_YEAR = parseInt(START_YEAR);
+	END_YEAR = parseInt(END_YEAR);
+	var i =0;
+	var today = new Date();
+	var currentYear = today.getFullYear();
+	
+	while(START_YEAR <= currentYear){
+		CalendarForm.cboYear.options[i] = new Option(START_YEAR, START_YEAR);
+		if(START_YEAR==currentYear){
+			CalendarForm.cboYear.options[i].selected = true;
+		}
 
-START_YEAR +=1;
-i+=1;
-}
-
+		START_YEAR +=1;
+		i+=1;
+	}
 } //End Function
 
 function SetMonth(){
