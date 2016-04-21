@@ -35,7 +35,18 @@ $ ant
 Buildfile: build.xml does not exist!
 Build failed
 ```
+####Setup enviroment variables for build process 
 
+Find the location of where your Tomcat is installed. Replace '/path/to/tomcat' with the location of your tomcat installation.
+
+```
+$ echo 'export TOMCAT_PATH="/path/to/tomcat"' >>~/.bash_profile
+```
+Now run it so its available in your current terminal 
+
+```
+$ source ~/.bash_profile
+```
 
 ###Get the source code
 Clone this repository
