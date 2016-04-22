@@ -10,9 +10,15 @@
 	<property file="LC.antuser.properties" />
 	<property name="build.dir" value="build" />
 
+	<fail message="TOMCAT_PATH environment variable is not set. Refer to README file." >
+		<condition>
+			<isset property="${tomcat_path1}" />
+		</condition>
+	</fail>
+
 	<!-- =================================
           target: Development_Build
-         ================================= -->
+       ================================= -->
 	<target name="development_build" depends="compile, copy_resources_dev" description="Unloads previous application version and deploys a new one">
 		<echo>Starting a development build - this will compile the code,jar it, then load it in tomcat</echo>
 		<echo>*****************************************************************************</echo>
@@ -89,9 +95,6 @@
 	</target>
 
 
-
-
-
 	<!-- =================================
           target: deployment_build
          ================================= -->
@@ -108,6 +111,7 @@
 		<zip basedir="deploy" destfile="listing_calendar.zip" />
 
 	</target>
+
 	<target name="staging_build" depends="compile, copy_resources_staging" description="description">
 			<echo>Starting a full build - this will compile the code and jar it ready for deployment</echo>
 			<echo>*****************************************************************************</echo>
@@ -219,15 +223,14 @@
 		</javac>
 	</target>
 
-
-
-
-
 	<!-- - - - - - - - - - - - - - - - - -
           target: copy_resources
          - - - - - - - - - - - - - - - - - -->
-	<target name="copy_resources_dev">
+
+	<target name="copy_resources">
+
 		<echo>Copying all files that exist external to the jar files but are needed for deployment</echo>
+
 		<copy todir="${build.dir}">
 			<fileset dir=".">
 				<include name="error.jsp"/>
@@ -238,60 +241,45 @@
 				<include name="HTMLCalendar.htm"/>
 			</fileset>
 		</copy>
+
+		<echo>Copy hibernate.cfg.xml to build</echo>
+
 		<copy todir="${build.dir}/WEB-INF/classes" overwrite="true">
-
-					<fileset dir="dev">
-						<include name="hibernate.cfg.xml"/>
-					</fileset>
-
-					</copy>
-
-
+      <fileset dir="WEB-INF/classes">
+				<include name="hibernate.cfg.xml"/>
+			</fileset>
+		</copy>
 	</target>
 
-	<target name="copy_resources_live">
-			<echo>Copying all files that exist external to the jar files but are needed for deployment</echo>
-			<copy todir="${build.dir}">
-				<fileset dir=".">
-					<include name="error.jsp"/>
-					<include name="index.jsp"/>
-					<include name="search.jsp"/>
-					<include name="detail.jsp"/>
-					<include name="Version.txt"/>
-					<include name="HTMLCalendar.htm"/>
-				</fileset>
-			</copy>
-		<copy todir="${build.dir}/WEB-INF/classes" overwrite="true">
+	<target name="copy_resources_dev" depends="copy_resources">
 
-							<fileset dir="live">
-								<include name="hibernate.cfg.xml"/>
-							</fileset>
+		<echo>hibernate.cfg.xml - Replace values for DEV DB connection</echo>
 
-							</copy>
+		<replace file="${build.dir}/WEB-INF/classes/hibernate.cfg.xml" token="@@SQLSERVER_URL@@" value="${env.DEV_CASE_TRACKER_URL}" />
+		<replace file="${build.dir}/WEB-INF/classes/hibernate.cfg.xml" token="@@SQLSERVER_USER@@" value="${env.DEV_CASE_TRACKER_USER}" />
+		<replace file="${build.dir}/WEB-INF/classes/hibernate.cfg.xml" token="@@SQLSERVER_PWD@@" value="${env.DEV_CASE_TRACKER_PWD}" />
+	</target>
 
-		</target>
+
+	<target name="copy_resources_live" depends="copy_resources">
+
+		<echo>hibernate.cfg.xml - Replace values for LIVE DB connection</echo>
+
+		<replace file="${build.dir}/WEB-INF/classes/hibernate.cfg.xml" token="@@SQLSERVER_URL@@" value="${env.LIVE_CASE_TRACKER_URL}" />
+		<replace file="${build.dir}/WEB-INF/classes/hibernate.cfg.xml" token="@@SQLSERVER_USER@@" value="${env.LIVE_CASE_TRACKER_USER}" />
+		<replace file="${build.dir}/WEB-INF/classes/hibernate.cfg.xml" token="@@SQLSERVER_PWD@@" value="${env.LIVE_CASE_TRACKER_PWD}" />
+	</target>
+
 
 	<target name="copy_resources_staging">
-			<echo>Copying all files that exist external to the jar files but are needed for deployment</echo>
-			<copy todir="${build.dir}">
-				<fileset dir=".">
-					<include name="error.jsp"/>
-					<include name="index.jsp"/>
-					<include name="search.jsp"/>
-					<include name="detail.jsp"/>
-					<include name="Version.txt"/>
-					<include name="HTMLCalendar.htm"/>
-				</fileset>
-			</copy>
-		<copy todir="${build.dir}/WEB-INF/classes" overwrite="true">
 
-							<fileset dir="staging">
-								<include name="hibernate.cfg.xml"/>
-							</fileset>
+		<echo>hibernate.cfg.xml - Replace values for STAGE DB connection</echo>
 
-							</copy>
+		<replace file="${build.dir}/WEB-INF/classes/hibernate.cfg.xml" token="@@SQLSERVER_URL@@" value="${env.STAGE_CASE_TRACKER_URL}" />
+		<replace file="${build.dir}/WEB-INF/classes/hibernate.cfg.xml" token="@@SQLSERVER_USER@@" value="${env.STAGE_CASE_TRACKER_USER}" />
+		<replace file="${build.dir}/WEB-INF/classes/hibernate.cfg.xml" token="@@SQLSERVER_PWD@@" value="${env.STAGE_CASE_TRACKER_PWD}" />
 
-		</target>
+	</target>
 
 	<!-- - - - - - - - - - - - - - - - - -
           target: SetUpLogging
@@ -364,6 +352,7 @@
 				<include name="assets/images/**" />
 				<include name="assets/stylesheets/**" />
 				<exclude name="WEB-INF/**/*.class" />
+				<exclude name="WEB-INF/classes/hibernate*" />
 			</fileset>
 
 		</copy>
