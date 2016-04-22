@@ -1,10 +1,11 @@
-#Config file (SECURITY)
-WEB-INF/classes/hibernate.cfg.xml
-
 #ignore build files
 build/*
 #ignore deploy
 deploy/*
+
+#Ignore compiled code
+WEB-INF/classes/au/*
+WEB-INF/classes/com/*
 
 #ignore NPM modules
 node_modules/*
