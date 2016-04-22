@@ -35,14 +35,36 @@ $ ant
 Buildfile: build.xml does not exist!
 Build failed
 ```
-####Setup enviroment variables for build process 
+####Setup environment variables for build process
 
-Find the location of where your Tomcat is installed. Replace '/path/to/tomcat' with the location of your tomcat installation.
+You will need the following information to substitue in the scripts below :
+
+- **/path/to/tomcat**  path to you systems Tomcat installation 
+- **connection-string** is the connection string to your database and tables for the service to use
+- **connection-username** is the database username
+- **connection-password** is the database users password
 
 ```
 $ echo 'export TOMCAT_PATH="/path/to/tomcat"' >>~/.bash_profile
+$ echo 'export DEV_CASE_TRACKER_URL="connection-string"' >> ~/.bash_profile
+$ echo 'export DEV_CASE_TRACKER_USER="connection-username"' >> ~/.bash_profile
+$ echo 'export DEV_CASE_TRACKER_PWD="connection-password"' >> ~/.bash_profile
 ```
-Now run it so its available in your current terminal 
+
+If you plan on deploying to staging and production you will need to run the following:
+
+```
+$ echo 'export STAGE_CASE_TRACKER_URL="connection-string"' >> ~/.bash_profile
+$ echo 'export STAGE_CASE_TRACKER_USER="connection-username"' >> ~/.bash_profile
+$ echo 'export STAGE_CASE_TRACKER_PWD="connection-password"' >> ~/.bash_profile
+
+$ echo 'export LIVE_CASE_TRACKER_URL="connection-string"' >> ~/.bash_profile
+$ echo 'export LIVE_CASE_TRACKER_USER="connection-username"' >> ~/.bash_profile
+$ echo 'export LIVE_CASE_TRACKER_PWD="connection-password"' >> ~/.bash_profile
+
+```
+
+Now run it so its available in your current terminal
 
 ```
 $ source ~/.bash_profile
@@ -61,17 +83,6 @@ Next change the directory to the new project
 $ cd hmcts-civil-appeal-case-tracker.git
 ```
 
-Setting up configuration file
-
-```
-$ cp WEB-INF/classes/hibernate.cfg.xml.sample WEB-INF/classes/hibernate.cfg.xml
-```
-Next edit ```WEB-INF/classes/hibernate.cfg.xml``` file and replace the follow three placeholders with the information obtained by other developers in the team.
-
-- &#35;&#35;URL&#35;&#35;
-- &#35;&#35;USERNAME&#35;&#35;
-- &#35;&#35;PASSWORD&#35;&#35;
-
 ###Front-end development
 
 Install Node js (version 4) using homebrew
@@ -79,7 +90,7 @@ Install Node js (version 4) using homebrew
 First install and setup Gulp and the dependencies
 
 ```
-$ npm install 
+$ npm install
 ```
 This should setup Gulp and all its tasks
 
