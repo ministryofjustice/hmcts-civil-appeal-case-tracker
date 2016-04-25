@@ -3,7 +3,7 @@
   background: url('images/moj_logo_horizontal_36x246.png') no-repeat;
   background-size: 246px 36px;
   @include ie-lte(8) {
-    background-image: image-url('images/moj_logo_horizontal_36x246.png');
+    background-image: url('images/moj_logo_horizontal_36x246.png');
   }
 
   img {

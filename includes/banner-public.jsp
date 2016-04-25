@@ -9,7 +9,7 @@
       <div class="header-proposition">
         <div class="content">
           <nav id="proposition-menu">
-            <a href="/" id="proposition-name">Tracking your civil appeal case</a>
+            <a href="/" id="proposition-name">Tracking a civil appeal case</a>
             <!--<ul id="proposition-links">
               <li><a href="url-to-page-1" class="active">Navigation item #1</a></li>
               <li><a href="url-to-page-2">Navigation item #2</a></li>
