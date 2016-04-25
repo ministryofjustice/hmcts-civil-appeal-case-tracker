@@ -19,7 +19,7 @@
 	<!-- =================================
           target: Development_Build
        ================================= -->
-	<target name="development_build" depends="compile, copy_resources_dev" description="Unloads previous application version and deploys a new one">
+	<target name="development_build" depends="gulp, compile, copy_resources_dev" description="Unloads previous application version and deploys a new one">
 		<echo>Starting a development build - this will compile the code,jar it, then load it in tomcat</echo>
 		<echo>*****************************************************************************</echo>
 		<echo>If anything odd happens (like it isn't deploying ) make sure you close any references to any files in the app</echo>
@@ -98,7 +98,7 @@
 	<!-- =================================
           target: deployment_build
          ================================= -->
-	<target name="prod_build" depends="compile, copy_resources_live" description="description">
+	<target name="prod_build" depends="gulp, compile, copy_resources_live" description="description">
 		<echo>Starting a full build - this will compile the code and jar it ready for deployment</echo>
 		<echo>*****************************************************************************</echo>
 		<echo>This may be a good time to go get something to drink - while the tests run...</echo>
@@ -112,7 +112,7 @@
 
 	</target>
 
-	<target name="staging_build" depends="compile, copy_resources_staging" description="description">
+	<target name="staging_build" depends="gulp, compile, copy_resources_staging" description="description">
 			<echo>Starting a full build - this will compile the code and jar it ready for deployment</echo>
 			<echo>*****************************************************************************</echo>
 			<echo>This may be a good time to go get something to drink - while the tests run...</echo>
@@ -353,11 +353,13 @@
 				<include name="common/**"/>
 				<include name="assets/images/**" />
 				<include name="assets/stylesheets/images/**" />
+				<include name="assets/stylesheets/fonts/**" />
+
 				<exclude name="WEB-INF/**/*.class" />
 				<exclude name="WEB-INF/classes/hibernate*" />
 			</fileset>
-
 		</copy>
+		<antcall target="copy-govuk-frontend-toolkit" />
 
 	</target>
 
@@ -413,5 +415,14 @@
 		<copy todir="${build.dir}/assets/images/govuk-frontend-toolkit">
 			<fileset dir="./node_modules/govuk_frontend_toolkit/images" />
 		</copy>
+	</target>
+
+	<!-- ===============================
+	Gulp Task - Build GOVUK GDS styling and assets
+	==================================== -->
+	<target name="gulp">
+		<exec executable="gulp" dir=".">
+			<arg value="styles" />
+		</exec>
 	</target>
 </project>

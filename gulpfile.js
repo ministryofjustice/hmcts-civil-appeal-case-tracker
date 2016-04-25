@@ -85,15 +85,17 @@ gulp.task('lint', function(){
       );
 });
 
-//Watch the folder for any changes
 gulp.task('watch', function(){
+  //plugin.livereload.listen();
+  gulp.watch('./assets/stylesheets/**/*.scss',['styles']);
+});
+//Watch the folder for any changes
+/*gulp.task('watch', function(){
   gulp.watch(cssSource, ['sass','minify']);
   gulp.watch(jsSource, ['uglify']);
 });
-
-gulp.task('sass:watch', function () {
-  gulp.watch('./sass/**/*.scss', ['sass']);
-});
+;
 
 //Setup the default task if "Gulp" is just run without a specific task
 gulp.task('default', ['delete','sass','minify', 'uglify', 'watch']);
+*/
