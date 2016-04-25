@@ -26,12 +26,12 @@ var govuk_elements_sass_root =  repo_root + 'node_modules/govuk-elements-sass/pu
 
 // Compile scss files to css
 gulp.task('styles', function () {
-  return gulp.src('./assets/css/**/*.scss')
+  return gulp.src('./assets/stylesheets/**/*.scss')
     .pipe(sass({includePaths: [
       govuk_frontend_toolkit_root,
       govuk_elements_sass_root
     ]}).on('error', sass.logError))
-    .pipe(gulp.dest('./build/assets/stylesheets'));
+    .pipe(gulp.dest('./build/assets/stylesheets/'));
 });
 
 //delete the build folders

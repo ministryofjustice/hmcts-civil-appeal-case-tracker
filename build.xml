@@ -315,7 +315,9 @@
           target: clean
          - - - - - - - - - - - - - - - - - -->
 	<target name="clean" depends="info">
-		<delete dir="${build.dir}" quiet="true" />
+		<delete dir="${build.dir}" quiet="true">
+			<exclude name="assets/stylesheets/**" />
+		</delete>
 		<delete dir="testresult" quiet="true" />
 		<delete dir="deploy" quiet="true" />
 
@@ -350,7 +352,7 @@
 				<include name="images/**"/>
 				<include name="common/**"/>
 				<include name="assets/images/**" />
-				<include name="assets/stylesheets/**" />
+				<include name="assets/stylesheets/images/**" />
 				<exclude name="WEB-INF/**/*.class" />
 				<exclude name="WEB-INF/classes/hibernate*" />
 			</fileset>
@@ -401,5 +403,15 @@
 			</fileset>
 			<report format="frames" todir="./testreport" />
 		</junitreport>
+	</target>
+
+	<!-- ================================
+	GOVUK - Templates
+	===================================== -->
+	<target name="copy-govuk-frontend-toolkit">
+		<echo>Copy GOVUK Frontend toolkit images to assets folder</echo>
+		<copy todir="${build.dir}/assets/images/govuk-frontend-toolkit">
+			<fileset dir="./node_modules/govuk_frontend_toolkit/images" />
+		</copy>
 	</target>
 </project>
