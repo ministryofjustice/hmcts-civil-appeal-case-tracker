@@ -15,3 +15,6 @@ node_modules/*
 WEB-INF/WEB-INF.iml
 .classpath
 .project
+
+#Ignore Thumbs.db files
+Thumbs.db
