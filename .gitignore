@@ -9,3 +9,9 @@ WEB-INF/classes/com/*
 
 #ignore NPM modules
 node_modules/*
+
+#Ignore IDE FILES
+.idea/*
+WEB-INF/WEB-INF.iml
+.classpath
+.project
