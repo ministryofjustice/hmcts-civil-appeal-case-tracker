@@ -122,7 +122,6 @@
             <fileset dir=".">
                 <include name="WEB-INF/**"/>
                 <include name="admin/**"/>
-                <include name="includes/**"/>
                 <include name="css/**"/>
                 <include name="files/**"/>
                 <include name="js/**"/>
