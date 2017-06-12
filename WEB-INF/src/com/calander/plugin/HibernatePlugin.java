@@ -1,8 +1,5 @@
 package com.calander.plugin;
 
-
-import java.io.PrintStream;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import org.apache.struts.action.ActionServlet;
@@ -15,10 +12,16 @@ import org.hibernate.cfg.Configuration;
 public class HibernatePlugin
         implements PlugIn {
 
+    public static String KEY_NAME;
+    private static Class myClass;
+
+    static {
+        myClass = HibernatePlugin.class;
+        KEY_NAME = myClass.getName();
+    }
+
     private Configuration config;
     private SessionFactory factory;
-    private static Class clazz;
-    public static String KEY_NAME;
 
     public HibernatePlugin() {
     }
@@ -26,14 +29,26 @@ public class HibernatePlugin
     public void init(ActionServlet servlet, ModuleConfig modConfig)
             throws ServletException {
         try {
+            String dbHost = System.getenv("DB_HOST");
+            String dbPort = System.getenv("DB_PORT");
+            String dbUser = System.getenv("DB_USER");
+            String dbPass = System.getenv("DB_PASS");
+            String dbName = System.getenv("DB_NAME");
+
+            String urlString = String.format("jdbc:jtds:sqlserver://%s:%s/%s", dbHost, dbPort, dbName);
+
             Configuration cfg = new Configuration();
             cfg.addResource("/hibernate.cfg.xml");
+            cfg.setProperty("hibernate.connection.url", urlString);
+            cfg.setProperty("hibernate.connection.username", dbUser);
+            cfg.setProperty("hibernate.connection.password", dbPass);
             cfg.configure();
+
             factory = cfg.buildSessionFactory();
             factory = (new Configuration()).configure().buildSessionFactory();
             servlet.getServletContext().setAttribute(KEY_NAME, factory);
         } catch (Exception e) {
-            System.out.println((new StringBuilder("Exception 11111>>>>>>>>>>>>>>>>")).append(e.getMessage()).toString());
+            System.out.println((new StringBuilder("Could not build Hibernate config: ")).append(e.getMessage()).toString());
             e.printStackTrace();
         }
     }
@@ -43,10 +58,5 @@ public class HibernatePlugin
             factory.close();
         } catch (HibernateException hibernateexception) {
         }
-    }
-
-    static {
-        clazz = HibernatePlugin.class;
-        KEY_NAME = clazz.getName();
     }
 }
