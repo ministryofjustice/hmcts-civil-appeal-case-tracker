@@ -1,0 +1,41 @@
+CREATE DATABASE CACT;
+
+-- BEGIN: THIS IS A DEV PASSOWRD ONLY DO NOT USE IN ANYTHING PUBLICALLY ACCESSABLE OR FOR PRODUCTION SYSTEMS!
+CREATE LOGIN cact_user WITH PASSWORD = 'cact_user';
+-- END
+
+use CACT;
+CREATE USER cact_user FOR LOGIN cact_user WITH DEFAULT_SCHEMA=dbo;
+GRANT SELECT, UPDATE, DELETE, INSERT TO cact_user;
+
+EXEC sp_addrolemember N'db_owner', N'cact_user';
+
+CREATE TABLE CACT.dbo.db_calander
+(
+  case_id INT PRIMARY KEY NOT NULL IDENTITY,
+  search_date NVARCHAR(50) NULL,
+  case_no NVARCHAR(50) NULL,
+  heading_status NVARCHAR(50) NULL,
+  judge1 NVARCHAR(50) NULL,
+  judge2 NVARCHAR(50) NULL,
+  judge3 NVARCHAR(50) NULL,
+  lcourt NVARCHAR(50) NULL,
+  venue NVARCHAR(50) NULL,
+  case_ref NVARCHAR(50) NULL,
+  title1 NVARCHAR(50) NULL,
+  title2 NVARCHAR(50) NULL,
+  type NVARCHAR(50) NULL,
+  lc_judge NVARCHAR(50) NULL,
+  nature NVARCHAR(50) NULL,
+  last_updated NVARCHAR(50) NULL,
+  result NVARCHAR(50) NULL,
+  status NVARCHAR(50) NULL,
+  track_line1 NVARCHAR(50) NULL,
+  track_line2 NVARCHAR(50) NULL,
+  track_line3 NVARCHAR(50) NULL,
+  track_line4 NVARCHAR(50) NULL,
+  track_line5 NVARCHAR(50) NULL,
+  track_line6 NVARCHAR(50) NULL,
+  track_line7 NVARCHAR(50) NULL,
+  track_line8 NVARCHAR(50) NULL,
+)
