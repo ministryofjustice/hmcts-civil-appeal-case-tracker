@@ -1,5 +1,7 @@
 package com.calander.plugin;
 
+import java.io.PrintStream;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import org.apache.struts.action.ActionServlet;
@@ -12,16 +14,10 @@ import org.hibernate.cfg.Configuration;
 public class HibernatePlugin
         implements PlugIn {
 
-    public static String KEY_NAME;
-    private static Class myClass;
-
-    static {
-        myClass = HibernatePlugin.class;
-        KEY_NAME = myClass.getName();
-    }
-
     private Configuration config;
     private SessionFactory factory;
+    private static Class myClass;
+    public static final String KEY_NAME;
 
     public HibernatePlugin() {
     }
@@ -45,7 +41,6 @@ public class HibernatePlugin
             cfg.configure();
 
             factory = cfg.buildSessionFactory();
-            factory = (new Configuration()).configure().buildSessionFactory();
             servlet.getServletContext().setAttribute(KEY_NAME, factory);
         } catch (Exception e) {
             System.out.println((new StringBuilder("Could not build Hibernate config: ")).append(e.getMessage()).toString());
@@ -58,5 +53,10 @@ public class HibernatePlugin
             factory.close();
         } catch (HibernateException hibernateexception) {
         }
+    }
+
+    static {
+        myClass = HibernatePlugin.class;
+        KEY_NAME = myClass.getName();
     }
 }
