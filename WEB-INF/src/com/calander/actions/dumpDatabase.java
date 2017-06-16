@@ -23,27 +23,20 @@ public class dumpDatabase extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
 
-        Session session = null;
-        SessionFactory factory = null;
         System.out.println(HibernatePlugin.KEY_NAME);
 
         //getting session object from Hibernate Util class
-        factory = (SessionFactory) servlet.getServletContext().getAttribute(HibernatePlugin.KEY_NAME);
-        System.out.println("coming here before factory open session");
-
-        session = factory.openSession();
-        System.out.println("coming here after factory open session");
+        SessionFactory factory = (SessionFactory) servlet.getServletContext().getAttribute(HibernatePlugin.KEY_NAME);
+        Session session = factory.openSession();
 
         ServletContext context = servlet.getServletContext();
         String FILE_PATH = context.getRealPath("/HMCSFormUpload/CASE_TRACKER.CSV");
-        System.out.println("file path");
         String result = null;
 
         try {
             CSVReader reader = new CSVReader(new FileReader(FILE_PATH));
             String[] nextLine;
-            Calander obj = null;
-
+            Calander calander = null;
 
             session.beginTransaction();
             session.createQuery("delete Calander").executeUpdate();
@@ -51,121 +44,117 @@ public class dumpDatabase extends Action {
 
             session.beginTransaction();
 
-            int ctr = 0;
+            int rows = 0;
 
             try {
                 while ((nextLine = reader.readNext()) != null) {
 
-                    int line = nextLine.length;
-                    int counter = 0;
+                    int line_length = nextLine.length;
+                    int column = 0;
 
+                    calander = new Calander();
 
-                    obj = new Calander();
+                    if (column < line_length)
+                        calander.setSearch_date(nextLine[0]);
+                    column++;
 
+                    if (column < line_length)
+                        calander.setCase_no(nextLine[1]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setSearch_date(nextLine[0]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setHeading_status(nextLine[2]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setCase_no(nextLine[1]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setJudge1(nextLine[3]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setHeading_status(nextLine[2]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setJudge2(nextLine[4]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setJudge1(nextLine[3]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setJudge3(nextLine[5]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setJudge2(nextLine[4]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setLcourt(nextLine[6]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setJudge3(nextLine[5]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setVenue(nextLine[7]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setLcourt(nextLine[6]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setCase_ref(nextLine[8]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setVenue(nextLine[7]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setTitle1(nextLine[9] + " " + nextLine[10]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setCase_ref(nextLine[8]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setTitle2(nextLine[10]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setTitle1(nextLine[9] + " " + nextLine[10]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setType(nextLine[11]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setTitle2(nextLine[10]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setLc_judge(nextLine[12]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setType(nextLine[11]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setNature(nextLine[13]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setLc_judge(nextLine[12]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setLast_updated(nextLine[14]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setNature(nextLine[13]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setResult(nextLine[15]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setLast_updated(nextLine[14]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setStatus(nextLine[16]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setResult(nextLine[15]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setTrack_line1(nextLine[17]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setStatus(nextLine[16]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setTrack_line2(nextLine[18]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setTrack_line1(nextLine[17]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setTrack_line3(nextLine[19]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setTrack_line2(nextLine[18]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setTrack_line4(nextLine[20]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setTrack_line3(nextLine[19]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setTrack_line5(nextLine[21]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setTrack_line4(nextLine[20]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setTrack_line6(nextLine[22]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setTrack_line5(nextLine[21]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setTrack_line7(nextLine[23]);
+                    column++;
 
-                    if (counter < line)
-                        obj.setTrack_line6(nextLine[22]);
-                    counter++;
+                    if (column < line_length)
+                        calander.setTrack_line8(nextLine[24]);
 
-                    if (counter < line)
-                        obj.setTrack_line7(nextLine[23]);
-                    counter++;
-
-                    if (counter < line)
-                        obj.setTrack_line8(nextLine[24]);
-
-                    ctr++;
-                    session.save(obj);
-
-
+                    rows++;
+                    session.save(calander);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -173,16 +162,13 @@ public class dumpDatabase extends Action {
             }
 
             session.getTransaction().commit();
-            result = "<ul><li><strong>" + ctr + "</strong> Records added in database</li>";
+            result = "<ul><li><strong>" + rows + "</strong> Records added in database</li>";
             session.clear();
-            // session.close();
-
 
         } catch (FileNotFoundException e) {
             result = "<font color='red'>Cannot find CASE_TRACKER.CSV file.</font>";
             e.printStackTrace();
         }
-
 
         request.setAttribute("msg", result);
 

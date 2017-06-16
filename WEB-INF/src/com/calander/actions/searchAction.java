@@ -14,29 +14,29 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Pattern;
+
 
 public class searchAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
-        String strQry;
-        List arrResults = null;
-        strQry = (String) request.getParameter("search");
+        String searchString = request.getParameter("search");
 
-        Session session = null;
-        SessionFactory factory = null;
-        Query qry = null;
+        Pattern pattern = Pattern.compile("^[A-Za-z0-9_, \\-\\)\\(\\.]++$");
+        if(!pattern.matcher(searchString).matches()) {
+            searchString = "";
+        }
 
         //getting session object from Hibernate Util class
-        factory = (SessionFactory) servlet.getServletContext().getAttribute(HibernatePlugin.KEY_NAME);
-        session = factory.openSession();
+        SessionFactory factory = (SessionFactory) servlet.getServletContext().getAttribute(HibernatePlugin.KEY_NAME);
+        Session session = factory.openSession();
 
+        Query query = session.createQuery("from Calander c where c.search_date like :date or c.case_no like :case or title1 like :title order by c.case_no");
+        query.setString("date", "%" + searchString + "%");
+        query.setString("case", "%" + searchString + "%");
+        query.setString("title", "%" + searchString + "%");
 
-        qry = session.createQuery("from Calander c where c.search_date like :date or c.case_no like :case or title1 like :title order by c.case_no");
-        qry.setString("date", "%" + strQry + "%");
-        qry.setString("case", "%" + strQry + "%");
-        qry.setString("title", "%" + strQry + "%");
-
-        arrResults = qry.list();
+        List arrResults = query.list();
 
         session.clear();
         session.close();
@@ -44,5 +44,4 @@ public class searchAction extends Action {
 
         return mapping.findForward("success");
     }
-
 }
