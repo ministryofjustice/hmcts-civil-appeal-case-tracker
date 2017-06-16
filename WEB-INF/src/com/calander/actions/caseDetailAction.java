@@ -14,35 +14,34 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 public class caseDetailAction extends Action {
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
 
-        String case_id;
-        case_id = request.getParameter("case_id");
+        String case_id = request.getParameter("case_id");
 
-        Session session = null;
-        SessionFactory factory = null;
+        Pattern pattern = Pattern.compile("^[0-9]++$");
+        if(!pattern.matcher(case_id).matches()) {
+            case_id = "";
+        }
 
         //getting session object from Hibernate Util class
-        factory = (SessionFactory) servlet.getServletContext().getAttribute(HibernatePlugin.KEY_NAME);
-        session = factory.openSession();
+        SessionFactory factory = (SessionFactory) servlet.getServletContext().getAttribute(HibernatePlugin.KEY_NAME);
+        Session session = factory.openSession();
 
-        Query qry = null;
+        Query query = session.createQuery("from Calander c where c.case_no=:case");
+        query.setString("case", case_id);
 
-        qry = session.createQuery("from Calander c where c.case_no=:case");
-        qry.setString("case", case_id);
+        Calander calander = (Calander) query.list().get(0);
 
-        Calander obj = (Calander) qry.list().get(0);
-
-        System.out.println(obj.getCase_no());
-        request.setAttribute("detail", obj);
+        System.out.println(calander.getCase_no());
+        request.setAttribute("detail", calander);
         request.setAttribute("case", case_id);
 
         session.close();
         return mapping.findForward("success");
     }
-
 }
