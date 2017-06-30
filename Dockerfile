@@ -10,7 +10,7 @@ ENV DB_HOST="172.22.5.164" \
 
 ENV CATALINA_OPTS "-Xmx512M -XX:MaxPermSize=1024m"
 
-RUN rm -rf /usr/local/tomcat/webapps/ROOT && mkdir -p /usr/local/tomcat/webapps/listing_calendar
+RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
 ADD "deploy/CACT.war" /usr/local/tomcat/webapps/ROOT.war
-ADD redirect.jsp /usr/local/tomcat/webapps/listing_calendar/index.jsp
+ADD context.xml /usr/local/tomcat/conf/context.xml
