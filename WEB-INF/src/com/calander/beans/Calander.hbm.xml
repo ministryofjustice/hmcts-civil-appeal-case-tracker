@@ -3,7 +3,7 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="com.calander.beans.Calander" table="dbo.db_calander">
+    <class name="com.calander.beans.Calander" table="db_calander">
         <id name="case_id" column="case_id">
             <generator class="native"/>
         </id>
