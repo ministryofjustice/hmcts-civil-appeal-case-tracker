@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 public class searchAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
-        String searchString = request.getParameter("search");
+        String searchString = request.getParameter("search").toString().toLowerCase();
 
         Pattern pattern = Pattern.compile("^[A-Za-z0-9_, \\-\\)\\(\\.]++$");
         if(!pattern.matcher(searchString).matches()) {
@@ -31,7 +31,7 @@ public class searchAction extends Action {
         SessionFactory factory = (SessionFactory) servlet.getServletContext().getAttribute(HibernatePlugin.KEY_NAME);
         Session session = factory.openSession();
 
-        Query query = session.createQuery("from Calander c where c.search_date like :date or c.case_no like :case or title1 like :title order by c.case_no");
+        Query query = session.createQuery("from Calander c where lower(c.search_date) like :date or lower(c.case_no) like :case or lower(title1) like :title order by c.case_no");
         query.setString("date", "%" + searchString + "%");
         query.setString("case", "%" + searchString + "%");
         query.setString("title", "%" + searchString + "%");
