@@ -1,0 +1,11 @@
+@media screen, projection {
+	#Footer {border-top-width: 5px;}
+	#Footer {border-top-style: solid;}
+	#Footer {border-top-color: #007cc6;}
+	#Footer .holder {margin:1em 10px;overflow:hidden;}
+	#Footer ul {overflow:hidden;width:100%;}
+	#Footer ul li {display:inline;font-size:1.1em;color:#666;}
+	#Footer ul li a {float:left;display:block;color:#666;text-decoration:none;padding:0.416em 10px 0.416em 9px;}
+	#Footer ul li a:hover {text-decoration:underline;}
+	#Footer ul .first {background:none;}
+}
