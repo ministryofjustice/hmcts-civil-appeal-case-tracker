@@ -1,0 +1,6 @@
+@media screen, projection {
+	#Section {padding-top:3.5em;border-top:2px #6e6e6e solid;margin:0 5px 1.2em 0;overflow:hidden;}
+	#Section #Heading {margin:0 216px 0 10px;}
+	#Section #Heading h1 {font-size:2em; color: #007cc6;}
+	#Section #Heading.search h1 {padding-left:35px;background:5px 0.15em url('../images/bigarrowright.gif') no-repeat;}
+}
