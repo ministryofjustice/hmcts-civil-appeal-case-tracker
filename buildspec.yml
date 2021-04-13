@@ -8,7 +8,7 @@ phases:
       - apt-get update -y
       - apt-get install -y software-properties-common
       - add-apt-repository -y ppa:openjdk-r/ppa
-      - curl -sL https://deb.nodesource.com/setup_6.x | bash -
+      - curl -sL https://deb.nodesource.com/setup_10.x | bash -
       - apt-get update -y
       - apt-get install -y ant openjdk-8-jdk-headless build-essential nodejs
       - update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java 
