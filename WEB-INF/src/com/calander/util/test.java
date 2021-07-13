@@ -34,10 +34,10 @@ public class test implements Job
        
         try
         {System.out.println("coing here in shcedular");
-        	ServletContext servletContext = (ServletContext) arg0.getMergedJobDataMap().get("servletContext");
+        	//ServletContext servletContext = (ServletContext) arg0.getMergedJobDataMap().get("servletContext");
         	System.out.println("calling dump dtabases");
         	dumpDatabase dumpdb=new dumpDatabase();
-        	dumpdb.runscheduler(servletContext);
+        	//dumpdb.runscheduler(servletContext);
         	
         	
          }
