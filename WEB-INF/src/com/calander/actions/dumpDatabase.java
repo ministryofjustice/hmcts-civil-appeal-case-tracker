@@ -29,7 +29,7 @@ public class dumpDatabase extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
 
-        System.out.println(HibernatePlugin.KEY_NAME);
+    	System.out.println(HibernatePlugin.KEY_NAME);
 
         //getting session object from Hibernate Util class
         SessionFactory factory = (SessionFactory) servlet.getServletContext().getAttribute(HibernatePlugin.KEY_NAME);
@@ -40,9 +40,7 @@ public class dumpDatabase extends Action {
         String result = null;
 
         try {
-        	
-        	GetObject2 getobj=new GetObject2();
-            CSVReader reader = new CSVReader(getobj.getReaderobj());
+            CSVReader reader = new CSVReader(new FileReader(FILE_PATH));
             String[] nextLine;
             Calander calander = null;
 
@@ -183,12 +181,12 @@ public class dumpDatabase extends Action {
         return mapping.findForward("success");
     }
     
-    public void runscheduler(ServletContext context) throws IOException
+    public void runscheduler(ServletContext context) throws Exception
     {
     	System.out.println("coming here in run schedular");
-
+    	HibernatePlugin hp=new HibernatePlugin();
         //getting session object from Hibernate Util class
-        SessionFactory factory = (SessionFactory) context.getAttribute(HibernatePlugin.KEY_NAME);
+        SessionFactory factory = (SessionFactory) hp.getconnection();
         Session session = factory.openSession();
 
         //ServletContext context = servlet.getServletContext();

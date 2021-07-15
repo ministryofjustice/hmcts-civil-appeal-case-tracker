@@ -25,11 +25,18 @@ public class HibernatePlugin
     public void init(ActionServlet servlet, ModuleConfig modConfig)
             throws ServletException {
         try {
-            String dbHost = System.getenv("DB_HOST");
+        	String dbHost = System.getenv("DB_HOST");
+
             String dbPort = System.getenv("DB_PORT");
+
             String dbUser = System.getenv("DB_USER");
+
             String dbPass = System.getenv("DB_PASSWORD");
+
             String dbName = System.getenv("DB_NAME");
+
+
+
 
             String urlString = String.format("jdbc:postgresql://%s:%s/%s", dbHost, dbPort, dbName);
 
