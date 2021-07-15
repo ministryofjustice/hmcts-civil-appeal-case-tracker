@@ -122,7 +122,6 @@
             <fileset dir=".">
                 <include name="WEB-INF/**"/>
                 <include name="admin/**"/>
-            	<include name="HMCSFormUpload/**"/>
                 <include name="asset/**"/>
                 <include name="files/**"/>
                 <include name="js/**"/>
