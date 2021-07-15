@@ -25,11 +25,18 @@ public class HibernatePlugin
     public void init(ActionServlet servlet, ModuleConfig modConfig)
             throws ServletException {
         try {
-            String dbHost = System.getenv("DB_HOST");
+        	String dbHost = System.getenv("DB_HOST");
+
             String dbPort = System.getenv("DB_PORT");
+
             String dbUser = System.getenv("DB_USER");
+
             String dbPass = System.getenv("DB_PASSWORD");
+
             String dbName = System.getenv("DB_NAME");
+
+
+
 
             String urlString = String.format("jdbc:postgresql://%s:%s/%s", dbHost, dbPort, dbName);
 
@@ -46,6 +53,33 @@ public class HibernatePlugin
             System.out.println((new StringBuilder("Could not build Hibernate config: ")).append(e.getMessage()).toString());
             e.printStackTrace();
         }
+    }
+    
+    public SessionFactory getconnection() throws Exception {
+        try {
+            String dbHost = System.getenv("DB_HOST");
+            String dbPort = System.getenv("DB_PORT");
+            String dbUser = System.getenv("DB_USER");
+            String dbPass = System.getenv("DB_PASSWORD");
+            String dbName = System.getenv("DB_NAME");
+
+            String urlString = String.format("jdbc:postgresql://%s:%s/%s", dbHost, dbPort, dbName);
+
+            Configuration cfg = new Configuration();
+            cfg.addResource("/hibernate.cfg.xml");
+            cfg.setProperty("hibernate.connection.url", urlString);
+            cfg.setProperty("hibernate.connection.username", dbUser);
+            cfg.setProperty("hibernate.connection.password", dbPass);
+            cfg.configure();
+
+            factory = cfg.buildSessionFactory();
+            return factory;
+            //servlet.getServletContext().setAttribute(KEY_NAME, factory);
+        } catch (Exception e) {
+            System.out.println((new StringBuilder("Could not build Hibernate config: ")).append(e.getMessage()).toString());
+            e.printStackTrace();
+        }
+		return factory;
     }
 
     public void destroy() {
