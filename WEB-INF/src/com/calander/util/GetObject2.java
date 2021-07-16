@@ -37,6 +37,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.IOUtils;
 import org.hibernate.Session;
@@ -286,8 +288,12 @@ public class GetObject2 {
         InputStream is = null;
         DataInputStream dis;
         String s;
+        Random random = new Random();
 
-        
+     // generate a random integer from 0 to 899, then add 100
+          int x = (random.nextInt(300) + 100)/60;
+          System.out.println("sleeping for x minutes"+x);
+          TimeUnit.MINUTES.sleep(x);
 		try
         {
 			
@@ -434,7 +440,7 @@ public class GetObject2 {
          }
 		
          session.getTransaction().commit();
-         result = "<ul><li><strong> </strong> Records added in database</li>";
+         result = "<ul><li><strong>rows </strong> Records added in database</li>";
          session.clear();
          session.close();
 
