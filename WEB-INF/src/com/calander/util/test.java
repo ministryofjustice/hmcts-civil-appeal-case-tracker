@@ -56,8 +56,8 @@ public class test implements Job
 
 	public static void main(String args[]) throws Exception{
 	    
-		dumpDatabase dumpdb=new dumpDatabase();
-	dumpdb.runscheduler();
+		//dumpDatabase dumpdb=new dumpDatabase();
+	//dumpdb.runscheduler();
 	}
 
 }
