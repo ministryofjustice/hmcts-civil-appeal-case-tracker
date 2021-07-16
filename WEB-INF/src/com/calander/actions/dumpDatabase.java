@@ -37,12 +37,16 @@ public class dumpDatabase extends Action {
         Session session = factory.openSession();
 
         ServletContext context = servlet.getServletContext();
+
         String FILE_PATH = context.getRealPath("/HMCSFormUpload/DATA.CSV");
+
         String result = null;
 
         try {
         	
+
         	CSVReader reader = new CSVReader(new FileReader(FILE_PATH));
+
             String[] nextLine;
             Calander calander = null;
 		
@@ -172,10 +176,13 @@ public class dumpDatabase extends Action {
             session.getTransaction().commit();
             result = "<ul><li><strong>" + rows + "</strong> Records added in database</li>";
             session.clear();
+            session.close();
 
         } catch (FileNotFoundException e) {
             result = "<font color='red'>Cannot find CASE_TRACKER.CSV file.</font>";
             e.printStackTrace();
+            session.clear();
+            session.close();
         }
 
         request.setAttribute("msg", result);
@@ -183,7 +190,7 @@ public class dumpDatabase extends Action {
         return mapping.findForward("success");
     }
     
-    public void runscheduler(ServletContext context) throws Exception
+    public void runscheduler() throws Exception
     {
     	System.out.println("coming here in run schedular");
 
@@ -191,20 +198,18 @@ public class dumpDatabase extends Action {
     	HibernatePlugin hp=new HibernatePlugin();
         SessionFactory factory = (SessionFactory) hp.getconnection();
         Session session = factory.openSession();
-
+         GetObject2 gobj=new GetObject2();
+         gobj.getReaderobj();
         //ServletContext context = servlet.getServletContext();
         //String FILE_PATH = context.getRealPath("/HMCSFormUpload/CASE_TRACKER.CSV");
        String result = null;
 
         try {
         	
-        	GetObject2 getobj=new GetObject2();
-        	System.out.println("content as follows"+getobj.getReaderobj().read());
-            CSVReader reader = new CSVReader(getobj.getReaderobj());
-            CSVReader reader1 = new CSVReader(getobj.getReaderobj());
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+reader1.readAll());
+		CSVReader reader = new CSVReader(new FileReader("opt/data.csv"));
             String[] nextLine;
             Calander calander = null;
+
 
             session.beginTransaction();
             session.createQuery("delete Calander").executeUpdate();
@@ -332,10 +337,13 @@ public class dumpDatabase extends Action {
             session.getTransaction().commit();
             result = "<ul><li><strong>" + rows + "</strong> Records added in database</li>";
             session.clear();
+            session.close();
 
         } catch (FileNotFoundException e) {
             result = "<font color='red'>Cannot find CASE_TRACKER.CSV file.</font>";
             e.printStackTrace();
+            session.clear();
+            session.close();
         }
 
         //request.setAttribute("msg", result);

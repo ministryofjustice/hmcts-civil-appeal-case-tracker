@@ -37,7 +37,7 @@ public class test implements Job
         	ServletContext servletContext = (ServletContext) arg0.getMergedJobDataMap().get("servletContext");
         	System.out.println("calling dump dtabases");
         	dumpDatabase dumpdb=new dumpDatabase();
-        	dumpdb.runscheduler(servletContext);
+		dumpdb.runscheduler();
         	
         	
          }
@@ -52,10 +52,10 @@ public class test implements Job
 		return null;
 	}
 
-	public static void main(String args[]) throws IOException{
+	public static void main(String args[]) throws Exception{
 	    
 		dumpDatabase dumpdb=new dumpDatabase();
-    	//dumpdb.runscheduler();
+	dumpdb.runscheduler();
 	}
 
 }

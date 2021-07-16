@@ -31,19 +31,19 @@
     <!-- InstanceEndEditable -->
 
     <link rel="shortcut icon" href="favicon.ico"/>
-    <link rel="stylesheet" type="text/css" href="asset/css/dg.css"/>
+    <link rel="stylesheet" type="text/css" href="css/dg.css"/>
 
     <!--[if lte IE 7]>
-    <link href="asset/css/dgie.css" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="css/dgie.css" rel="stylesheet" type="text/css" media="screen"/>
     <![endif]-->
     <!--[if IE 6]>
-    <link href="asset/css/dgie6.css" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="css/dgie6.css" rel="stylesheet" type="text/css" media="screen"/>
     <![endif]-->
 
-    <link rel="alternate stylesheet" type="text/css" href="asset/css/standard.css" title="Standard"/>
-    <link rel="alternate stylesheet" type="text/css" href="asset/css/larger.css" title="Larger"/>
-    <link rel="alternate stylesheet" type="text/css" href="asset/css/largest.css" title="Largest"/>
-    <link rel="stylesheet" type="text/css" href="asset/css/complex_table.css"/>
+    <link rel="alternate stylesheet" type="text/css" href="css/standard.css" title="Standard"/>
+    <link rel="alternate stylesheet" type="text/css" href="css/larger.css" title="Larger"/>
+    <link rel="alternate stylesheet" type="text/css" href="css/largest.css" title="Largest"/>
+    <link rel="stylesheet" type="text/css" href="css/complex_table.css"/>
 
     <script language="JavaScript" type="text/javascript" src="js/cal.js"></script>
     <script language="JavaScript" type="text/javascript" src="js/sort.js"></script>
