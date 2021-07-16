@@ -37,16 +37,15 @@ public class dumpDatabase extends Action {
         Session session = factory.openSession();
 
         ServletContext context = servlet.getServletContext();
-        String FILE_PATH = context.getRealPath("/HMCSFormUpload/CASE_TRACKER.CSV");
+        String FILE_PATH = context.getRealPath("/HMCSFormUpload/DATA.CSV");
         String result = null;
 
         try {
         	
-        	GetObject2 getobj=new GetObject2();
-            CSVReader reader = new CSVReader(getobj.getReaderobj());
+        	CSVReader reader = new CSVReader(new FileReader(FILE_PATH));
             String[] nextLine;
             Calander calander = null;
-
+		
             session.beginTransaction();
             session.createQuery("delete Calander").executeUpdate();
             session.getTransaction().commit();
