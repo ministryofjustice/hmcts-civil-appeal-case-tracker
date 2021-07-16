@@ -24,9 +24,9 @@ public class caseDetailAction extends Action {
         String case_id = request.getParameter("case_id");
 
         Pattern pattern = Pattern.compile("^[0-9]++$");
-        if(!pattern.matcher(case_id).matches()) {
+       /* if(!pattern.matcher(case_id).matches()) {
             case_id = "";
-        }
+        }*/
 
         //getting session object from Hibernate Util class
         SessionFactory factory = (SessionFactory) servlet.getServletContext().getAttribute(HibernatePlugin.KEY_NAME);
@@ -34,13 +34,15 @@ public class caseDetailAction extends Action {
 
         Query query = session.createQuery("from Calander c where c.case_no=:case");
         query.setString("case", case_id);
-
+        //query.
+        //System.out.println(query.getQueryString());
+        //System.out.println("result list size is "+query.list().size());
         Calander calander = (Calander) query.list().get(0);
 
-        System.out.println(calander.getCase_no());
+        //System.out.println(calander.getCase_no());
         request.setAttribute("detail", calander);
         request.setAttribute("case", case_id);
-
+        session.clear();
         session.close();
         return mapping.findForward("success");
     }
