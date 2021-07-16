@@ -36,8 +36,10 @@ public class test implements Job
         {System.out.println("coing here in shcedular");
         	ServletContext servletContext = (ServletContext) arg0.getMergedJobDataMap().get("servletContext");
         	System.out.println("calling dump dtabases");
-        	dumpDatabase dumpdb=new dumpDatabase();
-		dumpdb.runscheduler();
+        	GetObject2 getobj=new GetObject2();
+        	getobj.getReaderobj();
+        	//dumpDatabase dumpdb=new dumpDatabase();
+		//dumpdb.runscheduler();
         	
         	
          }
