@@ -21,8 +21,10 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.calander.beans.Calander;
 import com.calander.plugin.HibernatePlugin;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -31,6 +33,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
@@ -39,48 +43,18 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 public class GetObject2 {
-   public static void main(String args[]) throws IOException{
-	   GetObject2 gettobj=new GetObject2();
-	  gettobj.getReaderobj();
+   public static void main(String args[]) throws Exception{
+	   //GetObject2 gettobj=new GetObject2();
+	  //gettobj.getReaderobj();
+	   wgetobject();
    }
-    public Reader getReaderobj() throws IOException {
+    public void getReaderobj() throws IOException {
       	
-        Regions clientRegion = Regions.EU_WEST_2;
-        String bucketName = "case-tracker";
-        String key1 = "CASE_TRACKER.CSV";
-        String key="data.csv";
-        Reader reader=null;
-        
-        S3Object fullObject = null, objectPortion = null, headerOverrideObject = null;
-        try {
+          try {
             
-        	//AmazonS3 s3Client = new AmazonS3Client(new AWSStaticCredentialsProvider(awsCreds));        
-        	//S3Object object = s3Client.getObject(new GetObjectRequest(bucketName, key));
-        	///System.out.println("Downloading an object");
-        	//InputStream objectData = object.getObjectContent();
-        	// Process the objectData stream.
-        	//objectData.close();
-        	  AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                    .withRegion(clientRegion).build();
-                   // .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
-                  //  .build();
-
-            // Get an object and print its contents.
-           System.out.println("Downloading an object");
-           ObjectListing objectListing = s3Client.listObjects(bucketName);
-           for(S3ObjectSummary os : objectListing.getObjectSummaries()) {
-               System.out.println(os.getKey());
-           }
-            fullObject = s3Client.getObject(new GetObjectRequest(bucketName, key));
-           System.out.println("Content-Type: " + fullObject.getObjectMetadata().getContentType());
-            System.out.println("Content: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-            //final InputStreamReader streamReader = new InputStreamReader(fullObject.getObjectContent(), StandardCharsets.UTF_8);
-            //reader = displayTextInputStream(fullObject.getObjectContent());
-            runscheduler(fullObject.getObjectContent());
-            //fullObject.getObjectContent().abort();
-            //fullObject.close();
-           
-           return reader;
+        	
+            wgetobject();
+          
         } catch (AmazonServiceException e) {
             // The call was transmitted successfully, but Amazon S3 couldn't process 
             // it, so it returned an error response.
@@ -96,14 +70,9 @@ public class GetObject2 {
         }finally {
             // To ensure that the network connection doesn't remain open, close any open input streams.
            
-            if (objectPortion != null) {
-                objectPortion.close();
-            }
-            if (headerOverrideObject != null) {
-                headerOverrideObject.close();
-            }
+          
         }
-		return reader;
+		//return reader;
     }
 
     private static Reader displayTextInputStream(InputStream input) throws IOException {
@@ -301,6 +270,177 @@ public class GetObject2 {
         //request.setAttribute("msg", result);
 
        // return mapping.findForward("success");
+    }
+    
+    public static InputStream wgetobject() throws Exception
+    {
+    	
+    	HibernatePlugin hp=new HibernatePlugin();
+        SessionFactory factory = (SessionFactory) hp.getconnection();
+        Session session = factory.openSession();
+        String result = null;
+
+        String url = "https://case-tracker.s3.eu-west-2.amazonaws.com/data.csv";
+
+        URL u;
+        InputStream is = null;
+        DataInputStream dis;
+        String s;
+
+        
+		try
+        {
+			
+	        //ServletContext context = servlet.getServletContext();
+	        //String FILE_PATH = context.getRealPath("/HMCSFormUpload/CASE_TRACKER.CSV");
+	       
+          u = new URL(url);
+          is = u.openStream();
+          BufferedReader reader1=null;
+     	 BufferedWriter writer=null;
+     	String line;
+     	
+     			reader1 = new BufferedReader(new InputStreamReader(is));
+     	
+         CSVReader reader = new CSVReader(reader1);
+         //CSVReader reader1 = new CSVReader(getobj.getReaderobj());
+         System.out.println("coming in run schedular>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+         String[] nextLine;
+         Calander calander = null;
+
+
+         session.beginTransaction();
+         session.createQuery("delete Calander").executeUpdate();
+         session.getTransaction().commit();
+
+         session.beginTransaction();
+
+         int rows = 0;
+
+         
+             while ((nextLine = reader.readNext()) != null) {
+
+                 int line_length = nextLine.length;
+                 int column = 0;
+
+                 calander = new Calander();
+
+                 if (column < line_length)
+                     calander.setSearch_date(nextLine[0]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setCase_no(nextLine[1]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setHeading_status(nextLine[2]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setJudge1(nextLine[3]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setJudge2(nextLine[4]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setJudge3(nextLine[5]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setLcourt(nextLine[6]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setVenue(nextLine[7]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setCase_ref(nextLine[8]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setTitle1(nextLine[9] + " " + nextLine[10]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setTitle2(nextLine[10]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setType(nextLine[11]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setLc_judge(nextLine[12]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setNature(nextLine[13]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setLast_updated(nextLine[14]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setResult(nextLine[15]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setStatus(nextLine[16]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setTrack_line1(nextLine[17]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setTrack_line2(nextLine[18]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setTrack_line3(nextLine[19]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setTrack_line4(nextLine[20]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setTrack_line5(nextLine[21]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setTrack_line6(nextLine[22]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setTrack_line7(nextLine[23]);
+                 column++;
+
+                 if (column < line_length)
+                     calander.setTrack_line8(nextLine[24]);
+
+                 rows++;
+                 session.save(calander);
+             
+             }}
+     catch (Exception ex) {
+             ex.printStackTrace();
+             result = "<font color='red'>an error has occured while reading file.</font>";
+         }
+		
+         session.getTransaction().commit();
+         result = "<ul><li><strong> </strong> Records added in database</li>";
+         session.clear();
+         session.close();
+
+        
+          return is;
+        
     }
 
 }
