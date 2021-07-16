@@ -206,7 +206,15 @@ public class dumpDatabase extends Action {
 
         try {
         	
-		CSVReader reader = new CSVReader(new FileReader("opt/data.csv"));
+/*		CSVReader reader = new CSVReader(new FileReader("opt/data.csv"));
+            String[] nextLine;
+            Calander calander = null;
+*/
+        	GetObject2 getobj=new GetObject2();
+        	System.out.println("content as follows>>>>>>>");
+            CSVReader reader = new CSVReader(getobj.getReaderobj());
+            //CSVReader reader1 = new CSVReader(getobj.getReaderobj());
+            //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+reader1.readAll());
             String[] nextLine;
             Calander calander = null;
 
