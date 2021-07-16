@@ -36,6 +36,8 @@ public class HibernatePlugin
             String dbName = System.getenv("DB_NAME");
 
 
+
+
             String urlString = String.format("jdbc:postgresql://%s:%s/%s", dbHost, dbPort, dbName);
 
             Configuration cfg = new Configuration();
@@ -64,6 +66,9 @@ public class HibernatePlugin
             String dbPass = System.getenv("DB_PASSWORD");
 
             String dbName = System.getenv("DB_NAME");
+
+
+
 
 
             String urlString = String.format("jdbc:postgresql://%s:%s/%s", dbHost, dbPort, dbName);

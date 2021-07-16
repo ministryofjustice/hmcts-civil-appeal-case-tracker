@@ -18,8 +18,10 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -65,10 +67,10 @@ public class GetObject2 {
             fullObject = s3Client.getObject(new GetObjectRequest(bucketName, key));
            System.out.println("Content-Type: " + fullObject.getObjectMetadata().getContentType());
             System.out.println("Content: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-            final InputStreamReader streamReader = new InputStreamReader(fullObject.getObjectContent(), StandardCharsets.UTF_8);
+            //final InputStreamReader streamReader = new InputStreamReader(fullObject.getObjectContent(), StandardCharsets.UTF_8);
             reader = displayTextInputStream(fullObject.getObjectContent());
-            fullObject.getObjectContent().abort();
-            fullObject.close();
+            //fullObject.getObjectContent().abort();
+            //fullObject.close();
            
            return reader;
         } catch (AmazonServiceException e) {
@@ -97,11 +99,30 @@ public class GetObject2 {
     private static Reader displayTextInputStream(InputStream input) throws IOException {
         // Read the text input stream one line at a time and display each line.
         
-    	BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-        
-        BufferedReader reader1 = new BufferedReader(new InputStreamReader(input));
-        
-        return reader1;
+	 BufferedReader reader=null;
+	 BufferedWriter writer=null;
+	String line;
+	try {
+			reader = new BufferedReader(new InputStreamReader(input));
+		System.out.println("writting to file");
+			 writer = new BufferedWriter(new FileWriter(new File("opt/data.csv")));
+			 System.out.println("writting to file2");
+		    while ((line = reader.readLine()) != null) {
+		        //doSomethingWith(line);
+		        writer.write(line);
+		        // must do this: .readLine() will have stripped line endings
+		        writer.newLine();
+		    }
+	  writer.close();
+	  System.out.println("writting to file doneeeeeeeeeeeeeeeeeeeeeeeeeeee");
+	}
+       // BufferedReader reader1 = new BufferedReader(new InputStreamReader(input));
+        catch(Exception e)
+        {
+		//writer.close();
+		e.printStackTrace();
+        }
+        return reader;
     }
 }
 
