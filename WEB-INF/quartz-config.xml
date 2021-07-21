@@ -8,7 +8,7 @@
     <trigger name="myTrigger2" className="org.quartz.CronTrigger">
       <set-property 
         property="cronExpression"
-        value="0 0/10 * * * ?"/>
+        value="0 0 0 * * ?"/>
     </trigger>
   </trigger-group>
  
