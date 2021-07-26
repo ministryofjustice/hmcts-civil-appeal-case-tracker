@@ -26,8 +26,7 @@ var FormatAs = objOpener.FormatAs;
 	return MONTH + "/" + DAY + "/" + YEAR;
 	
 	case "dd/mmm/yyyy":
-	
-	return DAY + " " + arrMonths[MONTH -1].substring(0,3) + " " + YEAR;
+	return DAY + "-" + arrMonths[MONTH -1].substring(0,3) + "-" + YEAR;
 	
 	case "mmm/dd/yyyy":
 	FillZero();
@@ -44,7 +43,7 @@ var FormatAs = objOpener.FormatAs;
 
 
 FillZero();
-return DAY + "-" + arrMonths[MONTH -1].substring(0,3)  + "-" + YEAR.substring(2,4);
+return DAY + "-" + arrMonths[MONTH -1].substring(0,3)  + "-" + YEAR;
 }//End Function
 
 function FillZero(){
