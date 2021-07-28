@@ -35,7 +35,7 @@
           <form name="frmSubmit" id="frmSubmit" action="search.do"><br />
             <p>
               <input type="text" id="search" name="search" size="20" value="" />
-              <a href="Javascript:ShowCalendar('document.frmSubmit.search',2008,2030,'dd/mmm/yyyy');">
+              <a href="Javascript:ShowCalendar('document.frmSubmit.search',2008,2030,'dd/mmm/yy');">
                 <img src="images/cal.jpg" alt="calendar" width="65" height="16" border="0" />
               </a>
             </p>
