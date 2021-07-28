@@ -43,7 +43,7 @@ var FormatAs = objOpener.FormatAs;
 
 
 FillZero();
-return DAY + "-" + arrMonths[MONTH -1].substring(0,3)  + "-" + YEAR;
+return DAY + "-" + arrMonths[MONTH -1].substring(0,3)  + "-" + YEAR.substring(2,4);
 }//End Function
 
 function FillZero(){
