@@ -3,7 +3,7 @@
 <quartz-config>
 
 
-  
+ <!-- 
 <trigger-group>
     <trigger name="myTrigger2" className="org.quartz.CronTrigger">
       <set-property 
@@ -23,7 +23,7 @@
   
 
 <!-- Schedule the Job/Trigger -->
-  <schedule job="myJob2" trigger="myTrigger2"/>
+  <schedule job="myJob2" trigger="myTrigger2"/> -->
   
   
 </quartz-config>
