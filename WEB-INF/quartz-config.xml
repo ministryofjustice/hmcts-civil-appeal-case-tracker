@@ -13,7 +13,7 @@
   </trigger-group>
  
 
-<!-- Create a Job -->
+
  
    <job-group>
     <job
@@ -22,7 +22,7 @@
   </job-group>
   
 
-<!-- Schedule the Job/Trigger -->
+
   <schedule job="myJob2" trigger="myTrigger2"/> -->
   
   
