@@ -38,7 +38,7 @@ public class dumpDatabase extends Action {
 
         ServletContext context = servlet.getServletContext();
 
-        String FILE_PATH = context.getRealPath("/HMCSFormUpload/DATA.CSV");
+        String FILE_PATH = context.getRealPath("/HMCSFormUpload/CASE_TRACKER.CSV");
 
         String result = null;
 
