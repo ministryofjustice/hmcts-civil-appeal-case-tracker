@@ -6,7 +6,7 @@ var NN4 = (navigator.appName.indexOf("Netscape")>=0 && !document.getElementById)
 function ReturnDate(CONTROL){
 DAY = CONTROL.toString();
 MONTH = (parseInt(CalendarForm.cboMonth.options[CalendarForm.cboMonth.selectedIndex].value) + 1);
-YEAR = CalendarForm.cboYear.options[CalendarForm.cboYear.selectedIndex].value + 5;
+YEAR = CalendarForm.cboYear.options[CalendarForm.cboYear.selectedIndex].value;
 var DateOutput = FormatDate();
 objOpener.SetDate(DateOutput);
 window.close();
@@ -101,7 +101,7 @@ function FillYears(START_YEAR,END_YEAR){
 	var today = new Date();
 	var currentYear = today.getFullYear();
 	
-	while(START_YEAR <= currentYear){
+	while(START_YEAR <= END_YEAR){
 		CalendarForm.cboYear.options[i] = new Option(START_YEAR, START_YEAR);
 		if(START_YEAR==currentYear){
 			CalendarForm.cboYear.options[i].selected = true;
