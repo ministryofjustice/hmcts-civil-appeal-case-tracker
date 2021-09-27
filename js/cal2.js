@@ -6,7 +6,7 @@ var NN4 = (navigator.appName.indexOf("Netscape")>=0 && !document.getElementById)
 function ReturnDate(CONTROL){
 DAY = CONTROL.toString();
 MONTH = (parseInt(CalendarForm.cboMonth.options[CalendarForm.cboMonth.selectedIndex].value) + 1);
-YEAR = CalendarForm.cboYear.options[CalendarForm.cboYear.selectedIndex].value;
+YEAR = CalendarForm.cboYear.options[CalendarForm.cboYear.selectedIndex].value + 5;
 var DateOutput = FormatDate();
 objOpener.SetDate(DateOutput);
 window.close();
