@@ -102,7 +102,7 @@ function FillYears(START_YEAR,END_YEAR){
 	var today = new Date();
 	var currentYear = today.getFullYear();
 	
-	while(START_YEAR <= currentYear){
+	while(START_YEAR <= END_YEAR){
 		CalendarForm.cboYear.options[i] = new Option(START_YEAR, START_YEAR);
 		if(START_YEAR==currentYear){
 			CalendarForm.cboYear.options[i].selected = true;
