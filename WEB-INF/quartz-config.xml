@@ -2,28 +2,16 @@
 
 <quartz-config>
 
+    <trigger-group>
+        <trigger name="csvImportTrigger" className="org.quartz.CronTrigger">
+            <set-property property="cronExpression" value="0 0 0 * * ?"/>
+        </trigger>
+    </trigger-group>
 
- <!--
-<trigger-group>
-    <trigger name="myTrigger2" className="org.quartz.CronTrigger">
-      <set-property 
-        property="cronExpression"
-        value="0 0 0 * * ?"/>
-    </trigger>
-  </trigger-group>
- 
+    <job-group>
+        <job name="csvImportJob" className="com.calander.util.CsvImportJob"/>
+    </job-group>
 
+    <schedule job="csvImportJob" trigger="csvImportTrigger"/>
 
- 
-   <job-group>
-    <job
-      name="myJob2"
-      className="com.calander.util.test"/>
-  </job-group>
-  
-
-
-  <schedule job="myJob2" trigger="myTrigger2"/> 
-  -->
-  
 </quartz-config>
