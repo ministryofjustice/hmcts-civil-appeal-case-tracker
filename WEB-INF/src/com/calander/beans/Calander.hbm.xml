@@ -8,7 +8,7 @@
             <generator class="native"/>
         </id>
         <property name="search_date" column="search_date"/>
-        <property name="case_no" column="case_no" unique="true"/>
+        <property name="case_no" column="case_no"/>
         <property name="heading_status" column="heading_status"/>
         <property name="judge1" column="judge1"/>
         <property name="judge2" column="judge2"/>

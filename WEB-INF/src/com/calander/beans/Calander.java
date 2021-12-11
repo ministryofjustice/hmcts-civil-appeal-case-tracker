@@ -2,6 +2,7 @@ package com.calander.beans;
 
 public class Calander {
 
+
     private int case_id;
     private String search_date;
     private String case_no;
