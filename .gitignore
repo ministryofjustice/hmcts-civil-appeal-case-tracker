@@ -2,7 +2,7 @@
 build/*
 #ignore deploy
 deploy/*
-
+*.iml
 #Ignore compiled code
 WEB-INF/classes/au/*
 WEB-INF/classes/com/*
