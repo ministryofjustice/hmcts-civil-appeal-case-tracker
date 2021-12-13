@@ -4,12 +4,15 @@ import java.io.PrintStream;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import com.calander.util.CsvImportJob;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.action.PlugIn;
 import org.apache.struts.config.ModuleConfig;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HibernatePlugin
         implements PlugIn {
@@ -22,8 +25,12 @@ public class HibernatePlugin
     public HibernatePlugin() {
     }
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(HibernatePlugin.class);
+
+
     public void init(ActionServlet servlet, ModuleConfig modConfig)
             throws ServletException {
+        LOGGER.info("Initialising Hibernate Plugin");
         try {
         	String dbHost = System.getenv("DB_HOST");
 
