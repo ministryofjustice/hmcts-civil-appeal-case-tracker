@@ -4,7 +4,6 @@ import au.com.bytecode.opencsv.CSVReader;
 
 import com.calander.beans.Calander;
 import com.calander.plugin.HibernatePlugin;
-import com.calander.util.GetObject2;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -52,9 +51,9 @@ public class dumpDatabase extends Action {
 		
             session.beginTransaction();
             session.createQuery("delete Calander").executeUpdate();
-            session.getTransaction().commit();
-
-            session.beginTransaction();
+//            session.getTransaction().commit();
+//
+//            session.beginTransaction();
 
             int rows = 0;
 
@@ -168,13 +167,16 @@ public class dumpDatabase extends Action {
                     rows++;
                     session.save(calander);
                 }
+
+                session.getTransaction().commit();
+                result = "<ul><li><strong>" + rows + "</strong> Records added in database</li>";
+
             } catch (Exception ex) {
+                session.getTransaction().rollback();
                 ex.printStackTrace();
                 result = "<font color='red'>an error has occured while reading file.</font>";
             }
 
-            session.getTransaction().commit();
-            result = "<ul><li><strong>" + rows + "</strong> Records added in database</li>";
             session.clear();
             session.close();
 
