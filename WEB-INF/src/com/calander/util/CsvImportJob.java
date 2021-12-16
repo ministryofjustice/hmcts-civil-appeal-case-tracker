@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.text.MessageFormat;
+import java.util.Random;
 
 
 public class CsvImportJob implements Job {
@@ -30,12 +32,31 @@ public class CsvImportJob implements Job {
 
     public void execute(JobExecutionContext arg0)
         throws JobExecutionException {
+        
+        //Generates random wait time so that the tasks dont upload simultaneously causing a duplication of data
+        int waitTime = randomWaitTimeInMillis();
+        System.out.println(MessageFormat.format("Wait {0} milliseconds, {1} seconds", waitTime, (waitTime / 1000)));
+
+        try {
+            Thread.sleep(waitTime);
+        }
+        catch (InterruptedException e) { //Thread interrupted by another thread
+            e.printStackTrace();
+        }
+
         downloadCsvFromS3BucketAndReplaceDatabaseWithContents();
+    }
+
+    public static int randomWaitTimeInMillis() {
+        Random rand = new Random();
+        int upperBound = 3600; //Random wait time in seconds 3600 = 1 Hour
+        return rand.nextInt(upperBound * 1000); //convert seconds to milliseconds -> finer granularity
     }
 
 
     public static void downloadCsvFromS3BucketAndReplaceDatabaseWithContents() {
 
+        System.out.println("Cron job running!");
         int rowCount = 0;
         HibernatePlugin hibernatePlugin = new HibernatePlugin();
         SessionFactory factory = null;
