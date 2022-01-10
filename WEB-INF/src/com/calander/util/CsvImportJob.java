@@ -32,7 +32,7 @@ public class CsvImportJob implements Job {
 
     public void execute(JobExecutionContext arg0)
         throws JobExecutionException {
-        
+
         //Generates random wait time so that the tasks dont upload simultaneously causing a duplication of data
         int waitTime = randomWaitTimeInMillis();
         System.out.println(MessageFormat.format("Wait {0} milliseconds, {1} seconds", waitTime, (waitTime / 1000)));
@@ -71,7 +71,7 @@ public class CsvImportJob implements Job {
 
             String result = null;
 
-            String url = "https://case-tracker.s3.eu-west-2.amazonaws.com/data.csv";
+            String url = "https://casetrackerprod.s3.eu-west-2.amazonaws.com/data.csv";
 
             URL u;
             InputStream is = null;
