@@ -19,3 +19,5 @@ WEB-INF/WEB-INF.iml
 #Ignore Thumbs.db files
 Thumbs.db
 /bin
+
+out/*
