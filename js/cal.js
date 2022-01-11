@@ -3,7 +3,7 @@
 
 var ControlToSet;
 var theForm = document.theForm;
-var CalWidth=190;
+var CalWidth=230;
 var StartYear = "";
 var EndYear = "";
 var FormatAs;
@@ -37,7 +37,7 @@ StartYear = START_YEAR;
 EndYear = END_YEAR;
 FormatAs = FORMAT;
 
-var strFeatures = "width=" + CalWidth + ",height=170" + ",left=" + LEFT + ",top=" + TOP;
+var strFeatures = "width=" + CalWidth + ",height=215" + ",left=" + LEFT + ",top=" + TOP;
 var CalWindow = window.open("HTMLCalendar.htm","Calendar", strFeatures)
 CalWindow.focus();
 } //End Function

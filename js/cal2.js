@@ -58,7 +58,7 @@ MONTH = "0" + MONTH;
 var Today = new Date();
 var Day = Today.getDay();
 var Month = Today.getMonth();
-var Year = Today.getYear();
+var Year = Today.getFullYear();
 
 var strDays = "Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday";
 var arrDays = strDays.split(",");
