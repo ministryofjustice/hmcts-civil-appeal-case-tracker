@@ -117,7 +117,7 @@
 
                                         <h2>Search results</h2>
                                         <div class="result">
-                                            <display:table id="result" name="sessionScope.results" requestURI=""
+                                            <display:table id="result" name="sessionScope.results" requestURI="/search.do"
                                                            pagesize="15" sort="list">
                                                 <display:setProperty
                                                         name="paging.banner.placement">top</display:setProperty>
