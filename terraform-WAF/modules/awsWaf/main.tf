@@ -154,28 +154,6 @@ resource "aws_wafv2_web_acl" "webacl1" {
       sampled_requests_enabled   = true
     }
   }
-  #----------------------- Rule: Anonymous Ip List -------------------------
-  rule {
-    name     = "AWSManagedRulesAnonymousIpList"
-    priority = 6
-
-    override_action {
-      none {}
-    }
-
-    statement {
-      managed_rule_group_statement {
-        name        = "AWSManagedRulesAnonymousIpList"
-        vendor_name = "AWS"
-      }
-    }
-
-    visibility_config {
-      cloudwatch_metrics_enabled = true
-      metric_name                = "AWSManagedRulesAnonymousIpListMetric"
-      sampled_requests_enabled   = true
-    }
-  }
   visibility_config {
     cloudwatch_metrics_enabled = true
     metric_name                = "WAFLoggingMetric"
