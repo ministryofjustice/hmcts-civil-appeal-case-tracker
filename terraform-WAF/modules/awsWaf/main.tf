@@ -27,10 +27,18 @@ resource "aws_wafv2_web_acl" "webacl1" {
 
         rule_action_override {
           action_to_use {
-            allow {}
+            count {}
           }
 
           name = "CrossSiteScripting_COOKIE"
+        }
+
+        rule_action_override {
+          action_to_use {
+            count {}
+          }
+
+          name = "SizeRestrictions_BODY"
         }
       }
     }

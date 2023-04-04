@@ -11,6 +11,6 @@ environments = {
   },
   prod = {
     aws_lb_name       = "civil-LoadB-QVBU457DP1B"
-  },
+  }
 }
 
