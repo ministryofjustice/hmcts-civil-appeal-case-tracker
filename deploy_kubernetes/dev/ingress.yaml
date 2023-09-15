@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: civil-appeal-case-tracker
+  namespace: civil-appeal-case-tracker-dev
+  annotations:
+    external-dns.alpha.kubernetes.io/set-identifier: civil-appeal-case-tracker-civil-appeal-case-tracker-dev-green
+    external-dns.alpha.kubernetes.io/aws-weight: "100"
+spec:
+  ingressClassName: default
+  tls:
+    - hosts:
+        - dev.civil-appeal-case-tracker.apps.live.cloud-platform.service.justice.gov.uk
+      secretName: civil-appeal-case-tracker-justice-app-secret
+  rules:
+    - host: dev.civil-appeal-case-tracker.apps.live.cloud-platform.service.justice.gov.uk
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: civil-appeal-case-tracker-app-service
+                port:
+                  number: 80
