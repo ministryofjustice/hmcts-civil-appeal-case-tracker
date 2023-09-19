@@ -44,7 +44,7 @@ jobs:
             - run:
                 name: Build
                 command: |
-                  docker run  --mount type=bind,source="$(pwd)",target=/dockerrun/  paulushc/apacheant ant -buildfile /dockerrun/ clean development_build
+                  docker run  --mount type=bind,source="$(pwd)",target=/dockerrun/  paulushc/apacheant ant -buildfile /dockerrun/ clean build
                   docker build -t civil-appeal-case-tracker:${CIRCLE_SHA1} .
                   docker image ls
             - run:
@@ -65,7 +65,7 @@ jobs:
       #       - run:
       #           name: Build
       #           command: |
-      #             docker run  --mount type=bind,source="$(pwd)",target=/dockerrun/  paulushc/apacheant ant -buildfile /dockerrun/ clean development_build
+      #             docker run  --mount type=bind,source="$(pwd)",target=/dockerrun/  paulushc/apacheant ant -buildfile /dockerrun/ clean build
       #             docker build -t civil-appeal-case-tracker:${CIRCLE_SHA1} .
       #             docker image ls
       #       - run:
