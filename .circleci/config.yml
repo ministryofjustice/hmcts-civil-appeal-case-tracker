@@ -55,26 +55,26 @@ jobs:
                   docker tag civil-appeal-case-tracker:${CIRCLE_SHA1} ${ECR_ENDPOINT_PREPROD}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
                   docker push ${ECR_ENDPOINT_PREPROD}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
 
-      # - when:
-      #     condition:
-      #       equal: [ PROD, << parameters.env_name >> ]
-      #     steps:
-      #       - aws-cli/setup:
-      #           role_arn: $ECR_ROLE_TO_ASSUME_PROD
-      #           region: $ECR_REGION
-      #       - run:
-      #           name: Build
-      #           command: |
-      #             docker run  --mount type=bind,source="$(pwd)",target=/dockerrun/  paulushc/apacheant ant -buildfile /dockerrun/ clean build
-      #             docker build -t civil-appeal-case-tracker:${CIRCLE_SHA1} .
-      #             docker image ls
-      #       - run:
-      #           name: Tag and push images to repo
-      #           command: |
-      #             login="$(aws ecr get-login-password --region eu-west-2)"
-      #             echo ${login} | docker login --username AWS --password-stdin ${ECR_ENDPOINT_PROD}
-      #             docker tag civil-appeal-case-tracker:${CIRCLE_SHA1} ${ECR_ENDPOINT_PROD}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
-      #             docker push ${ECR_ENDPOINT_PROD}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
+      - when:
+          condition:
+            equal: [ PROD, << parameters.env_name >> ]
+          steps:
+            - aws-cli/setup:
+                role_arn: $ECR_ROLE_TO_ASSUME_PROD
+                region: $ECR_REGION
+            - run:
+                name: Build
+                command: |
+                  docker run  --mount type=bind,source="$(pwd)",target=/dockerrun/  paulushc/apacheant ant -buildfile /dockerrun/ clean build
+                  docker build -t civil-appeal-case-tracker:${CIRCLE_SHA1} .
+                  docker image ls
+            - run:
+                name: Tag and push images to repo
+                command: |
+                  login="$(aws ecr get-login-password --region eu-west-2)"
+                  echo ${login} | docker login --username AWS --password-stdin ${ECR_ENDPOINT_PROD}
+                  docker tag civil-appeal-case-tracker:${CIRCLE_SHA1} ${ECR_ENDPOINT_PROD}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
+                  docker push ${ECR_ENDPOINT_PROD}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
 
   deploy_image_to_dev:
     docker:
@@ -116,25 +116,25 @@ jobs:
             sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/preprod/app-deployment.yaml
             kubectl apply -n civil-appeal-case-tracker-preprod -f deploy_kubernetes/preprod
 
-  # deploy_image_to_prod:
-  #     docker:
-  #       - image: ministryofjustice/cloud-platform-tools
-  #     steps:
-  #       - checkout
-  #       - run:
-  #           name: Authenticate to LIVE cluster Prod
-  #           command: |
-  #             echo -n ${K8S_CLUSTER_CERT} | base64 -d > ./ca.crt
-  #             cat ./ca.crt
-  #             kubectl config set-cluster ${K8S_CLUSTER_NAME} --certificate-authority=./ca.crt --server=https://${K8S_CLUSTER_NAME}
-  #             kubectl config set-credentials circleci --token=${K8S_TOKEN_PROD}
-  #             kubectl config set-context ${K8S_CLUSTER_NAME} --cluster=${K8S_CLUSTER_NAME} --user=circleci --namespace=${K8S_NAMESPACE_PROD}
-  #             kubectl config use-context ${K8S_CLUSTER_NAME}
-  #       - run:
-  #           name: rolling update image
-  #           command: |
-  #             sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/prod/app-deployment.yaml
-  #             kubectl apply -n civil-appeal-case-tracker-prod -f deploy_kubernetes/prod
+  deploy_image_to_prod:
+      docker:
+        - image: ministryofjustice/cloud-platform-tools
+      steps:
+        - checkout
+        - run:
+            name: Authenticate to LIVE cluster Prod
+            command: |
+              echo -n ${K8S_CLUSTER_CERT} | base64 -d > ./ca.crt
+              cat ./ca.crt
+              kubectl config set-cluster ${K8S_CLUSTER_NAME} --certificate-authority=./ca.crt --server=https://${K8S_CLUSTER_NAME}
+              kubectl config set-credentials circleci --token=${K8S_TOKEN_PROD}
+              kubectl config set-context ${K8S_CLUSTER_NAME} --cluster=${K8S_CLUSTER_NAME} --user=circleci --namespace=${K8S_NAMESPACE_PROD}
+              kubectl config use-context ${K8S_CLUSTER_NAME}
+        - run:
+            name: rolling update image
+            command: |
+              sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/prod/app-deployment.yaml
+              kubectl apply -n civil-appeal-case-tracker-prod -f deploy_kubernetes/prod
 
 workflows:
   build:
@@ -183,26 +183,26 @@ workflows:
           requires:
             - build-preprod
 
-      # ### PROD ###
-      # - build:
-      #     name: build-prod
-      #     env_name: PROD
-      #     ecr_endpoint: ${ECR_ENDPOINT_PROD}
-      #     context:
-      #       - civil-appeal-case-tracker-prod
-      #     filters:
-      #       branches:
-      #         only: dockify-circleci
-      # - approve_production:
-      #     type: approval
-      #     requires:
-      #       - build-prod
-      # - deploy_image_to_prod:
-      #     name: deploy-prod
-      #     context:
-      #       - civil-appeal-case-tracker-prod
-      #     filters:
-      #       branches:
-      #         only: dockify-circleci
-      #     requires:
-      #       - build-prod
+      ### PROD ###
+      - build:
+          name: build-prod
+          env_name: PROD
+          ecr_endpoint: ${ECR_ENDPOINT_PROD}
+          context:
+            - civil-appeal-case-tracker-prod
+          filters:
+            branches:
+              only: dockify-circleci
+      - approve_production:
+          type: approval
+          requires:
+            - build-prod
+      - deploy_image_to_prod:
+          name: deploy-prod
+          context:
+            - civil-appeal-case-tracker-prod
+          filters:
+            branches:
+              only: dockify-circleci
+          requires:
+            - build-prod

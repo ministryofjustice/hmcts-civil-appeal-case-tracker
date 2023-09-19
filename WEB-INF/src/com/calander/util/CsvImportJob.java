@@ -71,7 +71,7 @@ public class CsvImportJob implements Job {
 
             String result = null;
 
-            String url = "https://cloud-platform-f92ddedd94d613169cee7e0b2add19b4.s3.eu-west-2.amazonaws.com/data.csv";
+            String url = "https://cloud-platform-ab00007072890fd153cef39e574f738e.s3.eu-west-2.amazonaws.com/data.csv";
 
             URL u;
             InputStream is = null;
