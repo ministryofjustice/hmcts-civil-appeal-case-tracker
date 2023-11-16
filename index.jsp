@@ -83,13 +83,12 @@
                             <!-- InstanceBeginEditable name="main" -->
                             <p>The Case Tracker allows users to search for information on applications or appeals in the
                                 Court of Appeal, Civil Division. Users are also able to search for information on
-                                applications or appeals heard in the last 31 days. You can search for a case in the
+                                applications or appeals heard in the last 90 days. You can search for a case in the
                                 following three ways:</p>
 
                             <ul class="listFix">
-                                <li><strong>By Case Number</strong> &ndash; The case number for the case needs to be 8
-                                    digits long and must be entered in the following format, without any spaces or
-                                    oblique strokes: 20051234;
+                                <li><strong>By Case Number</strong> &ndash; The case number for the case needs to be entered 
+                                    in the following format, CA-YYYY-000000 e.g.CA-2022-012345
                                 </li>
                                 <li><strong>By Title</strong> &ndash; The title can be entered using the names of either
                                     party. For example, in the case of Smith &amp; Co v Jones, either &quot;Smith&quot;
@@ -103,7 +102,7 @@
 
                             <p>For confirmation of the judges hearing your case, the time and location of the hearing,
                                 please check the <a
-                                        href="http://www.justice.gov.uk/guidance/courts-and-tribunals/courts/daily-court-hearings.htm"
+                                        href="https://www.gov.uk/government/publications/royal-courts-of-justice-cause-list/royal-courts-of-justice-daily-cause-list#court-of-appeal-civil-division-daily-cause-list"
                                         target="_blank">Daily List</a> from 14:30 the working day before your case is
                                 due to be heard, or call the Listing Office.</p>
                             <p>Information is provided in good faith for the convenience of court users and others.
@@ -132,10 +131,8 @@
         <div id="Footer">
             <div class="holder">
                 <ul>
-                    <li><a href="http://www.justice.gov.uk/about/justice/index.htm" class="first">About Justice</a></li>
-                    <li><a href="http://www.directgov.gov.uk">Directgov</a></li>
-                    <li><a href="http://www.justice.gov.uk/global/privacy/index.htm">Your privacy</a></li>
-                    <li><a href="http://www.justice.gov.uk/global/copyright/index.htm">&copy; Crown copyright</a></li>
+                    <li><a href="https://www.justice.gov.uk/privacy">Your privacy</a></li>
+                    <li><a href="https://www.justice.gov.uk/copyright">&copy; Crown copyright</a></li>
                 </ul>
             </div>
         </div>
