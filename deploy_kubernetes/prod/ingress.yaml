@@ -10,10 +10,10 @@ spec:
   ingressClassName: default
   tls:
     - hosts:
-        - prod.civil-appeal-case-tracker.apps.live.cloud-platform.service.justice.gov.uk
+        - https://casetracker.justice.gov.uk
       secretName: civil-appeal-case-tracker-justice-app-secret
   rules:
-    - host: prod.civil-appeal-case-tracker.apps.live.cloud-platform.service.justice.gov.uk
+    - host: https://casetracker.justice.gov.uk
       http:
         paths:
           - path: /
