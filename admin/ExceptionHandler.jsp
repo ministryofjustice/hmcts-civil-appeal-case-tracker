@@ -108,10 +108,8 @@
         <div id="Footer">
             <div class="holder">
                 <ul>
-                    <li><a href="http://www.justice.gov.uk/about/justice/index.htm" class="first">About Justice</a></li>
-                    <li><a href="http://www.directgov.gov.uk">Directgov</a></li>
-                    <li><a href="http://www.justice.gov.uk/global/privacy/index.htm">Your privacy</a></li>
-                    <li><a href="http://www.justice.gov.uk/global/copyright/index.htm">&copy; Crown copyright</a></li>
+                    <li><a href="https://www.justice.gov.uk/privacy">Your privacy</a></li>
+                    <li><a href="https://www.justice.gov.uk/copyright">&copy; Crown copyright</a></li>
                 </ul>
             </div>
         </div>
