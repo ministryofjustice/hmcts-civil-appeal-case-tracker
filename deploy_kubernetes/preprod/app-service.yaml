@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: civil-appeal-case-tracker-app-service
+  labels:
+    app: civil-appeal-case-tracker-app-service
+spec:
+  ports:
+    - port: 80
+      name: http
+      targetPort: 8080
+  selector:
+    app: civil-appeal-case-tracker-app

@@ -14,3 +14,6 @@ RUN rm -rf /usr/local/tomcat/webapps/ROOT && rm -rf /usr/local/tomcat/webapps/do
 
 ADD "deploy/CACT.war" /usr/local/tomcat/webapps/ROOT.war
 ADD context.xml /usr/local/tomcat/conf/context.xml
+
+RUN adduser --disabled-password tomcat -u 1001 && chown -R tomcat:tomcat /usr/local/tomcat
+USER 1001
