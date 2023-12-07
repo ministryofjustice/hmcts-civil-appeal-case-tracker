@@ -1,0 +1,208 @@
+version: 2.1
+orbs:
+  aws-cli: circleci/aws-cli@4.0.0
+  aws-ecr: circleci/aws-ecr@8.2.1
+
+jobs:
+  build:
+    parameters:
+      env_name:
+        type: string
+      ecr_endpoint:
+        type: string
+    executor: aws-ecr/default
+    steps:
+      - checkout
+      - when:
+          condition:
+            equal: [DEV, << parameters.env_name >>]
+          steps:
+            - aws-cli/setup:
+                role_arn: $ECR_ROLE_TO_ASSUME_DEV
+                region: $ECR_REGION
+            - run:
+                name: Build
+                command: |
+                  docker run  --mount type=bind,source="$(pwd)",target=/dockerrun/  paulushc/apacheant ant -buildfile /dockerrun/ clean build
+                  docker build -t civil-appeal-case-tracker:${CIRCLE_SHA1} .
+                  docker image ls
+            - run:
+                name: Tag and push images to repo
+                command: |
+                  login="$(aws ecr get-login-password --region eu-west-2)"
+                  echo ${login} | docker login --username AWS --password-stdin ${ECR_ENDPOINT_DEV}
+                  docker tag civil-appeal-case-tracker:${CIRCLE_SHA1} ${ECR_ENDPOINT_DEV}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
+                  docker push ${ECR_ENDPOINT_DEV}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
+
+      - when:
+          condition:
+            equal: [ PREPROD, << parameters.env_name >> ]
+          steps:
+            - aws-cli/setup:
+                role_arn: $ECR_ROLE_TO_ASSUME_PREPROD
+                region: $ECR_REGION
+            - run:
+                name: Build
+                command: |
+                  docker run  --mount type=bind,source="$(pwd)",target=/dockerrun/  paulushc/apacheant ant -buildfile /dockerrun/ clean build
+                  docker build -t civil-appeal-case-tracker:${CIRCLE_SHA1} .
+                  docker image ls
+            - run:
+                name: Tag and push images to repo
+                command: |
+                  login="$(aws ecr get-login-password --region eu-west-2)"
+                  echo ${login} | docker login --username AWS --password-stdin ${ECR_ENDPOINT_PREPROD}
+                  docker tag civil-appeal-case-tracker:${CIRCLE_SHA1} ${ECR_ENDPOINT_PREPROD}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
+                  docker push ${ECR_ENDPOINT_PREPROD}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
+
+      - when:
+          condition:
+            equal: [ PROD, << parameters.env_name >> ]
+          steps:
+            - aws-cli/setup:
+                role_arn: $ECR_ROLE_TO_ASSUME_PROD
+                region: $ECR_REGION
+            - run:
+                name: Build
+                command: |
+                  docker run  --mount type=bind,source="$(pwd)",target=/dockerrun/  paulushc/apacheant ant -buildfile /dockerrun/ clean build
+                  docker build -t civil-appeal-case-tracker:${CIRCLE_SHA1} .
+                  docker image ls
+            - run:
+                name: Tag and push images to repo
+                command: |
+                  login="$(aws ecr get-login-password --region eu-west-2)"
+                  echo ${login} | docker login --username AWS --password-stdin ${ECR_ENDPOINT_PROD}
+                  docker tag civil-appeal-case-tracker:${CIRCLE_SHA1} ${ECR_ENDPOINT_PROD}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
+                  docker push ${ECR_ENDPOINT_PROD}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
+
+  deploy_image_to_dev:
+    docker:
+      - image: ministryofjustice/cloud-platform-tools
+    steps:
+      - checkout
+      - run:
+          name: Authenticate to LIVE cluster Dev
+          command: |
+            echo -n ${K8S_CLUSTER_CERT} | base64 -d > ./ca.crt
+            cat ./ca.crt
+            kubectl config set-cluster ${K8S_CLUSTER_NAME} --certificate-authority=./ca.crt --server=https://${K8S_CLUSTER_NAME}
+            kubectl config set-credentials circleci --token=${K8S_TOKEN_DEV}
+            kubectl config set-context ${K8S_CLUSTER_NAME} --cluster=${K8S_CLUSTER_NAME} --user=circleci --namespace=${K8S_NAMESPACE_DEV}
+            kubectl config use-context ${K8S_CLUSTER_NAME}
+      - run:
+          name: rolling update image
+          command: |
+            sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/dev/app-deployment.yaml
+            kubectl apply -n civil-appeal-case-tracker-dev -f deploy_kubernetes/dev
+
+  deploy_image_to_preprod:
+    docker:
+      - image: ministryofjustice/cloud-platform-tools
+    steps:
+      - checkout
+      - run:
+          name: Authenticate to LIVE cluster Preprod
+          command: |
+            echo -n ${K8S_CLUSTER_CERT} | base64 -d > ./ca.crt
+            cat ./ca.crt
+            kubectl config set-cluster ${K8S_CLUSTER_NAME} --certificate-authority=./ca.crt --server=https://${K8S_CLUSTER_NAME}
+            kubectl config set-credentials circleci --token=${K8S_TOKEN_PREPROD}
+            kubectl config set-context ${K8S_CLUSTER_NAME} --cluster=${K8S_CLUSTER_NAME} --user=circleci --namespace=${K8S_NAMESPACE_PREPROD}
+            kubectl config use-context ${K8S_CLUSTER_NAME}
+      - run:
+          name: rolling update image
+          command: |
+            sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/preprod/app-deployment.yaml
+            kubectl apply -n civil-appeal-case-tracker-preprod -f deploy_kubernetes/preprod
+
+  deploy_image_to_prod:
+      docker:
+        - image: ministryofjustice/cloud-platform-tools
+      steps:
+        - checkout
+        - run:
+            name: Authenticate to LIVE cluster Prod
+            command: |
+              echo -n ${K8S_CLUSTER_CERT} | base64 -d > ./ca.crt
+              cat ./ca.crt
+              kubectl config set-cluster ${K8S_CLUSTER_NAME} --certificate-authority=./ca.crt --server=https://${K8S_CLUSTER_NAME}
+              kubectl config set-credentials circleci --token=${K8S_TOKEN_PROD}
+              kubectl config set-context ${K8S_CLUSTER_NAME} --cluster=${K8S_CLUSTER_NAME} --user=circleci --namespace=${K8S_NAMESPACE_PROD}
+              kubectl config use-context ${K8S_CLUSTER_NAME}
+        - run:
+            name: rolling update image
+            command: |
+              sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/prod/app-deployment.yaml
+              kubectl apply -n civil-appeal-case-tracker-prod -f deploy_kubernetes/prod
+
+workflows:
+  build:
+    jobs:
+      ### DEV ###
+      - build:
+          name: build-dev
+          env_name: DEV
+          ecr_endpoint: ${ECR_ENDPOINT_DEV}
+          context:
+            - civil-appeal-case-tracker-dev
+          filters:
+            branches:
+              only: dockify-circleci
+      - deploy_image_to_dev:
+          name: deploy-dev
+          context:
+            - civil-appeal-case-tracker-dev
+          filters:
+            branches:
+              only: dockify-circleci
+          requires:
+            - build-dev
+
+      ### PREPROD ###
+      - build:
+          name: build-preprod
+          env_name: PREPROD
+          ecr_endpoint: ${ECR_ENDPOINT_PREPROD}
+          context:
+            - civil-appeal-case-tracker-preprod
+          filters:
+            branches:
+              only: /^staging$/
+      - approve_preprod:
+          type: approval
+          requires:
+            - build-preprod
+      - deploy_image_to_preprod:
+          name: deploy-preprod
+          context:
+            - civil-appeal-case-tracker-preprod
+          filters:
+            branches:
+              only: /^staging$/
+          requires:
+            - build-preprod
+
+      ### PROD ###
+      - build:
+          name: build-prod
+          env_name: PROD
+          ecr_endpoint: ${ECR_ENDPOINT_PROD}
+          context:
+            - civil-appeal-case-tracker-prod
+          filters:
+            branches:
+              only: /^dockify$/
+      - approve_production:
+          type: approval
+          requires:
+            - build-prod
+      - deploy_image_to_prod:
+          name: deploy-prod
+          context:
+            - civil-appeal-case-tracker-prod
+          filters:
+            branches:
+              only: /^dockify$/
+          requires:
+            - build-prod
