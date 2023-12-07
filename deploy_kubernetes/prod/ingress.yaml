@@ -11,7 +11,7 @@ spec:
   tls:
     - hosts:
         - casetracker.justice.gov.uk
-      secretName: civil-appeal-case-tracker-justice-app-secret
+      secretName: casetracker-justice-app-secret
   rules:
     - host: casetracker.justice.gov.uk
       http:
