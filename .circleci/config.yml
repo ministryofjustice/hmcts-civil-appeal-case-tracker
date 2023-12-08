@@ -148,14 +148,14 @@ workflows:
             - civil-appeal-case-tracker-dev
           filters:
             branches:
-              only: dockify-circleci
+              only: /^RST-.*/
       - deploy_image_to_dev:
           name: deploy-dev
           context:
             - civil-appeal-case-tracker-dev
           filters:
             branches:
-              only: dockify-circleci
+              only: /^RST-.*/
           requires:
             - build-dev
 
@@ -192,7 +192,7 @@ workflows:
             - civil-appeal-case-tracker-prod
           filters:
             branches:
-              only: /^dockify$/
+              only: /^main$/
       - approve_production:
           type: approval
           requires:
@@ -203,6 +203,6 @@ workflows:
             - civil-appeal-case-tracker-prod
           filters:
             branches:
-              only: /^dockify$/
+              only: /^main$/
           requires:
             - build-prod
