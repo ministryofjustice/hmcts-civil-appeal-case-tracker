@@ -91,12 +91,8 @@
                                 <h2>Case Tracker Administration</h2>
                                 <h3>An error has occurred!</h3>
                                 <p>Please report the error message below to Publications Branch with a brief description
-                                    of
-                                    what action you were carrying out.</p>
-                                <p><strong>
-                                        <%= exception.toString() %>
-                                    </strong
-                                ></p>
+                                    of what action you were carrying out.
+                                </p>
                                 <!-- InstanceEndEditable -->
                             </div>
 
