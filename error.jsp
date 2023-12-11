@@ -60,7 +60,7 @@
             <div class="printlogo">
                 <img src="images/printlogo.gif" alt="Justice logo" />
             </div>
-            <div class="innerwrapper">
+            <div>
                 <div class="onecolfloat">
                     <div class="onecolblock">
                         <div id="Section">
@@ -78,11 +78,9 @@
                                 <h2>An error has occurred!</h2>
                                 <br/>
                             </div>
-
                         </div>
                     </div>
                 </div>
-
             </div>
 
             <div id="Footer">
