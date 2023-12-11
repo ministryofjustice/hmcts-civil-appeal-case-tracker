@@ -75,7 +75,7 @@
                         </div>
                         <div id="Content">
                             <div>
-                                <h1>An error has occurred!</h1>
+                                <h2>An error has occurred!</h2>
                                 <br/>
                             </div>
 
