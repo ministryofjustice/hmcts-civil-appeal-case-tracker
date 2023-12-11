@@ -148,14 +148,14 @@ workflows:
             - civil-appeal-case-tracker-dev
           filters:
             branches:
-              only: /^RST-.*/
+              only: add-firewall-config
       - deploy_image_to_dev:
           name: deploy-dev
           context:
             - civil-appeal-case-tracker-dev
           filters:
             branches:
-              only: /^RST-.*/
+              only: add-firewall-config
           requires:
             - build-dev
 
