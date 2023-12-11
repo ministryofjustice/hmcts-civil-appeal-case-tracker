@@ -7,14 +7,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<!-- InstanceBegin template="/Templates/default.dwt" codeOutsideHTMLIsLocked="false" -->
 
 <head>
-    <!-- InstanceBeginEditable name="doctitle" -->
     <title>Case tracker &ndash; Justice UK</title>
-    <!-- InstanceEndEditable -->
 
-    <!-- InstanceBeginEditable name="metadata" -->
     <meta name="DC.title" content="Publications - Ministry of Justice" />
     <meta name="revisit-after" content="1 days" />
     <meta name="Author" content="Ministry of Justice" />
@@ -36,17 +32,9 @@
     <meta name="DC.language" content="ENG" />
     <meta name="DC.coverage" content="England, Wales" />
     <meta name="DC.rights.copyright" content="Crown Copyright" />
-    <!-- InstanceEndEditable -->
 
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" href="asset/css/dg.css" />
-
-    <!--[if lte IE 7]>
-    <link href="../css/dgie.css" rel="stylesheet" type="text/css" media="screen"/>
-    <![endif]-->
-    <!--[if IE 6]>
-    <link href="../css/dgie6.css" rel="stylesheet" type="text/css" media="screen"/>
-    <![endif]-->
 
     <link rel="alternate stylesheet" type="text/css" href="asset/css/standard.css" title="Standard" />
     <link rel="alternate stylesheet" type="text/css" href="asset/css/larger.css" title="Larger" />
@@ -70,7 +58,7 @@
         <div class="wrapper">
             <a href="#Heading" class="access">Go to main content</a>
             <div class="printlogo">
-                <img src="images/printlogo.gif" alt="Justice  logo" />
+                <img src="images/printlogo.gif" alt="Justice logo" />
             </div>
             <div class="innerwrapper">
                 <div class="onecolfloat">
@@ -87,13 +75,7 @@
                         </div>
                         <div id="Content">
                             <div class="holder">
-                                <!-- InstanceBeginEditable name="main" -->
-                                <h1>Case Tracker Administration</h1>
-                                <h2>An error has occurred!</h2>
-                                <p>Please report the error message below to Publications Branch with a brief description
-                                    of what action you were carrying out.
-                                </p>
-                                <!-- InstanceEndEditable -->
+                                <h1>An error has occurred!</h1>
                             </div>
 
                         </div>
@@ -111,7 +93,6 @@
                 </div>
             </div>
 
-            <!-- Include the Top Bar here -->
             <div id="TopBar">
                 <div class="holder">
                     <span class="tl"></span><span class="tr"><span></span></span>
@@ -119,12 +100,10 @@
                             alt="Link to the Justice homepage" /></a>
                 </div>
             </div>
-            <!-- End of Top Bar -->
 
         </div>
     </div>
 
 </body>
-<!-- InstanceEnd -->
 
 </html>
