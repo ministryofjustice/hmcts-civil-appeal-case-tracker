@@ -86,11 +86,29 @@
                             <div class="holder">
                                 <!-- InstanceBeginEditable name="main" -->
                                 <div class="steps">
-                                    <h1>Error Page</h1>
+                                    <h1>Error</h1>
                                 </div>
                                 <!-- InstanceEndEditable -->
                             </div>
                         </div>
+
+                        <div id="Footer">
+                            <div class="holder">
+                                <ul>
+                                    <li><a href="https://www.justice.gov.uk/privacy">Your privacy</a></li>
+                                    <li><a href="https://www.justice.gov.uk/copyright">&copy; Crown copyright</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                
+                        <!-- Include the Top Bar here -->
+                        <div id="TopBar">
+                            <div class="holder">
+                                <span class="tl"></span><span class="tr"><span></span></span>
+                                <a href="#" tabindex="1"><img src="images/logo.png" alt="Link to Justice UK homepage"/></a>
+                            </div>
+                        </div>
+                        <!-- End of Top Bar -->
 
 </body>
 </html>
