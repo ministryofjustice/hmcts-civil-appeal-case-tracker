@@ -88,8 +88,8 @@
                         <div id="Content">
                             <div class="holder">
                                 <!-- InstanceBeginEditable name="main" -->
-                                <h2>Case Tracker Administration</h2>
-                                <h3>An error has occurred!</h3>
+                                <h1>Case Tracker Administration</h1>
+                                <h2>An error has occurred!</h2>
                                 <p>Please report the error message below to Publications Branch with a brief description
                                     of what action you were carrying out.
                                 </p>
