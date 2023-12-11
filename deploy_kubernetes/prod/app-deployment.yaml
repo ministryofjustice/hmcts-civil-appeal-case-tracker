@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: civil-appeal-case-tracker-app
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: civil-appeal-case-tracker-app
