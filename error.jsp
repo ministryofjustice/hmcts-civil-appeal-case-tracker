@@ -60,7 +60,7 @@
             <div class="printlogo">
                 <img src="images/printlogo.gif" alt="Justice logo" />
             </div>
-            <div>
+            <div class="innerwrapper">
                 <div class="onecolfloat">
                     <div class="onecolblock">
                         <div id="Section">
@@ -81,6 +81,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div id="Footer">
