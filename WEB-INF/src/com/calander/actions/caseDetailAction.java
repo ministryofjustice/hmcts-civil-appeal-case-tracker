@@ -49,10 +49,5 @@ public class caseDetailAction extends Action {
         }
 
         //System.out.println(calander.getCase_no());
-        request.setAttribute("detail", calander);
-        request.setAttribute("case", case_id);
-        session.clear();
-        session.close();
-        return mapping.findForward("success");
     }
 }
