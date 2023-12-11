@@ -37,13 +37,18 @@ public class caseDetailAction extends Action {
         //query.
         //System.out.println(query.getQueryString());
         //System.out.println("result list size is "+query.list().size());
-        Calander calander = (Calander) query.list().get(0);
-
-        //System.out.println(calander.getCase_no());
-        request.setAttribute("detail", calander);
-        request.setAttribute("case", case_id);
+        String mappingResult = "success";
+        if (query.list().size() > 0) {
+            Calander calander = (Calander) query.list().get(0);
+            request.setAttribute("detail", calander);
+            request.setAttribute("case", case_id);
+        } else {
+            mappingResult = "error";
+        }
         session.clear();
         session.close();
-        return mapping.findForward("success");
+        return mapping.findForward(mappingResult);
+
+        //System.out.println(calander.getCase_no());
     }
 }
