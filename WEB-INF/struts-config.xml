@@ -54,7 +54,7 @@
 			scope="request">
 			
 			<forward name="success" path="/detail.jsp"></forward>
-			<forward name="error" path="/error.jsp"></forward>
+			<forward name="error" path="/ExceptionHandler.jsp"></forward>
 	</action>  
  	
  	</action-mappings> 
