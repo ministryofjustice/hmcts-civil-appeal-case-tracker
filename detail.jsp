@@ -164,7 +164,7 @@
                                     <div class="function next right">
                                         <span class="tl"></span>
                                         <span class="tr"><span></span></span>
-                                        <a href="#" onclick="goBack()">Go back<span class="access"></span></a>
+                                        <a href="#" onclick="goBack()">Search results<span class="access"></span></a>
                                         <span class="bl"></span>
                                         <span class="br"></span>
                                     </div>
