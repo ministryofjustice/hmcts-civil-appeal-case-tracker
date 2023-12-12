@@ -164,12 +164,11 @@
                                     <div class="function next right">
                                         <span class="tl"></span>
                                         <span class="tr"><span></span></span>
-                                        <a href="search.jsp">Search again<span class="access"></span></a>
+                                        <a href="#" onclick="goBack()">Go back<span class="access"></span></a>
                                         <span class="bl"></span>
                                         <span class="br"></span>
                                     </div>
                                 </div>
-                            </div>
                             <!-- InstanceEndEditable -->
                         </div>
 
@@ -201,6 +200,11 @@
 </div>
 <!--BEGIN_EXCLUDE-->
 <script type="text/javascript" src="/dg_scripts/ProphetInsert.js"></script>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
 <noscript>
     <div>
         <img src='http://directgov.stcllctrs.com/OWCPZPDTRUV/noScript.bmp' alt="Scipt is not enabled"/>
