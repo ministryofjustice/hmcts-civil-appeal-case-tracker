@@ -113,7 +113,7 @@
                                 <div class="function next right">
                                     <span class="tl"></span>
                                     <span class="tr"><span></span></span>
-                                    <a href="search.jsp">Next <span class="access">page</span></a>
+                                    <a href="search.jsp?action=nextPage">Next <span class="access">page</span></a>
                                     <span class="bl"></span>
                                     <span class="br"></span>
                                 </div>
