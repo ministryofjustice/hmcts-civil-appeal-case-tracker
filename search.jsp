@@ -84,6 +84,16 @@
                     <div id="Content">
                         <div class="holder">
                             <!-- InstanceBeginEditable name="main" -->
+                            <% 
+                            
+                            // Check if the request has been triggered by the "Next page" link 
+                            boolean isNextPageLink="nextPage".equals(request.getParameter("action"));
+
+                            // Clear the search results if it's the "Next page" link 
+                            if (isNextPageLink) { request.getSession().removeAttribute("results"); } 
+                            
+                            %>
+
                             <div class="steps">
                                 <h2>Ways to Search</h2>
                             </div>
