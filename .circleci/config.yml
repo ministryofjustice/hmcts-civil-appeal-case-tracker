@@ -148,14 +148,14 @@ workflows:
             - civil-appeal-case-tracker-dev
           filters:
             branches:
-              only: fix-internal-server-error-bug
+              only: fix-navigation-bug
       - deploy_image_to_dev:
           name: deploy-dev
           context:
             - civil-appeal-case-tracker-dev
           filters:
             branches:
-              only: fix-internal-server-error-bug
+              only: fix-navigation-bug
           requires:
             - build-dev
 
