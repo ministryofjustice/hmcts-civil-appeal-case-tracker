@@ -148,14 +148,14 @@ workflows:
             - civil-appeal-case-tracker-dev
           filters:
             branches:
-              only: fix-navigation-bug
+              only: update-date-picker-format
       - deploy_image_to_dev:
           name: deploy-dev
           context:
             - civil-appeal-case-tracker-dev
           filters:
             branches:
-              only: fix-navigation-bug
+              only: update-date-picker-format
           requires:
             - build-dev
 
