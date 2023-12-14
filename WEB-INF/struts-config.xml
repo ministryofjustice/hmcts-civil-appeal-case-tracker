@@ -23,7 +23,7 @@
 	parameter="/admin/loginform.jsp" scope="request"/>
 	
 	<action path="/validateLogin" type="org.apache.struts.actions.ForwardAction"
-	parameter="/admin/validateLogin.jsp" scope="request"/>
+	parameter="/admin/validateLogin.jsp" scope="session"/>
 	
 	<action path="/simpleUpload" type="org.apache.struts.actions.ForwardAction"
 	parameter="/admin/SimpleUpload1.jsp" scope="session"/>	
