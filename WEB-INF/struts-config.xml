@@ -17,10 +17,10 @@
 	<action-mappings>
 	
 	<action path="/loginform" type="org.apache.struts.actions.ForwardAction"
-	parameter="/admin/loginform.jsp" scope="session"/>
+	parameter="/admin/loginform.jsp" scope="request"/>
 	
 	<action path="/invalidate" type="org.apache.struts.actions.ForwardAction"
-	parameter="/admin/loginform.jsp" scope="session"/>
+	parameter="/admin/loginform.jsp" scope="request"/>
 	
 	<action path="/validateLogin" type="org.apache.struts.actions.ForwardAction"
 	parameter="/admin/validateLogin.jsp" scope="request"/>
@@ -29,14 +29,14 @@
 	parameter="/admin/SimpleUpload1.jsp" scope="session"/>	
 	
 	<action path="/info" type="org.apache.struts.actions.ForwardAction"
-	parameter="/admin/info.jsp" scope="session"/>	
+	parameter="/admin/info.jsp" scope="request"/>	
 	
 	
 
 
 	<action path="/dumpData"
 			type="com.calander.actions.dumpDatabase"
-		    scope="request">
+		    scope="session">
 			<forward name="success" path="/info.do"></forward>
 	</action>     
 
