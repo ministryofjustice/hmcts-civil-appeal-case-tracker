@@ -20,7 +20,7 @@
 	parameter="/admin/loginform.jsp" scope="session"/>
 	
 	<action path="/invalidate" type="org.apache.struts.actions.ForwardAction"
-	parameter="/admin/loginform.jsp" scope="session"/>
+	parameter="/admin/loginform.jsp" scope="request"/>
 	
 	<action path="/validateLogin" type="org.apache.struts.actions.ForwardAction"
 	parameter="/admin/validateLogin.jsp" scope="session"/>
