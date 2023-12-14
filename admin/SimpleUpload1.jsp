@@ -4,7 +4,7 @@
 
 <%@ page language="java" import="javazoom.upload.*,java.util.*" %>
 <%@ page errorPage="ExceptionHandler.jsp" %>
-<%
+<!-- <%
     if (request.getSession(true).getAttribute("UserName") == null) {
 %>
 
@@ -12,7 +12,7 @@
 
 <%
     }
-%>
+%> -->
 
 <%
     String path = application.getRealPath("/HMCSFormUpload/");
