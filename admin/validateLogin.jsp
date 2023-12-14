@@ -86,6 +86,9 @@
                                 if ((userid.equals(adminUser)) && (password.equals(adminPass))) {
                                     session.setAttribute("UserName", userid);
                             %>
+                            <%@ page import="org.slf4j.Logger, org.slf4j.LoggerFactory" %>
+                            <% Logger logger = LoggerFactory.getLogger("validateLogin"); %>
+                            <% logger.info("User '" + userid + "' logged in. Session ID: " + session.getId()); %>
                             <jsp:forward page="SimpleUpload1.jsp">
                                 <jsp:param name="id" value="<%= userid %>"/>
                             </jsp:forward>

@@ -116,6 +116,10 @@
                             </form>
 
                             <ul>
+                                <%@ page import="org.slf4j.Logger, org.slf4j.LoggerFactory" %>
+                                <% Logger logger = LoggerFactory.getLogger("SimpleUpload1"); %>
+                                <% logger.info(Session ID: " + session.getId()); %>
+
                                 <%
                                     if (MultipartFormDataRequest.isMultipartFormData(request)) {
                                         // Uses MultipartFormDataRequest to parse the HTTP request.
