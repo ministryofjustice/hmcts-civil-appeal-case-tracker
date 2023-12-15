@@ -11,3 +11,7 @@ spec:
       targetPort: 8080
   selector:
     app: civil-appeal-case-tracker-app
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
