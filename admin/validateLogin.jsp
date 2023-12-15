@@ -85,10 +85,6 @@
 
                                 if ((userid.equals(adminUser)) && (password.equals(adminPass))) {
                                     session.setAttribute("UserName", userid);
-
-                                // Logging the attributes set in the current session
-                                java.util.logging.Logger logger = java.util.logging.Logger.getLogger("SessionLogger");
-                                logger.info("User " + userid + " logged in. Session attributes set: UserName=" + userid);
                             %>
                             <jsp:forward page="SimpleUpload1.jsp">
                                 <jsp:param name="id" value="<%= userid %>"/>
