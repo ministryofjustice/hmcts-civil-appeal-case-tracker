@@ -12,3 +12,6 @@ spec:
   selector:
     app: civil-appeal-case-tracker-app
   sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 5000
