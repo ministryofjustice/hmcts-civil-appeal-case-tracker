@@ -1,1 +1,4 @@
 FROM tomcat:8.5.73-jdk8-openjdk
+
+RUN adduser --disabled-password tomcat -u 1001 && chown -R tomcat:tomcat /usr/local/tomcat
+USER 1001
