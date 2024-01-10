@@ -26,5 +26,5 @@ RUN chown nonrootuser /usr/local/bin/awk.script2-dev
 # Switch to the nonrootuser
 USER 1002
 
-# Set the default command to run the script
-CMD ["/usr/local/bin/awk.script2-dev"]
+# # Set the default command to run the script
+# CMD ["/usr/local/bin/awk.script2-dev"]
