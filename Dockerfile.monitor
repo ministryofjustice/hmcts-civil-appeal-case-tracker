@@ -20,7 +20,7 @@ USER nonrootuser
 COPY awk.script2-dev /usr/local/bin/awk.script2-dev
 
 # Make the script executable
-RUN chmod +x /usr/local/bin/awk.script2-dev
+RUN sudo chmod +x /usr/local/bin/awk.script2-dev
 
 # Set the default command to run the script
 CMD ["/usr/local/bin/awk.script2-dev"]
