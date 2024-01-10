@@ -18,10 +18,3 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 8080
-            initialDelaySeconds: 60
-            periodSeconds: 3
-            timeoutSeconds: 10
