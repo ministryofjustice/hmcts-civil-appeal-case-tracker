@@ -17,10 +17,9 @@ COPY awk.script2-dev /usr/local/bin/awk.script2-dev
 # Make the script executable
 RUN chmod +x /usr/local/bin/awk.script2-dev
 
-# Create a non-root user with a numeric UID (1000) and switch to it
-RUN adduser --disabled-password --uid 1000 nonrootuser && \
-    usermod -aG sudo nonrootuser
-USER nonrootuser
+# Create a non-root user with a specific UID (1000)
+RUN useradd --create-home --shell /bin/bash --uid 1002 nonrootuser
+USER 1002
 
 # Set the default command to run the script
 CMD ["/usr/local/bin/awk.script2-dev"]
