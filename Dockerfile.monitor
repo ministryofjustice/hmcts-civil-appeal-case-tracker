@@ -1,4 +1,16 @@
 FROM tomcat:8.5.73-jdk8-openjdk
 
+# Add bash script to the image
+COPY awk.script2-dev /usr/local/tomcat/awk.script2-dev
+
+# Make the script executable
+RUN chmod +x /usr/local/tomcat/awk.script2-dev
+
+# Add user and set permissions
 RUN adduser --disabled-password tomcat -u 1001 && chown -R tomcat:tomcat /usr/local/tomcat
+
+# Switch to the tomcat user
 USER 1001
+
+# Set the default command to run bash script
+CMD ["/usr/local/tomcat/awk.script2-dev"]
