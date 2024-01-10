@@ -2,13 +2,17 @@ FROM tomcat:8.5.73-jdk8-openjdk
 
 # Install required dependencies
 RUN apt-get update && \
-    apt-get install -y apt-transport-https gnupg2 curl && \
+    apt-get install -y apt-transport-https gnupg2 curl jq && \
     rm -rf /var/lib/apt/lists/*
 
 # Download and install kubectl
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
     rm kubectl
+
+RUN tar xzv -C /usr/local/bin/ -f \
+<(curl -sL $(curl -sL https://api.github.com/repos/ministryofjustice/cloud-platform-cli/releases/latest \
+| jq -r '.assets[] | select(.browser_download_url | match("linux_amd64")) | .browser_download_url'))
 
     # Add bash script to the image
 COPY awk.script2-dev /usr/local/tomcat/awk.script2-dev
