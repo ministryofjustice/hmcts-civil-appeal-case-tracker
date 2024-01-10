@@ -17,6 +17,9 @@ COPY awk.script2-dev /usr/local/bin/awk.script2-dev
 # Make the script executable
 RUN chmod +x /usr/local/bin/awk.script2-dev
 
+RUN adduser --disabled-password nonrootuser -u 1001 && chown -R nonrootuser:nonrootuser /usr/local/bin
+USER 1001
+
 # # Create a non-root user with a specific UID (1000)
 # RUN useradd --create-home --shell /bin/bash --uid 1002 nonrootuser
 
