@@ -1,7 +1,19 @@
-FROM tomcat:8.5.73-jdk8-openjdk
+FROM debian:buster-slim
+
+# Install required packages
+RUN apt-get update && \
+    apt-get install -y openjdk-8-jdk curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install kubectl
-RUN apt-get update && apt-get install -y kubectl
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
+    chmod +x kubectl && \
+    mv kubectl /usr/local/bin/
+
+# Set environment variables for Tomcat
+ENV CATALINA_HOME /usr/local/tomcat
+ENV PATH $CATALINA_HOME/bin:$PATH
 
 # Add bash script to the image
 COPY awk.script2-dev /usr/local/tomcat/awk.script2-dev
