@@ -5,6 +5,8 @@ metadata:
   labels:
     app: civil-appeal-case-tracker-monitor-service
 spec:
+  securityContext:
+    runAsNonRoot: true
   ports:
     - port: 80
       name: http
