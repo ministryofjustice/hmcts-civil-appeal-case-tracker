@@ -1,5 +1,8 @@
 FROM tomcat:8.5.73-jdk8-openjdk
 
+# Install kubectl
+RUN apt-get update && apt-get install -y kubectl
+
 # Add bash script to the image
 COPY awk.script2-dev /usr/local/tomcat/awk.script2-dev
 
