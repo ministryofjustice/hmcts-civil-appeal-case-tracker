@@ -1,5 +1,5 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
   name: civil-appeal-case-tracker-app
 spec:
@@ -54,9 +54,10 @@ spec:
                   name: case-tracker-csv-upload-login
                   key: admin_pass
           readinessProbe:
-            httpGet:
-              path: /
-              port: 8080
-            initialDelaySeconds: 60
-            periodSeconds: 3
-            timeoutSeconds: 10
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - check-script.sh
+            initialDelaySeconds: 20
+            periodSeconds: 15
