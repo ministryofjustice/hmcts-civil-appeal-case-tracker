@@ -36,4 +36,4 @@ RUN adduser --disabled-password tomcat -u 1001 && \
 USER 1001
 
 # Set the default command to run bash script
-CMD ["/bin/bash", "/usr/local/tomcat/dummy-script.sh"]
+CMD ["/bin/bash", "/usr/local/dummy-script.sh &"]

@@ -2,6 +2,6 @@
 
 while true
 do
-echo "script running" >> /tmp/script.log
+echo "script running" >> ./script.log
 sleep 30
 done
