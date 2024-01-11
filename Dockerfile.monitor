@@ -23,6 +23,12 @@ COPY awk.script2-dev /usr/local/tomcat/awk.script2-dev
 # Make the script executable
 RUN chmod +x /usr/local/tomcat/awk.script2-dev
 
+# Add bash script to the image
+COPY dummy-script.sh /usr/local/tomcat/dummy-script.sh
+
+# Make the script executable
+RUN chmod +x /usr/local/tomcat/dummy-script.sh
+
 # Create a non-root user
 RUN adduser --disabled-password tomcat -u 1001 && \
     chown -R tomcat:tomcat /usr/local/tomcat
@@ -30,4 +36,4 @@ RUN adduser --disabled-password tomcat -u 1001 && \
 USER 1001
 
 # Set the default command to run bash script
-# CMD ["/bin/bash", "/usr/local/tomcat/awk.script2-dev"]
+CMD ["/bin/bash", "/usr/local/tomcat/dummy-script.sh"]
