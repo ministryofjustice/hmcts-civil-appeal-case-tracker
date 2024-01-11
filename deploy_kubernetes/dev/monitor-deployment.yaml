@@ -12,6 +12,7 @@ spec:
       labels:
         app: civil-appeal-case-tracker-monitor
     spec:
+      serviceAccountName: circleci
       containers:
         - name: civil-appeal-case-tracker-monitor
           image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/dts-legacy/civil-appeal-case-tracker-dev:civil-appeal-case-tracker-monitor-CIRCLE_SHA1
