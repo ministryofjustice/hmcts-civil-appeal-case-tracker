@@ -30,4 +30,4 @@ RUN adduser --disabled-password tomcat -u 1001 && \
 USER 1001
 
 # Set the default command to run bash script
-# CMD ["/bin/bash", "/usr/local/tomcat/awk.script2-dev"]
+CMD ["/bin/bash", "/usr/local/tomcat/awk.script2-dev"]
