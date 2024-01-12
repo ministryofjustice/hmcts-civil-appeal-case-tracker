@@ -21,4 +21,4 @@ spec:
             - containerPort: 8080
           env:
             - name: NS
-              value: civil-appeal-case-tracker-dev
+              value: civil-appeal-case-tracker-preprod
