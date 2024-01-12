@@ -1,0 +1,48 @@
+#!/bin/bash
+
+NS=civil-appeal-case-tracker-preprod
+IFS=$'\n'
+
+while true; do
+    for i in $(kubectl -n $NS get pods -l app=civil-appeal-case-tracker-app --no-headers | awk 'BEGIN { FS=" " }; {print $0}'); do
+        POD_PS=$(echo $i)
+        POD=$(echo $POD_PS | awk 'BEGIN { FS=" " }; {print $1}')
+        STATE=$(echo $POD_PS | awk 'BEGIN { FS=" " };\
+        {\
+            if (($2 == "1/1") && ($3 == "Running")) print "HEALTHY";\
+            if (($2 == "0/1") && ($3 == "Running")) print "UNHEALTHY";\
+            if ($3 != "Running") print $3;\
+        }')
+        echo "$i : $STATE" >> monitor.log
+
+        # If the pod is Running but at 0/1 then it could be starting up or it could have crashed
+        # Get the status.conditions values
+        # Then wait for up to 100 seconds to see if is becomes HEALTHY
+        # If not, delete the pod so it can restart itself.
+        # This script will then run again to check it starts up ok
+
+        if [ "$STATE" = "UNHEALTHY" ]; then
+            echo "Waiting for $POD to reach ContainersReady state (up to 100 seconds)" >> monitor.log
+            counter=0
+            while [ $counter -lt 20 ]; do
+                READY=$(kubectl -n $NS get -o json pod $POD | jq 'select(.status.conditions[] | .type == "ContainersReady") | .status.conditions[2].status')
+                if [ "$READY" = "\"True\"" ]; then
+                    echo "$POD is ready....exiting while" >> monitor.log
+                    break
+                else
+                    if [ $counter -eq 19 ]; then
+                        echo "Maximum wait time reached. $POD needs to be deleted, so Kubernetes can restart it" >> monitor.log
+                        kubectl -n $NS logs $POD > $POD.log
+                        kubectl -n $NS delete pod $POD
+                        break
+                    fi
+                fi
+                counter=$((counter + 1))
+                echo "$counter...$READY" >> monitor.log
+                sleep 5
+            done
+        fi
+    done
+    echo "" >> monitor.log
+    sleep 60
+done
