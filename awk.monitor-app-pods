@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NS=civil-appeal-case-tracker-dev
+# NS=civil-appeal-case-tracker-dev
 IFS=$'\n'
 
 while true; do
