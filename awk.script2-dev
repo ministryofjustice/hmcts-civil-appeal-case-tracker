@@ -44,5 +44,5 @@ while true; do
         fi
     done
     echo "" >> monitor.log
-    sleep 60  # Adjust the sleep duration as needed
+    sleep 60
 done
