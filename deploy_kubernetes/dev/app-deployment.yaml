@@ -54,10 +54,9 @@ spec:
                   name: case-tracker-csv-upload-login
                   key: admin_pass
           readinessProbe:
-            exec:
-              command:
-              - /bin/sh
-              - -c
-              - check-script.sh
-            initialDelaySeconds: 20
-            periodSeconds: 15
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 3
+            timeoutSeconds: 10
