@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# NS=civil-appeal-case-tracker-dev
-IFS=$'\n'
+# IFS=$'\n'
 
 while true; do
     for i in $(kubectl -n $NS get pods -l app=civil-appeal-case-tracker-app --no-headers | awk 'BEGIN { FS=" " }; {print $0}'); do

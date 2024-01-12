@@ -22,3 +22,5 @@ spec:
           env:
             - name: NS
               value: civil-appeal-case-tracker-dev
+            - name: IFS
+              value: $'\n'

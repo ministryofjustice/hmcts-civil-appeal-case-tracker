@@ -29,8 +29,5 @@ RUN adduser --disabled-password tomcat -u 1001 && \
 
 USER 1001
 
-# Set environment variable
-ENV IFS=$'\n'
-
 # Set the default command to run monitoring script
 CMD ["/bin/bash", "/usr/local/tomcat/awk.monitor-app-pods"]
