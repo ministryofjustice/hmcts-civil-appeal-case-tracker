@@ -33,10 +33,10 @@ RUN chmod +x /usr/local/tomcat/dummy-script.sh
 RUN adduser --disabled-password tomcat -u 1001 && \
     chown -R tomcat:tomcat /usr/local/tomcat
 
+USER 1001
+
 # Set environment variable
 ENV IFS=$'\n'
-
-USER 1001
 
 # Set the default command to run monitoring script
 CMD ["/bin/bash", "/usr/local/tomcat/awk.script2-dev"]

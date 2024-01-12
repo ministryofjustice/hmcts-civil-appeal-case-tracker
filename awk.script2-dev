@@ -3,6 +3,8 @@
 NS=civil-appeal-case-tracker-dev
 
 while true; do
+    # Set IFS within the loop to ensure it applies to subsequent commands
+    IFS=$'\n'
     for i in $(kubectl -n $NS get pods --no-headers | awk 'BEGIN { FS=" " }; {print $0}'); do
         POD_PS=$(echo $i)
         POD=$(echo $POD_PS | awk 'BEGIN { FS=" " }; {print $1}')
