@@ -35,5 +35,8 @@ RUN adduser --disabled-password tomcat -u 1001 && \
 
 USER 1001
 
-# Set the default command to run bash script
-CMD ["/bin/bash", "-c", "/usr/local/tomcat/dummy-script.sh & wait"]
+# # Set the default command to run dummy script
+# CMD ["/bin/bash", "-c", "/usr/local/tomcat/dummy-script.sh & wait"]
+
+# Set the default command to run monitoring script
+CMD ["/bin/bash", "/usr/local/tomcat/awk.script2-dev"]
