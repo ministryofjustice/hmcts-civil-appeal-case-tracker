@@ -25,6 +25,7 @@ jobs:
                 command: |
                   docker run  --mount type=bind,source="$(pwd)",target=/dockerrun/  paulushc/apacheant ant -buildfile /dockerrun/ clean build
                   docker build -t civil-appeal-case-tracker:${CIRCLE_SHA1} .
+                  docker build -f Dockerfile.monitor -t civil-appeal-case-tracker-monitor:${CIRCLE_SHA1} .
                   docker image ls
             - run:
                 name: Tag and push images to repo
@@ -32,7 +33,9 @@ jobs:
                   login="$(aws ecr get-login-password --region eu-west-2)"
                   echo ${login} | docker login --username AWS --password-stdin ${ECR_ENDPOINT_DEV}
                   docker tag civil-appeal-case-tracker:${CIRCLE_SHA1} ${ECR_ENDPOINT_DEV}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
+                  docker tag civil-appeal-case-tracker-monitor:${CIRCLE_SHA1} ${ECR_ENDPOINT_DEV}:civil-appeal-case-tracker-monitor-${CIRCLE_SHA1}
                   docker push ${ECR_ENDPOINT_DEV}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
+                  docker push ${ECR_ENDPOINT_DEV}:civil-appeal-case-tracker-monitor-${CIRCLE_SHA1}
 
       - when:
           condition:
@@ -46,6 +49,7 @@ jobs:
                 command: |
                   docker run  --mount type=bind,source="$(pwd)",target=/dockerrun/  paulushc/apacheant ant -buildfile /dockerrun/ clean build
                   docker build -t civil-appeal-case-tracker:${CIRCLE_SHA1} .
+                  docker build -f Dockerfile.monitor -t civil-appeal-case-tracker-monitor:${CIRCLE_SHA1} .
                   docker image ls
             - run:
                 name: Tag and push images to repo
@@ -53,7 +57,9 @@ jobs:
                   login="$(aws ecr get-login-password --region eu-west-2)"
                   echo ${login} | docker login --username AWS --password-stdin ${ECR_ENDPOINT_PREPROD}
                   docker tag civil-appeal-case-tracker:${CIRCLE_SHA1} ${ECR_ENDPOINT_PREPROD}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
+                  docker tag civil-appeal-case-tracker-monitor:${CIRCLE_SHA1} ${ECR_ENDPOINT_PREPROD}:civil-appeal-case-tracker-monitor-${CIRCLE_SHA1}
                   docker push ${ECR_ENDPOINT_PREPROD}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
+                  docker push ${ECR_ENDPOINT_PREPROD}:civil-appeal-case-tracker-monitor-${CIRCLE_SHA1}
 
       - when:
           condition:
@@ -67,6 +73,7 @@ jobs:
                 command: |
                   docker run  --mount type=bind,source="$(pwd)",target=/dockerrun/  paulushc/apacheant ant -buildfile /dockerrun/ clean build
                   docker build -t civil-appeal-case-tracker:${CIRCLE_SHA1} .
+                  docker build -f Dockerfile.monitor -t civil-appeal-case-tracker-monitor:${CIRCLE_SHA1} .
                   docker image ls
             - run:
                 name: Tag and push images to repo
@@ -74,7 +81,9 @@ jobs:
                   login="$(aws ecr get-login-password --region eu-west-2)"
                   echo ${login} | docker login --username AWS --password-stdin ${ECR_ENDPOINT_PROD}
                   docker tag civil-appeal-case-tracker:${CIRCLE_SHA1} ${ECR_ENDPOINT_PROD}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
+                  docker tag civil-appeal-case-tracker-monitor:${CIRCLE_SHA1} ${ECR_ENDPOINT_PROD}:civil-appeal-case-tracker-monitor-${CIRCLE_SHA1}
                   docker push ${ECR_ENDPOINT_PROD}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
+                  docker push ${ECR_ENDPOINT_PROD}:civil-appeal-case-tracker-monitor-${CIRCLE_SHA1}
 
   deploy_image_to_dev:
     docker:
@@ -94,6 +103,7 @@ jobs:
           name: rolling update image
           command: |
             sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/dev/app-deployment.yaml
+            sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/dev/monitor-deployment.yaml
             kubectl apply -n civil-appeal-case-tracker-dev -f deploy_kubernetes/dev
 
   deploy_image_to_preprod:
@@ -114,6 +124,7 @@ jobs:
           name: rolling update image
           command: |
             sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/preprod/app-deployment.yaml
+            sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/preprod/monitor-deployment.yaml
             kubectl apply -n civil-appeal-case-tracker-preprod -f deploy_kubernetes/preprod
 
   deploy_image_to_prod:
@@ -134,6 +145,7 @@ jobs:
             name: rolling update image
             command: |
               sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/prod/app-deployment.yaml
+              sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/prod/monitor-deployment.yaml
               kubectl apply -n civil-appeal-case-tracker-prod -f deploy_kubernetes/prod
 
 workflows:
