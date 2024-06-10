@@ -1,72 +1,155 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-
-<!DOCTYPE web-app
-  PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
-  "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
-
-<web-app>
-  <!-- Standard Action Servlet Configuration (with debugging) -->
-  <servlet>
-    <servlet-name>action</servlet-name>
-    <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+
+<!DOCTYPE web-app
+
+  PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
+
+  "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
+
+
+
+<web-app>
+
+  <!-- Standard Action Servlet Configuration (with debugging) -->
+
+  <servlet>
+
+    <servlet-name>action</servlet-name>
+
+    <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+
     <init-param>
       <param-name>application</param-name>
       <param-value>resources.application</param-value>
-    </init-param>
-    <init-param>
-      <param-name>config</param-name>
-      <param-value>/WEB-INF/struts-config.xml</param-value>
-    </init-param>
-    <init-param>
-      <param-name>debug</param-name>
-      <param-value>1</param-value>
-    </init-param>
-    <init-param>
-      <param-name>detail</param-name>
-      <param-value>2</param-value>
-    </init-param>
-    <init-param>
-      <param-name>validate</param-name>
-      <param-value>true</param-value>
-    </init-param>
-    <load-on-startup>2</load-on-startup>
-  </servlet>
-
-
-  <!-- Standard Action Servlet Mapping -->
-  <servlet-mapping>
-    <servlet-name>action</servlet-name>
-    <url-pattern>*.do</url-pattern>
-  </servlet-mapping>
-
-
-  <!-- The Usual Welcome File List -->
-  <welcome-file-list>
-    <welcome-file>index.jsp</welcome-file>
-  </welcome-file-list>
-
-  <!-- Example Application Tag Library Descriptor
-  <taglib>
-    <taglib-uri>/WEB-INF/app.tld</taglib-uri>
-    <taglib-location>/WEB-INF/app.tld</taglib-location>
-  </taglib>
-  -->
-
-  <!-- Struts Tag Library Descriptors -->
-  <taglib>
-    <taglib-uri>/WEB-INF/struts-bean.tld</taglib-uri>
-    <taglib-location>/WEB-INF/struts-bean.tld</taglib-location>
-  </taglib>
+    </init-param>
 
-  <taglib>
-    <taglib-uri>/WEB-INF/struts-html.tld</taglib-uri>
-    <taglib-location>/WEB-INF/struts-html.tld</taglib-location>
-  </taglib>
-
-  <taglib>
-    <taglib-uri>/WEB-INF/struts-logic.tld</taglib-uri>
-    <taglib-location>/WEB-INF/struts-logic.tld</taglib-location>
-  </taglib>
+    <init-param>
+
+      <param-name>config</param-name>
+
+      <param-value>/WEB-INF/struts-config.xml</param-value>
+
+    </init-param>
+
+    <init-param>
+
+      <param-name>debug</param-name>
+
+      <param-value>1</param-value>
+
+    </init-param>
+
+    <init-param>
+
+      <param-name>detail</param-name>
+
+      <param-value>2</param-value>
+
+    </init-param>
+
+    <init-param>
+
+      <param-name>validate</param-name>
+
+      <param-value>true</param-value>
+
+    </init-param>
+
+    <load-on-startup>2</load-on-startup>
+
+  </servlet>
+
+
+  <servlet>
+    <servlet-name>QuartzInitializer</servlet-name>
+
+    <servlet-class>org.quartz.ee.servlet.QuartzInitializerServlet</servlet-class>
+
+    <init-param>
+      <param-name>shutdown-on-unload</param-name>
+      <param-value>true</param-value>
+    </init-param>
+
+    <init-param>
+      <param-name>start-scheduler-on-load</param-name>
+      <param-value>true</param-value>
+    </init-param>
+
+        <load-on-startup>3</load-on-startup>
+  </servlet>
+
+
+
+
+  <!-- Standard Action Servlet Mapping -->
+
+  <servlet-mapping>
+
+    <servlet-name>action</servlet-name>
+
+    <url-pattern>*.do</url-pattern>
+
+  </servlet-mapping>
+
+
+
+
+
+  <!-- The Usual Welcome File List -->
+
+  <welcome-file-list>
+
+    <welcome-file>index.jsp</welcome-file>
+
+  </welcome-file-list>
+
+
+
+  <!-- Example Application Tag Library Descriptor
+
+  <taglib>
+
+    <taglib-uri>/WEB-INF/app.tld</taglib-uri>
+
+    <taglib-location>/WEB-INF/app.tld</taglib-location>
+
+  </taglib>
+
+  -->
+
+
+
+  <!-- Struts Tag Library Descriptors -->
+
+  <taglib>
+
+    <taglib-uri>/WEB-INF/struts-bean.tld</taglib-uri>
+
+    <taglib-location>/WEB-INF/struts-bean.tld</taglib-location>
+
+  </taglib>
+
+
+  <taglib>
+
+    <taglib-uri>/WEB-INF/struts-html.tld</taglib-uri>
+
+    <taglib-location>/WEB-INF/struts-html.tld</taglib-location>
+
+  </taglib>
+
+
+
+  <taglib>
+
+    <taglib-uri>/WEB-INF/struts-logic.tld</taglib-uri>
+
+    <taglib-location>/WEB-INF/struts-logic.tld</taglib-location>
+
+  </taglib>
+
 <taglib>
 
     <taglib-uri>/WEB-INF/struts-logic-el.tld</taglib-uri>
@@ -94,7 +177,8 @@
 
     <taglib-location>/WEB-INF/displaytag.tld</taglib-location>
 
-  </taglib>
+  </taglib>
+
 <taglib>
 
     <taglib-uri>/WEB-INF/c.tld</taglib-uri>
@@ -103,4 +187,4 @@
 
   </taglib>
 
-</web-app>
+</web-app>
