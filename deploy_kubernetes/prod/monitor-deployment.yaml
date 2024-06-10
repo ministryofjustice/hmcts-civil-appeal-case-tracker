@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: civil-appeal-case-tracker-monitor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: civil-appeal-case-tracker-monitor
+  template:
+    metadata:
+      labels:
+        app: civil-appeal-case-tracker-monitor
+    spec:
+      serviceAccountName: circleci
+      containers:
+        - name: civil-appeal-case-tracker-monitor
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/dts-legacy/civil-appeal-case-tracker-prod:civil-appeal-case-tracker-monitor-CIRCLE_SHA1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: NS
+              value: civil-appeal-case-tracker-prod

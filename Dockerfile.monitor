@@ -1,0 +1,33 @@
+FROM tomcat:8.5.73-jdk8-openjdk
+
+# Install required dependencies
+RUN apt-get update && \
+    apt-get install -y apt-transport-https gnupg2 curl jq && \
+    rm -rf /var/lib/apt/lists/*
+
+# Download and install kubectl
+RUN curl -LO https://dl.k8s.io/release/v1.26.0/bin/linux/amd64/kubectl && \
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
+    rm kubectl
+
+RUN /bin/bash -c 'tar xzv -C /usr/local/bin/ -f <(\
+    curl -sL $(\
+        curl -sL https://api.github.com/repos/ministryofjustice/cloud-platform-cli/releases/latest \
+        | jq -r ".assets[] | select(.browser_download_url | match(\"linux_amd64\")) | .browser_download_url"\
+    )\
+)'
+
+# Add bash script to the image
+COPY awk.monitor-app-pods /usr/local/tomcat/awk.monitor-app-pods
+
+# Make the script executable
+RUN chmod +x /usr/local/tomcat/awk.monitor-app-pods
+
+# Create a non-root user
+RUN adduser --disabled-password tomcat -u 1001 && \
+    chown -R tomcat:tomcat /usr/local/tomcat
+
+USER 1001
+
+# Set the default command to run monitoring script
+CMD ["/bin/bash", "/usr/local/tomcat/awk.monitor-app-pods"]
