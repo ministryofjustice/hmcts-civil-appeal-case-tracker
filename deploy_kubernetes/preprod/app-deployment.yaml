@@ -16,6 +16,13 @@ spec:
         - name: civil-appeal-case-tracker-app
           image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/dts-legacy/civil-appeal-case-tracker-preprod:civil-appeal-case-tracker-app-CIRCLE_SHA1
           imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1024Mi"
           ports:
             - containerPort: 8080
           env:
