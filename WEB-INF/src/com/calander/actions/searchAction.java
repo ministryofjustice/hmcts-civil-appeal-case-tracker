@@ -25,6 +25,7 @@ public class searchAction extends Action {
         String searchString = request.getParameter("search");
         if (searchString != null) {
             searchString = searchString.toLowerCase();
+            System.out.println("searchString is: " + searchString);
         } else {
             // Handle the case where "search" parameter is not present.
             // Set a default value or log a message.
@@ -46,6 +47,8 @@ public class searchAction extends Action {
                 // Query creation and execution
                 Query query = session.createQuery("from Calander c where lower(c.search_date) like :date or lower(c.case_no) like :case or lower(title1) like :title order by c.case_no");
 
+                System.out.println("query is: " + query);
+
                 if (query != null) {
                     query.setString("date", "%" + searchString + "%");
                     query.setString("case", "%" + searchString + "%");
@@ -53,6 +56,8 @@ public class searchAction extends Action {
 
                     // Execute the query and process the results
                     List arrResults = query.list();
+
+                    System.out.println("arrResults is: " + arrResults);
 
                     // Clear and close the session
                     session.clear();
