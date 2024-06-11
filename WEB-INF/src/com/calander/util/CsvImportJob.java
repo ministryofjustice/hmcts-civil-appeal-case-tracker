@@ -98,15 +98,20 @@ public class CsvImportJob implements Job {
             ex.printStackTrace();
             session.getTransaction().rollback();
             LOGGER.error("Import Failed: {}", ex.getMessage());
-            session.flush();
-            session.clear();
-            session.close();
+
+            if (session.isOpen()) {
+                session.flush();
+                session.clear();
+                session.close();
+            }
             //TODO send alert to slack or have a healthcheck page that shows last time db was updated
         } finally {
 
-            session.flush();
-            session.clear();
-            session.close();
+            if (session.isOpen()) {
+                session.flush();
+                session.clear();
+                session.close();
+            }
         }
         System.out.println("Scheduler Finished");
 
