@@ -8,7 +8,7 @@ ENV DB_HOST="172.22.5.164" \
     ADMIN_USER=admin \
     ADMIN_PASS=admin
 
-ENV CATALINA_OPTS="-Xmx1024m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=512m"
+ENV CATALINA_OPTS="-Xmx1024m -XX:MaxPermSize=2048m"
 
 RUN mkdir -p /opt
 RUN rm -rf /usr/local/tomcat/webapps/ROOT && rm -rf /usr/local/tomcat/webapps/docs && rm -rf /usr/local/tomcat/webapps/examples
