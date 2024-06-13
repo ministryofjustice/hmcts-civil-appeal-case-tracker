@@ -135,6 +135,7 @@ jobs:
           command: |
             sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/preprod/app-deployment.yaml
             sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/preprod/monitor-deployment.yaml
+            sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/preprod/maintenance-deployment.yaml
             kubectl apply -n civil-appeal-case-tracker-preprod -f deploy_kubernetes/preprod
 
   deploy_image_to_prod:
@@ -156,6 +157,7 @@ jobs:
             command: |
               sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/prod/app-deployment.yaml
               sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/prod/monitor-deployment.yaml
+              sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/prod/maintenance-deployment.yaml
               kubectl apply -n civil-appeal-case-tracker-prod -f deploy_kubernetes/prod
 
 workflows:
