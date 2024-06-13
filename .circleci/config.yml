@@ -37,7 +37,7 @@ jobs:
                   docker tag civil-appeal-case-tracker-monitor:${CIRCLE_SHA1} ${ECR_ENDPOINT_DEV}:civil-appeal-case-tracker-monitor-${CIRCLE_SHA1}
                   docker push ${ECR_ENDPOINT_DEV}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
                   docker push ${ECR_ENDPOINT_DEV}:civil-appeal-case-tracker-monitor-${CIRCLE_SHA1}
-                  docker push ${ECR_ENDPOINT_PROD}:civil-appeal-case-tracker-maintenance-${CIRCLE_SHA1}
+                  docker push ${ECR_ENDPOINT_DEV}:civil-appeal-case-tracker-maintenance-${CIRCLE_SHA1}
 
       - when:
           condition:
