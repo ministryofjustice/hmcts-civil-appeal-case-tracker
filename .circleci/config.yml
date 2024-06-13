@@ -173,6 +173,7 @@ workflows:
           filters:
             branches:
               only: /^RST-.*/
+              
       - deploy_image_to_dev:
           name: deploy-dev
           context:
@@ -193,10 +194,12 @@ workflows:
           filters:
             branches:
               only: /^staging$/
+
       - approve_preprod:
           type: approval
           requires:
             - build-preprod
+
       - deploy_image_to_preprod:
           name: deploy-preprod
           context:
@@ -205,7 +208,7 @@ workflows:
             branches:
               only: /^staging$/
           requires:
-            - build-preprod
+            - approve_preprod
 
       ### PROD ###
       - build:
@@ -217,10 +220,12 @@ workflows:
           filters:
             branches:
               only: /^main$/
+
       - approve_production:
           type: approval
           requires:
             - build-prod
+
       - deploy_image_to_prod:
           name: deploy-prod
           context:
@@ -229,4 +234,4 @@ workflows:
             branches:
               only: /^main$/
           requires:
-            - build-prod
+            - approve_production
