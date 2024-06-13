@@ -26,6 +26,7 @@ jobs:
                   docker run  --mount type=bind,source="$(pwd)",target=/dockerrun/  paulushc/apacheant ant -buildfile /dockerrun/ clean build
                   docker build -t civil-appeal-case-tracker:${CIRCLE_SHA1} .
                   docker build -f Dockerfile.monitor -t civil-appeal-case-tracker-monitor:${CIRCLE_SHA1} .
+                  docker build -f Dockerfile.maintenance -t civil-appeal-case-tracker-maintenance:${CIRCLE_SHA1} .
                   docker image ls
             - run:
                 name: Tag and push images to repo
@@ -36,6 +37,7 @@ jobs:
                   docker tag civil-appeal-case-tracker-monitor:${CIRCLE_SHA1} ${ECR_ENDPOINT_DEV}:civil-appeal-case-tracker-monitor-${CIRCLE_SHA1}
                   docker push ${ECR_ENDPOINT_DEV}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
                   docker push ${ECR_ENDPOINT_DEV}:civil-appeal-case-tracker-monitor-${CIRCLE_SHA1}
+                  docker push ${ECR_ENDPOINT_PROD}:civil-appeal-case-tracker-maintenance-${CIRCLE_SHA1}
 
       - when:
           condition:
@@ -104,6 +106,7 @@ jobs:
           command: |
             sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/dev/app-deployment.yaml
             sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/dev/monitor-deployment.yaml
+            sed -i -e s/CIRCLE_SHA1/$CIRCLE_SHA1/ deploy_kubernetes/dev/maintenance-deployment.yaml
             kubectl apply -n civil-appeal-case-tracker-dev -f deploy_kubernetes/dev
 
   deploy_image_to_preprod:
