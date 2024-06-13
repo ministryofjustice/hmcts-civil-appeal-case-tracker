@@ -35,6 +35,7 @@ jobs:
                   echo ${login} | docker login --username AWS --password-stdin ${ECR_ENDPOINT_DEV}
                   docker tag civil-appeal-case-tracker:${CIRCLE_SHA1} ${ECR_ENDPOINT_DEV}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
                   docker tag civil-appeal-case-tracker-monitor:${CIRCLE_SHA1} ${ECR_ENDPOINT_DEV}:civil-appeal-case-tracker-monitor-${CIRCLE_SHA1}
+                  docker tag civil-appeal-case-tracker-maintenance:${CIRCLE_SHA1} ${ECR_ENDPOINT_DEV}:civil-appeal-case-tracker-maintenance-${CIRCLE_SHA1}
                   docker push ${ECR_ENDPOINT_DEV}:civil-appeal-case-tracker-app-${CIRCLE_SHA1}
                   docker push ${ECR_ENDPOINT_DEV}:civil-appeal-case-tracker-monitor-${CIRCLE_SHA1}
                   docker push ${ECR_ENDPOINT_DEV}:civil-appeal-case-tracker-maintenance-${CIRCLE_SHA1}
