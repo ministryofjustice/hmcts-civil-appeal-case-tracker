@@ -31,6 +31,6 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: civil-appeal-case-tracker-app-service
+                name: maintenance-page-svc
                 port:
                   number: 80
