@@ -1,0 +1,4 @@
+FROM bitnami/nginx:latest
+
+COPY maintenance/index.html /opt/bitnami/nginx/html
+COPY maintenance/maintenance_page.conf /opt/bitnami/nginx/conf/server_blocks/

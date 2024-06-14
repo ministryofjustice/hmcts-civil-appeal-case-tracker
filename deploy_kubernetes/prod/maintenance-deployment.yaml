@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maintenance-page
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  maintenance-page
+  template:
+    metadata:
+      labels:
+        app: maintenance-page
+    spec:
+      containers:
+      - name: maintenance-page
+        image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/dts-legacy/civil-appeal-case-tracker-prod:civil-appeal-case-tracker-maintenance-CIRCLE_SHA1
+        ports:
+        - containerPort: 8080
