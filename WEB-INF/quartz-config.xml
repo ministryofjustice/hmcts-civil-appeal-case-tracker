@@ -4,7 +4,7 @@
 
     <trigger-group>
         <trigger name="csvImportTrigger" className="org.quartz.CronTrigger">
-            <set-property property="cronExpression" value="0 0/5 * * * ?"/>
+            <set-property property="cronExpression" value="0 0 0 * * ?"/>
         </trigger>
     </trigger-group>
 
