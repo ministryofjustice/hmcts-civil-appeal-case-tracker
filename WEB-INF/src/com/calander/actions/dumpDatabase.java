@@ -177,18 +177,14 @@ public class dumpDatabase extends Action {
                 result = "<font color='red'>an error has occured while reading file.</font>";
             }
 
-            if (session.isOpen()) {
-                session.clear();
-                session.close();
-            }
+            session.clear();
+            session.close();
 
         } catch (FileNotFoundException e) {
             result = "<font color='red'>Cannot find CASE_TRACKER.CSV file.</font>";
             e.printStackTrace();
-            if (session.isOpen()) {
-                session.clear();
-                session.close();
-            }
+            session.clear();
+            session.close();
         }
 
         request.setAttribute("msg", result);

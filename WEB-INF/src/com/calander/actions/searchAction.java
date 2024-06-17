@@ -13,7 +13,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -24,7 +23,7 @@ public class searchAction extends Action {
 
         // Null check for "search" parameter
         String searchString = request.getParameter("search");
-        if (!searchString.equals(null)) {
+        if (searchString != null) {
             searchString = searchString.toLowerCase();
             System.out.println("searchString is: " + searchString);
         } else {
@@ -58,11 +57,11 @@ public class searchAction extends Action {
                     // Execute the query and process the results
                     List arrResults = query.list();
 
+                    System.out.println("arrResults is: " + arrResults);
+
                     // Clear and close the session
-                    if (session.isOpen()) {
-                        session.clear();
-                        session.close();
-                    }
+                    session.clear();
+                    session.close();
 
                     // Set results in session
                     request.getSession().setAttribute("results", arrResults);
