@@ -20,7 +20,18 @@ import java.util.regex.Pattern;
 public class searchAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
-        String searchString = request.getParameter("search").toString().toLowerCase();
+
+        // Null check for "search" parameter
+        String searchString = request.getParameter("search");
+        if (searchString != null) {
+            searchString = searchString.toLowerCase();
+            System.out.println("searchString is: " + searchString);
+        } else {
+            // Handle the case where "search" parameter is not present.
+            // Set a default value or log a message.
+            searchString = "";  // Setting a default value
+            System.out.println("Warning: 'search' parameter is missing in the request.");
+        }
 
         Pattern pattern = Pattern.compile("^[A-Za-z0-9_, \\-\\)\\(\\.]++$");
         if(!pattern.matcher(searchString).matches()) {
@@ -31,17 +42,50 @@ public class searchAction extends Action {
         SessionFactory factory = (SessionFactory) servlet.getServletContext().getAttribute(HibernatePlugin.KEY_NAME);
         Session session = factory.openSession();
 
-        Query query = session.createQuery("from Calander c where lower(c.search_date) like :date or lower(c.case_no) like :case or lower(title1) like :title order by c.case_no");
-        query.setString("date", "%" + searchString + "%");
-        query.setString("case", "%" + searchString + "%");
-        query.setString("title", "%" + searchString + "%");
+        if (session != null) {
+            try {
+                // Query creation and execution
+                Query query = session.createQuery("from Calander c where lower(c.search_date) like :date or lower(c.case_no) like :case or lower(title1) like :title order by c.case_no");
 
-        List arrResults = query.list();
+                System.out.println("query is: " + query);
 
-        session.clear();
-        session.close();
-        request.getSession().setAttribute("results", arrResults);
+                if (query != null) {
+                    query.setString("date", "%" + searchString + "%");
+                    query.setString("case", "%" + searchString + "%");
+                    query.setString("title", "%" + searchString + "%");
 
-        return mapping.findForward("success");
+                    // Execute the query and process the results
+                    List arrResults = query.list();
+
+                    System.out.println("arrResults is: " + arrResults);
+
+                    // Clear and close the session
+                    session.clear();
+                    session.close();
+
+                    // Set results in session
+                    request.getSession().setAttribute("results", arrResults);
+
+                    return mapping.findForward("success");
+                } else {
+                    // Handle the case where the query object is not successfully created.
+                    System.err.println("Error: Unable to create Hibernate query.");
+                }
+            } catch (Exception e) {
+                // Handle any other exceptions that might occur during query execution
+                System.err.println("Error executing Hibernate query: " + e.getMessage());
+            } finally {
+                // Ensure session is closed in case of any exception
+                if (session.isOpen()) {
+                    session.close();
+                }
+            }
+        } else {
+            // Handle the case where the session is not successfully opened.
+            System.err.println("Error: Unable to open Hibernate session.");
+        }
+
+        // Return a forward in case of errors
+        return mapping.findForward("error");
     }
 }
