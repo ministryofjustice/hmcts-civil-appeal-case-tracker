@@ -16,6 +16,7 @@
         <property name="hibernate.jdbc.batch_size">100</property>
         <property name="hibernate.cache.use_second_level_cache">false</property>
         <property name="hibernate.cglib.use_reflection_optimizer">false</property>
+        <property name="hibernate.connection.autocommit">true</property>
 
         <mapping resource="com/calander/beans/Calander.hbm.xml"/>
     </session-factory>
