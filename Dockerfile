@@ -8,7 +8,7 @@ ENV DB_HOST="172.22.5.164" \
     ADMIN_USER=admin \
     ADMIN_PASS=admin
 
-ENV CATALINA_OPTS "-Xmx512M -XX:MaxPermSize=1024m"
+ENV CATALINA_OPTS "-Xmx512M -XX:MaxPermSize=1024m -XX:+PrintGCDetails -Xlog:gc*:file=/var/log/gc.log:time,uptime:filecount=5,filesize=10m"
 
 RUN mkdir -p /opt
 RUN rm -rf /usr/local/tomcat/webapps/ROOT && rm -rf /usr/local/tomcat/webapps/docs && rm -rf /usr/local/tomcat/webapps/examples
