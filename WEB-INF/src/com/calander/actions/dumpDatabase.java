@@ -62,22 +62,11 @@ public class dumpDatabase extends Action {
                 while ((nextLine = reader.readNext()) != null) {
 
                     int line_length = nextLine.length;
+
                     int column = 0;
 
                     calander = new Calander();
 
-                    if(nextLine[0].length() > 50) {
-                        System.out.println("******** SearchDate > 50 <" + nextLine[0] + "> for Case No <" + nextLine[1] + ">");
-                    }
-                    if(nextLine[1].length() > 50) {
-                        System.out.println("******** CaseNo > 50 <" + nextLine[1] + ">");
-                    }
-                    if(nextLine[8].length() > 50) {
-                        System.out.println("******** CaseRef > 50 <" + nextLine[8] + "> for Case No <" + nextLine[1] + ">");
-                    }
-                    if(nextLine[14].length() > 50) {
-                        System.out.println("******** LastUpdated > 50 <" + nextLine[14] + "> for Case No <" + nextLine[1] + ">");
-                    }
 
                     if (column < line_length)
                         calander.setSearch_date(nextLine[0]);
@@ -179,6 +168,23 @@ public class dumpDatabase extends Action {
                         calander.setTrack_line8(nextLine[24]);
 
                     rows++;
+
+                    System.out.println("*** Saving row <" + rows + "> with cols <" + column + "> line_length <" + line_length + "> for Case No <" + nextLine[1] + ">");
+
+                    if(nextLine[0].length() > 50) {
+                        System.out.println("******** SearchDate > 50 <" + nextLine[0] + "> for Case No <" + nextLine[1] + ">");
+                    }
+                    if(nextLine[1].length() > 50) {
+                        System.out.println("******** CaseNo > 50 <" + nextLine[1] + ">");
+                    }
+                    if(nextLine[8].length() > 50) {
+                        System.out.println("******** CaseRef > 50 <" + nextLine[8] + "> for Case No <" + nextLine[1] + ">");
+                    }
+                    if(nextLine[14].length() > 50) {
+                        System.out.println("******** LastUpdated > 50 <" + nextLine[14] + "> for Case No <" + nextLine[1] + ">");
+                    }
+
+
                     session.save(calander);
                 }
 
