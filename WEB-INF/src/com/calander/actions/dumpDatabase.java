@@ -66,16 +66,16 @@ public class dumpDatabase extends Action {
 
                     calander = new Calander();
 
-                    if(strlen(nextLine[0]) > 50) {
+                    if(nextLine[0].length() > 50) {
                         System.out.println("******** SearchDate > 50 <" + nextLine[0] + "> for Case No <" + nextLine[1] + ">");
                     }
-                    if(strlen(nextLine[1]) > 50) {
+                    if(nextLine[1].length() > 50) {
                         System.out.println("******** CaseNo > 50 <" + nextLine[1] + ">");
                     }
-                    if(strlen(nextLine[8]) > 50) {
+                    if(nextLine[8].length() > 50) {
                         System.out.println("******** CaseRef > 50 <" + nextLine[8] + "> for Case No <" + nextLine[1] + ">");
                     }
-                    if(strlen(nextLine[14]) > 50) {
+                    if(nextLine[14].length() > 50) {
                         System.out.println("******** LastUpdated > 50 <" + nextLine[14] + "> for Case No <" + nextLine[1] + ">");
                     }
 
