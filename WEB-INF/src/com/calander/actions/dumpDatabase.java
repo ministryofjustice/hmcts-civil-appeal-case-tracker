@@ -46,6 +46,7 @@ public class dumpDatabase extends Action {
 
         	CSVReader reader = new CSVReader(new FileReader(FILE_PATH));
 
+
             String[] nextLine;
             Calander calander = null;
 		
@@ -64,6 +65,19 @@ public class dumpDatabase extends Action {
                     int column = 0;
 
                     calander = new Calander();
+
+                    if(strlen(nextLine[0]) > 50) {
+                        System.out.println("******** SearchDate > 50 <" + nextLine[0] + "> for Case No <" + nextLine[1] + ">");
+                    }
+                    if(strlen(nextLine[1]) > 50) {
+                        System.out.println("******** CaseNo > 50 <" + nextLine[1] + ">");
+                    }
+                    if(strlen(nextLine[8]) > 50) {
+                        System.out.println("******** CaseRef > 50 <" + nextLine[8] + "> for Case No <" + nextLine[1] + ">");
+                    }
+                    if(strlen(nextLine[14]) > 50) {
+                        System.out.println("******** LastUpdated > 50 <" + nextLine[14] + "> for Case No <" + nextLine[1] + ">");
+                    }
 
                     if (column < line_length)
                         calander.setSearch_date(nextLine[0]);
