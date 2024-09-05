@@ -169,21 +169,12 @@ public class dumpDatabase extends Action {
 
                     rows++;
 
-                    System.out.println("*** Saving row <" + rows + "> with cols <" + column + "> line_length <" + line_length + "> for Case No <" + nextLine[1] + ">");
-
-                    if(nextLine[0].length() > 50) {
-                        System.out.println("******** SearchDate > 50 <" + nextLine[0] + "> for Case No <" + nextLine[1] + ">");
+                    if nextLine[1].equals("CA-2024-001030") {
+                        System.out.println("***** line_length for CA-2024-001030 <" + line_length + ">");
+                        for(int i = 0; i<25; i++) {
+                            System.out.println("***** nextLine field <" + i + "> <" + nextLine[i] + ">");
+                        }
                     }
-                    if(nextLine[1].length() > 50) {
-                        System.out.println("******** CaseNo > 50 <" + nextLine[1] + ">");
-                    }
-                    if(nextLine[8].length() > 50) {
-                        System.out.println("******** CaseRef > 50 <" + nextLine[8] + "> for Case No <" + nextLine[1] + ">");
-                    }
-                    if(nextLine[14].length() > 50) {
-                        System.out.println("******** LastUpdated > 50 <" + nextLine[14] + "> for Case No <" + nextLine[1] + ">");
-                    }
-
 
                     session.save(calander);
                 }
