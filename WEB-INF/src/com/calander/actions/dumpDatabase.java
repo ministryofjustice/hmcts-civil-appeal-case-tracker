@@ -52,14 +52,15 @@ public class dumpDatabase extends Action {
 		
             session.beginTransaction();
             session.createQuery("delete Calander").executeUpdate();
-//            session.getTransaction().commit();
-//
-//            session.beginTransaction();
+            session.getTransaction().commit();
+
 
             int rows = 0;
 
             try {
                 while ((nextLine = reader.readNext()) != null) {
+
+                    session.beginTransaction();
 
                     int line_length = nextLine.length;
 
@@ -176,11 +177,11 @@ public class dumpDatabase extends Action {
                             System.out.println("***** nextLine field <" + i + "> <" + nextLine[i] + ">");
                         }
                     }
-
                     session.save(calander);
+                    session.getTransaction().commit();
+
                 }
 
-                session.getTransaction().commit();
                 result = "<ul><li><strong>" + rows + "</strong> Records added in database</li>";
 
             } catch (Exception ex) {
