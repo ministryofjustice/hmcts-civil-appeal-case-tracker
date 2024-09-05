@@ -169,6 +169,7 @@ public class dumpDatabase extends Action {
 
                     rows++;
 
+                    System.out.println("***** Case <" + nextLine[1] ">");
                     if (nextLine[1].equals("CA-2024-001030")) {
                         System.out.println("***** line_length for CA-2024-001030 <" + line_length + ">");
                         for(int i = 0; i<25; i++) {
