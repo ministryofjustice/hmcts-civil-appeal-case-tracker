@@ -51,8 +51,7 @@ public class CsvImportJob implements Job {
 
     public static int randomWaitTimeInMillis() {
         Random rand = new Random();
-        // TODO: Temporary change for testing. Revert to 3600 for production.
-        int upperBound = 240; // Random wait time in seconds (4 minutes)
+        int upperBound = 3600; // Random wait time in seconds (1 hour)
         return rand.nextInt(upperBound * 1000); // convert seconds to milliseconds
     }
 
