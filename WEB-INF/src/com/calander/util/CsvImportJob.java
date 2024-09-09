@@ -19,7 +19,9 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Random;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import org.hibernate.Query;
 
 public class CsvImportJob implements Job {
 
@@ -55,9 +57,7 @@ public class CsvImportJob implements Job {
 
 
     public static void downloadCsvFromS3BucketAndReplaceDatabaseWithContents() {
-
         System.out.println("Cron job running!");
-        int rowCount = 0;
         HibernatePlugin hibernatePlugin = new HibernatePlugin();
         SessionFactory factory = null;
         try {
@@ -68,29 +68,24 @@ public class CsvImportJob implements Job {
         Session session = factory.openSession();
 
         try {
+            if (isLastUpdatedToday(session)) {
+                LOGGER.info("Database already updated today. Skipping CSV import.");
+                return;
+            }
 
             String result = null;
-
             String url = "https://cloud-platform-ab00007072890fd153cef39e574f738e.s3.eu-west-2.amazonaws.com/data.csv";
-
-            URL u;
-            InputStream is = null;
-
-
-            u = new URL(url);
-            is = u.openStream();
+            URL u = new URL(url);
+            InputStream is = u.openStream();
             BufferedReader reader1 = new BufferedReader(new InputStreamReader(is));
-
             CSVReader reader = new CSVReader(reader1);
-            System.out.println("coming in run schedular>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-            String[] nextLine;
-            Calander calander = null;
 
+            System.out.println("coming in run schedular>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
             session.beginTransaction();
             session.createQuery("delete Calander").executeUpdate();
             
-            rowCount = CsvProcessor.processCSV(reader, session);
+            int rowCount = CsvProcessor.processCSV(reader, session);
             session.getTransaction().commit();
             LOGGER.info("Success {} rows added in database", rowCount);
         } catch (Exception ex) {
@@ -102,11 +97,21 @@ public class CsvImportJob implements Job {
             session.close();
             //TODO send alert to slack or have a healthcheck page that shows last time db was updated
         } finally {
-
             session.flush();
             session.clear();
             session.close();
         }
         System.out.println("Scheduler Finished");
+    }
+
+    private static boolean isLastUpdatedToday(Session session) {
+        Query query = session.createQuery("SELECT MAX(c.last_updated) FROM Calander c");
+        String lastUpdated = (String) query.uniqueResult();
+        if (lastUpdated == null) {
+            return false;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+        String today = sdf.format(new Date());
+        return lastUpdated.equals(today);
     }
 }
