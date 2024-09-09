@@ -2,8 +2,6 @@ package com.calander.actions;
 
 import au.com.bytecode.opencsv.CSVReader;
 import com.calander.util.CsvProcessor;
-
-import com.calander.beans.Calander;
 import com.calander.plugin.HibernatePlugin;
 
 import org.apache.struts.action.Action;
@@ -13,18 +11,17 @@ import org.apache.struts.action.ActionMapping;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.File;
 import java.util.logging.Logger;
 
 public class dumpDatabase extends Action {
+
+    private static final Logger LOGGER = Logger.getLogger(dumpDatabase.class.getName());
 
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response)
