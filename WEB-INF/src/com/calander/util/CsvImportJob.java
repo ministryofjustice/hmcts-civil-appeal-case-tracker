@@ -110,16 +110,27 @@ public class CsvImportJob implements Job {
     private static boolean isLastUpdatedToday(Session session) {
         Query query = session.createQuery("SELECT MAX(c.last_updated) FROM Calander c");
         String lastUpdated = (String) query.uniqueResult();
-        LOGGER.info("Last updated date from database: {}", lastLastUpdated);
+        LOGGER.info("Last updated date from database: {}", lastUpdated);
+        
         if (lastUpdated == null) {
             LOGGER.info("No last updated date found in database");
             return false;
         }
+        
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
         String today = sdf.format(new Date());
         LOGGER.info("Today's date: {}", today);
-        boolean isUpdatedToday = lastUpdated.equals(today);
-        LOGGER.info("Is updated today: {}", isUpdatedToday);
-        return isUpdatedToday;
+        
+        try {
+            Date lastUpdatedDate = sdf.parse(lastUpdated);
+            Date todayDate = sdf.parse(today);
+            
+            boolean isUpdatedToday = lastUpdatedDate.equals(todayDate);
+            LOGGER.info("Is updated today: {}", isUpdatedToday);
+            return isUpdatedToday;
+        } catch (ParseException e) {
+            LOGGER.error("Error parsing date: {}", e.getMessage());
+            return false;
+        }
     }
 }
