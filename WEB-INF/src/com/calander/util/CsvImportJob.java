@@ -69,10 +69,12 @@ public class CsvImportJob implements Job {
         Session session = factory.openSession();
 
         try {
+            LOGGER.info("Checking if database was updated today");
             if (isLastUpdatedToday(session)) {
                 LOGGER.info("Database already updated today. Skipping CSV import.");
                 return;
             }
+            LOGGER.info("Database not updated today. Proceeding with CSV import.");
 
             String result = null;
             String url = "https://cloud-platform-ab00007072890fd153cef39e574f738e.s3.eu-west-2.amazonaws.com/data.csv";
@@ -108,11 +110,16 @@ public class CsvImportJob implements Job {
     private static boolean isLastUpdatedToday(Session session) {
         Query query = session.createQuery("SELECT MAX(c.last_updated) FROM Calander c");
         String lastUpdated = (String) query.uniqueResult();
+        LOGGER.info("Last updated date from database: {}", lastLastUpdated);
         if (lastUpdated == null) {
+            LOGGER.info("No last updated date found in database");
             return false;
         }
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
         String today = sdf.format(new Date());
-        return lastUpdated.equals(today);
+        LOGGER.info("Today's date: {}", today);
+        boolean isUpdatedToday = lastUpdated.equals(today);
+        LOGGER.info("Is updated today: {}", isUpdatedToday);
+        return isUpdatedToday;
     }
 }
