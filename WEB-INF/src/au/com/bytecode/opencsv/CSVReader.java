@@ -202,8 +202,9 @@ public class CSVReader {
                 if (c == quotechar) {
                     // Check if it's an escaped quote
                     if (i > 0 && nextLine.charAt(i - 1) == '\\') {
-                        // It's an escaped quote, just append it
-                        sb.append(c);
+                        // It's an escaped quote, remove the backslash and append the quote
+                        sb.setLength(sb.length() - 1);  // Remove the backslash
+                        sb.append(c);  // Append the quote
                     } else {
                         // this gets complex... the quote may end a quoted block, or escape another quote.
                         // do a 1-char lookahead:
