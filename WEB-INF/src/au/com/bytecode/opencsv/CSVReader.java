@@ -200,24 +200,30 @@ public class CSVReader {
 
                 char c = nextLine.charAt(i);
                 if (c == quotechar) {
-                    // this gets complex... the quote may end a quoted block, or escape another quote.
-                    // do a 1-char lookahead:
-                    if (inQuotes  // we are in quotes, therefore there can be escaped quotes in here.
-                            && nextLine.length() > (i + 1)  // there is indeed another character to check.
-                            && nextLine.charAt(i + 1) == quotechar) { // ..and that char. is a quote also.
-                        // we have two quote chars in a row == one quote char, so consume them both and
-                        // put one on the token. we do *not* exit the quoted text.
-                        sb.append(nextLine.charAt(i + 1));
-                        i++;
+                    // Check if it's an escaped quote
+                    if (i > 0 && nextLine.charAt(i - 1) == '\\') {
+                        // It's an escaped quote, just append it
+                        sb.append(c);
                     } else {
-                        inQuotes = !inQuotes;
-                        // the tricky case of an embedded quote in the middle: a,bc"d"ef,g
-                        if (i > 2 //not on the begining of the line
-                                && nextLine.charAt(i - 1) != this.separator //not at the begining of an escape sequence
-                                && nextLine.length() > (i + 1) &&
-                                nextLine.charAt(i + 1) != this.separator //not at the	end of an escape sequence
-                                ) {
-                            sb.append(c);
+                        // this gets complex... the quote may end a quoted block, or escape another quote.
+                        // do a 1-char lookahead:
+                        if (inQuotes  // we are in quotes, therefore there can be escaped quotes in here.
+                                && nextLine.length() > (i + 1)  // there is indeed another character to check.
+                                && nextLine.charAt(i + 1) == quotechar) { // ..and that char. is a quote also.
+                            // we have two quote chars in a row == one quote char, so consume them both and
+                            // put one on the token. we do *not* exit the quoted text.
+                            sb.append(nextLine.charAt(i + 1));
+                            i++;
+                        } else {
+                            inQuotes = !inQuotes;
+                            // the tricky case of an embedded quote in the middle: a,bc"d"ef,g
+                            if (i > 2 //not on the beginning of the line
+                                    && nextLine.charAt(i - 1) != this.separator //not at the beginning of an escape sequence
+                                    && nextLine.length() > (i + 1) &&
+                                    nextLine.charAt(i + 1) != this.separator //not at the end of an escape sequence
+                            ) {
+                                sb.append(c);
+                            }
                         }
                     }
                 } else if (c == separator && !inQuotes) {
