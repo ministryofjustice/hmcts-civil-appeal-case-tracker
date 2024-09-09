@@ -43,7 +43,6 @@ public class dumpDatabase extends Action {
 
             // Get the actual path of the uploaded file
             String uploadDir = getServlet().getServletContext().getRealPath("/HMCSFormUpload/");
-            LOGGER.info("Checking for CSV files in: " + uploadDir);
             
             File dir = new File(uploadDir);
             File[] files = dir.listFiles((d, name) -> name.endsWith(".CSV") || name.endsWith(".csv"));
@@ -53,7 +52,6 @@ public class dumpDatabase extends Action {
             }
             
             String filePath = files[0].getAbsolutePath();
-            LOGGER.info("Processing file: " + filePath);
 
             CSVReader reader = new CSVReader(new FileReader(filePath));
 
