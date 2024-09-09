@@ -45,6 +45,9 @@ public class dumpDatabase extends Action {
             String uploadDir = getServlet().getServletContext().getRealPath("/HMCSFormUpload/");
             LOGGER.info("Checking for CSV files in: " + uploadDir);
             
+            File dir = new File(uploadDir);
+            File[] files = dir.listFiles((d, name) -> name.endsWith(".CSV") || name.endsWith(".csv"));
+            
             if (files == null || files.length == 0) {
                 throw new FileNotFoundException("No CSV file found in " + uploadDir);
             }
