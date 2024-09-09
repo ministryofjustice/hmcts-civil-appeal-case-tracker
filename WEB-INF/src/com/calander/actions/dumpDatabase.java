@@ -40,7 +40,7 @@ public class dumpDatabase extends Action {
             session.beginTransaction();
             session.createQuery("delete Calander").executeUpdate();
 
-            String filePath = getServlet().getServletContext().getRealPath("/") + "uploadfile/data.csv";
+            String filePath = getServlet().getServletContext().getRealPath("/") + "uploadfile/CASE_TRACKER.csv";
             CSVReader reader = new CSVReader(new FileReader(filePath));
 
             int rowCount = CsvProcessor.processCSV(reader, session);
