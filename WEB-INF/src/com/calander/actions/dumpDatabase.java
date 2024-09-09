@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.File;
+import java.util.logging.Logger;
 
 public class dumpDatabase extends Action {
 
@@ -40,7 +42,18 @@ public class dumpDatabase extends Action {
             session.beginTransaction();
             session.createQuery("delete Calander").executeUpdate();
 
-            String filePath = getServlet().getServletContext().getRealPath("/") + "uploadfile/CASE_TRACKER.CSV";
+            // Get the actual path of the uploaded file
+            String uploadDir = "/usr/local/tomcat/webapps/ROOT/uploadfile/";
+            File dir = new File(uploadDir);
+            File[] files = dir.listFiles((d, name) -> name.endsWith(".CSV") || name.endsWith(".csv"));
+            
+            if (files == null || files.length == 0) {
+                throw new FileNotFoundException("No CSV file found in " + uploadDir);
+            }
+            
+            String filePath = files[0].getAbsolutePath();
+            LOGGER.info("Processing file: " + filePath);
+
             CSVReader reader = new CSVReader(new FileReader(filePath));
 
             int rowCount = CsvProcessor.processCSV(reader, session);
