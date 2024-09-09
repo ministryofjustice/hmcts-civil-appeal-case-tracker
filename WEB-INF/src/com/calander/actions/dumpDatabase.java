@@ -2,6 +2,8 @@ package com.calander.actions;
 
 import au.com.bytecode.opencsv.CSVReader;
 import com.calander.util.CsvProcessor;
+
+import com.calander.beans.Calander;
 import com.calander.plugin.HibernatePlugin;
 
 import org.apache.struts.action.Action;
@@ -40,9 +42,8 @@ public class dumpDatabase extends Action {
             session.createQuery("delete Calander").executeUpdate();
 
             // Get the actual path of the uploaded file
-            String uploadDir = "/usr/local/tomcat/webapps/ROOT/uploadfile/";
-            File dir = new File(uploadDir);
-            File[] files = dir.listFiles((d, name) -> name.endsWith(".CSV") || name.endsWith(".csv"));
+            String uploadDir = getServlet().getServletContext().getRealPath("/HMCSFormUpload/");
+            LOGGER.info("Checking for CSV files in: " + uploadDir);
             
             if (files == null || files.length == 0) {
                 throw new FileNotFoundException("No CSV file found in " + uploadDir);
