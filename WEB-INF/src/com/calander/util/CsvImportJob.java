@@ -1,6 +1,5 @@
 package com.calander.util;
 
-
 import au.com.bytecode.opencsv.CSVReader;
 import com.calander.beans.Calander;
 import com.calander.plugin.HibernatePlugin;
@@ -31,18 +30,17 @@ public class CsvImportJob implements Job {
         downloadCsvFromS3BucketAndReplaceDatabaseWithContents();
     }
 
-
     public void execute(JobExecutionContext arg0)
-        throws JobExecutionException {
+            throws JobExecutionException {
 
-        //Generates random wait time so that the tasks dont upload simultaneously causing a duplication of data
+        // Generates random wait time so that the tasks dont upload simultaneously
+        // causing a duplication of data
         int waitTime = randomWaitTimeInMillis();
         System.out.println(MessageFormat.format("Wait {0} milliseconds, {1} seconds", waitTime, (waitTime / 1000)));
 
         try {
             Thread.sleep(waitTime);
-        }
-        catch (InterruptedException e) { //Thread interrupted by another thread
+        } catch (InterruptedException e) { // Thread interrupted by another thread
             e.printStackTrace();
         }
 
@@ -54,7 +52,6 @@ public class CsvImportJob implements Job {
         int upperBound = 3600; // Random wait time in seconds (1 hour)
         return rand.nextInt(upperBound * 1000); // convert seconds to milliseconds
     }
-
 
     public static void downloadCsvFromS3BucketAndReplaceDatabaseWithContents() {
         System.out.println("Cron job running!");
@@ -86,7 +83,7 @@ public class CsvImportJob implements Job {
 
             session.beginTransaction();
             session.createQuery("delete Calander").executeUpdate();
-            
+
             int rowCount = CsvProcessor.processCSV(reader, session);
             session.getTransaction().commit();
             LOGGER.info("Success {} rows added in database", rowCount);
@@ -97,7 +94,8 @@ public class CsvImportJob implements Job {
             session.flush();
             session.clear();
             session.close();
-            //TODO send alert to slack or have a healthcheck page that shows last time db was updated
+            // TODO send alert to slack or have a healthcheck page that shows last time db
+            // was updated
         } finally {
             session.flush();
             session.clear();
@@ -110,20 +108,20 @@ public class CsvImportJob implements Job {
         Query query = session.createQuery("SELECT MAX(c.last_updated) FROM Calander c");
         String lastUpdated = (String) query.uniqueResult();
         LOGGER.info("Last updated date from database: {}", lastUpdated);
-        
+
         if (lastUpdated == null) {
             LOGGER.info("No last updated date found in database");
             return false;
         }
-        
+
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
         String today = sdf.format(new Date());
         LOGGER.info("Today's date: {}", today);
-        
+
         try {
             Date lastUpdatedDate = sdf.parse(lastUpdated);
             Date todayDate = sdf.parse(today);
-            
+
             boolean isUpdatedToday = lastUpdatedDate.equals(todayDate);
             LOGGER.info("Is updated today: {}", isUpdatedToday);
             return isUpdatedToday;
