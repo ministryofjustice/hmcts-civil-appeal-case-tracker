@@ -66,7 +66,7 @@ public class CsvImportJob implements Job {
 
         try {
             LOGGER.info("Checking if database was updated today");
-            if (isLastUpdatedToday(session)) {
+            if (isLastUpdatedYesterday(session)) {
                 LOGGER.info("Database already updated today. Skipping CSV import.");
                 return;
             }
@@ -104,7 +104,7 @@ public class CsvImportJob implements Job {
         System.out.println("Scheduler Finished");
     }
 
-    private static boolean isLastUpdatedToday(Session session) {
+    private static boolean isLastUpdatedYesterday(Session session) {
         Query query = session.createQuery("SELECT MAX(c.last_updated) FROM Calander c");
         String lastUpdated = (String) query.uniqueResult();
         LOGGER.info("Last updated date from database: {}", lastUpdated);
@@ -115,16 +115,18 @@ public class CsvImportJob implements Job {
         }
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
-        String today = sdf.format(new Date());
-        LOGGER.info("Today's date: {}", today);
+        Date today = new Date();
+        Date yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+        String yesterdayStr = sdf.format(yesterday);
+        LOGGER.info("Yesterday's date: {}", yesterdayStr);
 
         try {
             Date lastUpdatedDate = sdf.parse(lastUpdated);
-            Date todayDate = sdf.parse(today);
+            Date yesterdayDate = sdf.parse(yesterdayStr);
 
-            boolean isUpdatedToday = lastUpdatedDate.equals(todayDate);
-            LOGGER.info("Is updated today: {}", isUpdatedToday);
-            return isUpdatedToday;
+            boolean isUpdatedYesterday = lastUpdatedDate.equals(yesterdayDate);
+            LOGGER.info("Is updated yesterday: {}", isUpdatedYesterday);
+            return isUpdatedYesterday;
         } catch (ParseException e) {
             LOGGER.error("Error parsing date: {}", e.getMessage());
             return false;
