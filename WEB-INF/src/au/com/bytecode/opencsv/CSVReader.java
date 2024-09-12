@@ -179,7 +179,7 @@ public class CSVReader {
      * @return the comma-tokenized list of elements, or null if nextLine is null
      * @throws IOException if bad things happen during the read
      */
-    private String[] parseLine(String nextLine) throws IOException {
+    public String[] parseLine(String nextLine) throws IOException {
 
         if (nextLine == null) {
             return null;

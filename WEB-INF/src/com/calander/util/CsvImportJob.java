@@ -104,7 +104,7 @@ public class CsvImportJob implements Job {
         System.out.println("Scheduler Finished");
     }
 
-    private static boolean isLastUpdatedYesterday(Session session) {
+    public static boolean isLastUpdatedYesterday(Session session) {
         Query query = session.createQuery("SELECT MAX(c.last_updated) FROM Calander c");
         String lastUpdated = (String) query.uniqueResult();
         LOGGER.info("Last updated date from database: {}", lastUpdated);
