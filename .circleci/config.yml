@@ -5,12 +5,12 @@ orbs:
 
 jobs:
   build:
+    executor: aws-ecr/default
     parameters:
       env_name:
         type: string
       ecr_endpoint:
         type: string
-    executor: aws-ecr/default
     steps:
       - checkout
       - when:
@@ -23,7 +23,18 @@ jobs:
             - run:
                 name: Build and Test
                 command: |
-                  docker run --mount type=bind,source="$(pwd)",target=/dockerrun/ paulushc/apacheant ant -buildfile /dockerrun/ clean build-and-test
+                  docker run --mount type=bind,source="$(pwd)",target=/dockerrun/ paulushc/apacheant ant -buildfile /dockerrun/ clean build-and-test war
+            - run:
+                name: Verify WAR file
+                command: |
+                  ls -l deploy/
+                  if [ ! -f deploy/CACT.war ]; then
+                    echo "CACT.war not found in deploy directory"
+                    exit 1
+                  fi
+            - run:
+                name: Build Docker images
+                command: |
                   docker build -t civil-appeal-case-tracker:${CIRCLE_SHA1} .
                   docker build -f Dockerfile.monitor -t civil-appeal-case-tracker-monitor:${CIRCLE_SHA1} .
                   docker build -f Dockerfile.maintenance -t civil-appeal-case-tracker-maintenance:${CIRCLE_SHA1} .
@@ -55,7 +66,18 @@ jobs:
             - run:
                 name: Build and Test
                 command: |
-                  docker run --mount type=bind,source="$(pwd)",target=/dockerrun/ paulushc/apacheant ant -buildfile /dockerrun/ clean build-and-test
+                  docker run --mount type=bind,source="$(pwd)",target=/dockerrun/ paulushc/apacheant ant -buildfile /dockerrun/ clean build-and-test war
+            - run:
+                name: Verify WAR file
+                command: |
+                  ls -l deploy/
+                  if [ ! -f deploy/CACT.war ]; then
+                    echo "CACT.war not found in deploy directory"
+                    exit 1
+                  fi
+            - run:
+                name: Build Docker images
+                command: |
                   docker build -t civil-appeal-case-tracker:${CIRCLE_SHA1} .
                   docker build -f Dockerfile.monitor -t civil-appeal-case-tracker-monitor:${CIRCLE_SHA1} .
                   docker build -f Dockerfile.maintenance -t civil-appeal-case-tracker-maintenance:${CIRCLE_SHA1} .
@@ -87,7 +109,18 @@ jobs:
             - run:
                 name: Build and Test
                 command: |
-                  docker run --mount type=bind,source="$(pwd)",target=/dockerrun/ paulushc/apacheant ant -buildfile /dockerrun/ clean build-and-test
+                  docker run --mount type=bind,source="$(pwd)",target=/dockerrun/ paulushc/apacheant ant -buildfile /dockerrun/ clean build-and-test war
+            - run:
+                name: Verify WAR file
+                command: |
+                  ls -l deploy/
+                  if [ ! -f deploy/CACT.war ]; then
+                    echo "CACT.war not found in deploy directory"
+                    exit 1
+                  fi
+            - run:
+                name: Build Docker images
+                command: |
                   docker build -t civil-appeal-case-tracker:${CIRCLE_SHA1} .
                   docker build -f Dockerfile.monitor -t civil-appeal-case-tracker-monitor:${CIRCLE_SHA1} .
                   docker build -f Dockerfile.maintenance -t civil-appeal-case-tracker-maintenance:${CIRCLE_SHA1} .
