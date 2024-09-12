@@ -11,6 +11,25 @@
 	=================================
 	-->
 	<target name="build" depends="clean,make_move_directories,compile,build-and-test" description="Compile source code and run tests">
+		<echo>
+			Starting build - this will compile the code, jar it, then produce a war file
+		</echo>
+		<echo>
+			*****************************************************************************
+		</echo>
+		<echo>
+			If anything odd happens make sure you close any references to any files in the app
+		</echo>
+		<tstamp>
+			<format property="time" pattern="dd/MM/yyyy hh:mm:ss aa" unit="hour" />
+		</tstamp>
+		<echo>
+			*****************************************************************************
+		</echo>
+		<echo>
+			Time started: ${time} - action occuring in build directoy!
+		</echo>
+		<antcall target="war" />
 		<echo message="Build completed successfully"/>
 	</target>
 	<path id="build_classpath">
