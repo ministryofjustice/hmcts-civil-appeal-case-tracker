@@ -10,26 +10,8 @@
 	target: build
 	=================================
 	-->
-	<target name="build" depends="compile" description="Unloads previous application version and deploys a new one">
-		<echo>
-			Starting build - this will compile the code, jar it, then produce a war file
-		</echo>
-		<echo>
-			*****************************************************************************
-		</echo>
-		<echo>
-			If anything odd happens make sure you close any references to any files in the app
-		</echo>
-		<tstamp>
-			<format property="time" pattern="dd/MM/yyyy hh:mm:ss aa" unit="hour" />
-		</tstamp>
-		<echo>
-			*****************************************************************************
-		</echo>
-		<echo>
-			Time started: ${time} - action occuring in build directoy!
-		</echo>
-		<antcall target="war" />
+	<target name="build" depends="clean,make_move_directories,compile,build-and-test" description="Compile source code and run tests">
+		<echo message="Build completed successfully"/>
 	</target>
 	<path id="build_classpath">
 		<fileset dir="WEB-INF/lib">
@@ -245,5 +227,8 @@
 				</fileset>
 			</batchtest>
 		</junit>
+	</target>
+	<target name="build-and-test" depends="compile,compile-tests,run_junit_tests" description="Compile and run all tests">
+		<echo message="Build and tests completed successfully"/>
 	</target>
 </project>
