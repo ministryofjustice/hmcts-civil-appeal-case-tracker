@@ -2,7 +2,6 @@ package com.calander.beans;
 
 public class Calander {
 
-
     private int case_id;
     private String search_date;
     private String case_no;
@@ -236,5 +235,33 @@ public class Calander {
 
     public void setTrack_line8(String track_line8) {
         this.track_line8 = track_line8;
+    }
+
+    public void setProperties(String[] data) {
+        this.setSearch_date(data[0]);
+        this.setCase_no(data[1]);
+        this.setHeading_status(data[2]);
+        this.setJudge1(data[3]);
+        this.setJudge2(data[4]);
+        this.setJudge3(data[5]);
+        this.setLcourt(data[6]);
+        this.setVenue(data[7]);
+        this.setCase_ref(data[8]);
+        this.setTitle1(data[9] + " " + data[10]);
+        this.setTitle2(data[10]);
+        this.setType(data[11]);
+        this.setLc_judge(data[12]);
+        this.setNature(data[13]);
+        this.setLast_updated(data[14]);
+        this.setResult(data[15]);
+        this.setStatus(data[16]);
+        this.setTrack_line1(data[17]);
+        this.setTrack_line2(data[18]);
+        this.setTrack_line3(data[19]);
+        this.setTrack_line4(data[20]);
+        this.setTrack_line5(data[21]);
+        this.setTrack_line6(data[22]);
+        this.setTrack_line7(data[23]);
+        this.setTrack_line8(data[24]);
     }
 }
