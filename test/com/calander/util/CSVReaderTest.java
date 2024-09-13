@@ -30,12 +30,15 @@ public class CSVReaderTest {
 
     @Test
     public void testParseLineWithEscapedQuote() throws IOException {
-        String input = "\\\"test string";
+        // This input simulates a CSV line with an escaped quote in the first field
+        // and a second field. The actual input being tested is: \"test string,second string
+        String input = "\\\"test string,second string";
         CSVReader reader = new CSVReader(new StringReader(input));
         
-        String[] result = reader.readNext();
-        assertNotNull(result);
-        assertEquals(1, result.length);
-        assertEquals("\"test string", result[0]);
+        String[] parsedLine = reader.readNext();
+        assertNotNull(parsedLine);
+        assertEquals(2, parsedLine.length);
+        assertEquals("\"test string", parsedLine[0]);
+        assertEquals("second string", parsedLine[1]);
     }
 }
