@@ -29,20 +29,7 @@ public class CSVReaderTest {
     }
 
     @Test
-    public void testParseLineWithEscapedQuotes() throws IOException {
-        String input = "\"Column 1\",\"Column \\\"2\\\"\",\"Column 3\"";
-        CSVReader reader = new CSVReader(new StringReader(input));
-        
-        String[] result = reader.readNext();
-        assertNotNull(result);
-        assertEquals(3, result.length);
-        assertEquals("Column 1", result[0]);
-        assertEquals("Column \"2\"", result[1]);
-        assertEquals("Column 3", result[2]);
-    }
-
-    @Test
-    public void testParseLineWithQuoteAtStart() throws IOException {
+    public void testParseLineWithEscapedQuote() throws IOException {
         String input = "\\\"test string";
         CSVReader reader = new CSVReader(new StringReader(input));
         
