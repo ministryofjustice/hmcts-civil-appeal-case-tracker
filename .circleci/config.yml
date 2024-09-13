@@ -21,13 +21,29 @@ jobs:
                 role_arn: $ECR_ROLE_TO_ASSUME_DEV
                 region: $ECR_REGION
             - run:
-                name: Build
+                name: Build and Test
                 command: |
-                  docker run  --mount type=bind,source="$(pwd)",target=/dockerrun/  paulushc/apacheant ant -buildfile /dockerrun/ clean build
+                  docker run --mount type=bind,source="$(pwd)",target=/dockerrun/ paulushc/apacheant ant -buildfile /dockerrun/ clean build-and-test war
+            - run:
+                name: Verify WAR file
+                command: |
+                  ls -l deploy/
+                  if [ ! -f deploy/CACT.war ]; then
+                    echo "CACT.war not found in deploy directory"
+                    exit 1
+                  fi
+            - run:
+                name: Build Docker images
+                command: |
                   docker build -t civil-appeal-case-tracker:${CIRCLE_SHA1} .
                   docker build -f Dockerfile.monitor -t civil-appeal-case-tracker-monitor:${CIRCLE_SHA1} .
                   docker build -f Dockerfile.maintenance -t civil-appeal-case-tracker-maintenance:${CIRCLE_SHA1} .
                   docker image ls
+            - store_test_results:
+                path: testreport/xml
+            - store_artifacts:
+                path: testreport
+                destination: test-results
             - run:
                 name: Tag and push images to repo
                 command: |
@@ -48,13 +64,29 @@ jobs:
                 role_arn: $ECR_ROLE_TO_ASSUME_PREPROD
                 region: $ECR_REGION
             - run:
-                name: Build
+                name: Build and Test
                 command: |
-                  docker run  --mount type=bind,source="$(pwd)",target=/dockerrun/  paulushc/apacheant ant -buildfile /dockerrun/ clean build
+                  docker run --mount type=bind,source="$(pwd)",target=/dockerrun/ paulushc/apacheant ant -buildfile /dockerrun/ clean build-and-test war
+            - run:
+                name: Verify WAR file
+                command: |
+                  ls -l deploy/
+                  if [ ! -f deploy/CACT.war ]; then
+                    echo "CACT.war not found in deploy directory"
+                    exit 1
+                  fi
+            - run:
+                name: Build Docker images
+                command: |
                   docker build -t civil-appeal-case-tracker:${CIRCLE_SHA1} .
                   docker build -f Dockerfile.monitor -t civil-appeal-case-tracker-monitor:${CIRCLE_SHA1} .
                   docker build -f Dockerfile.maintenance -t civil-appeal-case-tracker-maintenance:${CIRCLE_SHA1} .
                   docker image ls
+            - store_test_results:
+                path: testreport/xml
+            - store_artifacts:
+                path: testreport
+                destination: test-results
             - run:
                 name: Tag and push images to repo
                 command: |
@@ -75,13 +107,29 @@ jobs:
                 role_arn: $ECR_ROLE_TO_ASSUME_PROD
                 region: $ECR_REGION
             - run:
-                name: Build
+                name: Build and Test
                 command: |
-                  docker run  --mount type=bind,source="$(pwd)",target=/dockerrun/  paulushc/apacheant ant -buildfile /dockerrun/ clean build
+                  docker run --mount type=bind,source="$(pwd)",target=/dockerrun/ paulushc/apacheant ant -buildfile /dockerrun/ clean build-and-test war
+            - run:
+                name: Verify WAR file
+                command: |
+                  ls -l deploy/
+                  if [ ! -f deploy/CACT.war ]; then
+                    echo "CACT.war not found in deploy directory"
+                    exit 1
+                  fi
+            - run:
+                name: Build Docker images
+                command: |
                   docker build -t civil-appeal-case-tracker:${CIRCLE_SHA1} .
                   docker build -f Dockerfile.monitor -t civil-appeal-case-tracker-monitor:${CIRCLE_SHA1} .
                   docker build -f Dockerfile.maintenance -t civil-appeal-case-tracker-maintenance:${CIRCLE_SHA1} .
                   docker image ls
+            - store_test_results:
+                path: testreport/xml
+            - store_artifacts:
+                path: testreport
+                destination: test-results
             - run:
                 name: Tag and push images to repo
                 command: |
