@@ -31,7 +31,7 @@ public class CSVReaderTest {
     @Test
     public void testParseLineWithEscapedQuote() throws IOException {
         // This input simulates a CSV line with an escaped quote in the first field
-        // and a second field. The actual input being tested is: \"test string,second string
+        // and a second field. The actual input being tested is: "\"test string","second string"
         String input = "\"\\\"test string\",\"second string\"";
         CSVReader reader = new CSVReader(new StringReader(input));
         
