@@ -9,6 +9,8 @@ import org.apache.struts.action.ActionMapping;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,37 +20,48 @@ import java.util.regex.Pattern;
 
 public class caseDetailAction extends Action {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(caseDetailAction.class);
+
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException, Exception {
+            throws IOException, ServletException {
+        try {
+            String case_id = request.getParameter("case_id");
 
-        String case_id = request.getParameter("case_id");
+            Pattern pattern = Pattern.compile("^[0-9]++$");
+           /* if(!pattern.matcher(case_id).matches()) {
+                case_id = "";
+            }*/
 
-        Pattern pattern = Pattern.compile("^[0-9]++$");
-       /* if(!pattern.matcher(case_id).matches()) {
-            case_id = "";
-        }*/
+            //getting session object from Hibernate Util class
+            SessionFactory factory = (SessionFactory) servlet.getServletContext().getAttribute(HibernatePlugin.KEY_NAME);
+            Session session = factory.openSession();
 
-        //getting session object from Hibernate Util class
-        SessionFactory factory = (SessionFactory) servlet.getServletContext().getAttribute(HibernatePlugin.KEY_NAME);
-        Session session = factory.openSession();
+            Query query = session.createQuery("from Calander c where c.case_no=:case");
+            query.setString("case", case_id);
+            //query.
+            //System.out.println(query.getQueryString());
+            //System.out.println("result list size is "+query.list().size());
+            String mappingResult = "success";
+            if (query.list().size() > 0) {
+                Calander calander = (Calander) query.list().get(0);
+                request.setAttribute("detail", calander);
+                request.setAttribute("case", case_id);
+            } else {
+                mappingResult = "error";
+            }
+            session.clear();
+            session.close();
+            return mapping.findForward(mappingResult);
 
-        Query query = session.createQuery("from Calander c where c.case_no=:case");
-        query.setString("case", case_id);
-        //query.
-        //System.out.println(query.getQueryString());
-        //System.out.println("result list size is "+query.list().size());
-        String mappingResult = "success";
-        if (query.list().size() > 0) {
-            Calander calander = (Calander) query.list().get(0);
-            request.setAttribute("detail", calander);
-            request.setAttribute("case", case_id);
-        } else {
-            mappingResult = "error";
+            //System.out.println(calander.getCase_no());
+        } catch (NullPointerException e) {
+            LOGGER.error("NullPointerException in caseDetailAction: ", e);
+            request.setAttribute("exception", e);
+            return mapping.findForward("exception");
+        } catch (Exception e) {
+            LOGGER.error("Exception in caseDetailAction: ", e);
+            request.setAttribute("exception", e);
+            return mapping.findForward("exception");
         }
-        session.clear();
-        session.close();
-        return mapping.findForward(mappingResult);
-
-        //System.out.println(calander.getCase_no());
     }
 }
