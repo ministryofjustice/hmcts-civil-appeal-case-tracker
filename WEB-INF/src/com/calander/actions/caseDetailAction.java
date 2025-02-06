@@ -9,6 +9,7 @@ import org.apache.struts.action.ActionMapping;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,47 +22,59 @@ import java.util.regex.Pattern;
 public class caseDetailAction extends Action {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(caseDetailAction.class);
+    private static final int MAX_RESULTS = 1000;
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
+        Session session = null;
+        Transaction tx = null;
+        
         try {
-            String case_id = request.getParameter("case_id");
-
-            Pattern pattern = Pattern.compile("^[0-9]++$");
-           /* if(!pattern.matcher(case_id).matches()) {
-                case_id = "";
-            }*/
-
-            //getting session object from Hibernate Util class
-            SessionFactory factory = (SessionFactory) servlet.getServletContext().getAttribute(HibernatePlugin.KEY_NAME);
-            Session session = factory.openSession();
-
-            Query query = session.createQuery("from Calander c where c.case_no=:case");
-            query.setString("case", case_id);
-            //query.
-            //System.out.println(query.getQueryString());
-            //System.out.println("result list size is "+query.list().size());
-            String mappingResult = "success";
-            if (query.list().size() > 0) {
-                Calander calander = (Calander) query.list().get(0);
-                request.setAttribute("detail", calander);
-                request.setAttribute("case", case_id);
-            } else {
-                mappingResult = "error";
+            String caseId = request.getParameter("case_id");
+            if (caseId == null || caseId.trim().isEmpty()) {
+                return mapping.findForward("error");
             }
-            session.clear();
-            session.close();
-            return mapping.findForward(mappingResult);
 
-            //System.out.println(calander.getCase_no());
-        } catch (NullPointerException e) {
-            LOGGER.error("NullPointerException in caseDetailAction: ", e);
-            request.setAttribute("exception", e);
-            return mapping.findForward("exception");
+            SessionFactory factory = (SessionFactory) servlet.getServletContext().getAttribute(HibernatePlugin.KEY_NAME);
+            session = factory.openSession();
+            tx = session.beginTransaction();
+
+            Query query = session.createQuery("from Calander where case_id = :caseId")
+                    .setParameter("caseId", caseId)
+                    .setMaxResults(1);  // We only want one result
+            
+            Calander result = (Calander) query.uniqueResult();
+            
+            if (result == null) {
+                return mapping.findForward("error");
+            }
+
+            request.setAttribute("detail", result);
+            tx.commit();
+            
+            return mapping.findForward("success");
+            
         } catch (Exception e) {
-            LOGGER.error("Exception in caseDetailAction: ", e);
+            LOGGER.error("Error in caseDetailAction: ", e);
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (Exception rollbackEx) {
+                    LOGGER.error("Error rolling back transaction: ", rollbackEx);
+                }
+            }
             request.setAttribute("exception", e);
             return mapping.findForward("exception");
+            
+        } finally {
+            if (session != null) {
+                try {
+                    session.clear();
+                    session.close();
+                } catch (Exception e) {
+                    LOGGER.error("Error closing session: ", e);
+                }
+            }
         }
     }
 }
