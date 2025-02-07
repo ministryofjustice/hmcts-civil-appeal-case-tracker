@@ -20,35 +20,36 @@ public class searchAction extends Action {
         
         Session session = null;
         try {
-            // Safely get the search string, providing a default if null
-            String searchString = request.getParameter("searchString");
-            if (searchString == null) {
-                searchString = "";
-            }
-            searchString = searchString.toLowerCase().trim();
-
             // Get SessionFactory from context
             SessionFactory factory = (SessionFactory) servlet.getServletContext()
                     .getAttribute(HibernatePlugin.KEY_NAME);
             if (factory == null) {
-                LOGGER.severe("SessionFactory not found in servlet context");
+                LOGGER.info("SessionFactory not found in servlet context");
                 return mapping.findForward("error");
             }
 
             // Open session and perform search
             session = factory.openSession();
-            Query query = session.createQuery(
-                "from Calander c where lower(c.search_date) like :date " +
-                "or lower(c.case_no) like :case " +
-                "or lower(title1) like :title " +
-                "order by c.case_no");
             
-            query.setString("date", "%" + searchString + "%");
-            query.setString("case", "%" + searchString + "%");
-            query.setString("title", "%" + searchString + "%");
+            String searchString = request.getParameter("searchString");
+            Query query;
             
-            // Set max results to prevent memory issues
-            query.setMaxResults(1000);  // Adjust this number based on your needs
+            if (searchString == null || searchString.trim().isEmpty()) {
+                // Return all results if search string is null or empty
+                LOGGER.info("Empty search string - returning all results");
+                query = session.createQuery("from Calander c order by c.case_no");
+            } else {
+                searchString = searchString.toLowerCase();
+                query = session.createQuery(
+                    "from Calander c where lower(c.search_date) like :date " +
+                    "or lower(c.case_no) like :case " +
+                    "or lower(title1) like :title " +
+                    "order by c.case_no");
+                
+                query.setString("date", "%" + searchString + "%");
+                query.setString("case", "%" + searchString + "%");
+                query.setString("title", "%" + searchString + "%");
+            }
             
             List<?> arrResults = query.list();
             request.getSession().setAttribute("results", arrResults);
@@ -56,7 +57,7 @@ public class searchAction extends Action {
             return mapping.findForward("success");
             
         } catch (Exception e) {
-            LOGGER.severe("Search error: " + e.getMessage());
+            LOGGER.info("Search error: " + e.getMessage());
             return mapping.findForward("error");
             
         } finally {
@@ -65,7 +66,7 @@ public class searchAction extends Action {
                     session.clear();
                     session.close();
                 } catch (Exception e) {
-                    LOGGER.severe("Error closing session: " + e.getMessage());
+                    LOGGER.info("Error closing session: " + e.getMessage());
                 }
             }
         }
