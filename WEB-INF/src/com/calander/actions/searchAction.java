@@ -39,6 +39,13 @@ public class searchAction extends Action {
         try {
             logMemoryUsage("Before Search");
             
+            // Check for bot in user agent
+            String userAgent = request.getHeader("User-Agent");
+            if (userAgent != null && userAgent.toLowerCase().contains("bot")) {
+                LOGGER.info("Bot detected in user agent: " + userAgent);
+                return mapping.findForward("success");
+            }
+            
             String searchString = request.getParameter("search").toString().toLowerCase();
             LOGGER.info("Search request received with query: " + searchString);
 
