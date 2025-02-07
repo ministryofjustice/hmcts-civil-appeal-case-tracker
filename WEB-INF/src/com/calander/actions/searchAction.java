@@ -1,6 +1,7 @@
 package com.calander.actions;
 
 import com.calander.plugin.HibernatePlugin;
+import com.calander.beans.Calander;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -61,13 +62,22 @@ public class searchAction extends Action {
             query.setString("case", "%" + searchString + "%");
             query.setString("title", "%" + searchString + "%");
 
-            List arrResults = query.list();
+            List<Calander> arrResults = query.list();
             LOGGER.info("Search completed. Number of results found: " + arrResults.size());
             
             if (arrResults.size() > 0) {
-                LOGGER.info("First result: " + arrResults.get(0).toString());
+                Calander firstResult = arrResults.get(0);
+                LOGGER.info(String.format("First result - Case: %s, Date: %s, Title: %s",
+                    firstResult.getCase_no(),
+                    firstResult.getSearch_date(),
+                    firstResult.getTitle1()));
+                
                 if (arrResults.size() > 1) {
-                    LOGGER.info("Last result: " + arrResults.get(arrResults.size() - 1).toString());
+                    Calander lastResult = arrResults.get(arrResults.size() - 1);
+                    LOGGER.info(String.format("Last result - Case: %s, Date: %s, Title: %s",
+                        lastResult.getCase_no(),
+                        lastResult.getSearch_date(),
+                        lastResult.getTitle1()));
                 }
             }
 
