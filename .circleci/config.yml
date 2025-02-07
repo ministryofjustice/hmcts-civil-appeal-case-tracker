@@ -11,6 +11,8 @@ jobs:
       ecr_endpoint:
         type: string
     executor: aws-ecr/default
+    machine:
+      image: ubuntu-2204:edge
     steps:
       - checkout
       - when:
