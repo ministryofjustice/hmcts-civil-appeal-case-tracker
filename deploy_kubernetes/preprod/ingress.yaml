@@ -16,6 +16,19 @@ metadata:
       SecRule REQUEST_HEADERS:User-Agent "@contains gptbot" "phase:request,log,deny,id:1000001"
       SecRule REQUEST_HEADERS:User-Agent "@contains crawler" "phase:request,log,deny,id:1000002"
       SecRule REQUEST_HEADERS:User-Agent "@contains bingbot" "phase:request,log,deny,id:1000003"
+      SecRule REQUEST_HEADERS:User-Agent "@contains politico.eu" "phase:request,log,deny,id:1000004"
+      SecRule REQUEST_HEADERS:User-Agent "@contains awario.com" "phase:request,log,deny,id:1000005"
+    nginx.ingress.kubernetes.io/whitelist-source-range: >-
+      194.33.196.0/24, 
+      194.33.192.0/24, 
+      51.149.249.0/29, 
+      51.149.249.32/29, 
+      51.149.250.0/24, 
+      81.153.123.31/32, 
+      90.209.17.46/32, 
+      5.151.166.193/32, 
+      94.192.178.93/32,
+      52.167.144.219
     nginx.ingress.kubernetes.io/server-snippet: |
       location @custom_403 {
         return 403 "<h1>There is a problem:</h1><br><h3>Go back to the previous page using the back arrow and enter valid content</h3>";
