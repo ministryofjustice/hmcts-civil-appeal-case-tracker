@@ -38,10 +38,10 @@ spec:
   ingressClassName: modsec
   tls:
     - hosts:
-        - preprod.civil-appeal-case-tracker.apps.live.cloud-platform.service.justice.gov.uk
-      secretName: civil-appeal-case-tracker-justice-app-secret
+        - preprod.casetracker.justice.gov.uk
+      secretName: casetracker-justice-app-secret
   rules:
-    - host: preprod.civil-appeal-case-tracker.apps.live.cloud-platform.service.justice.gov.uk
+    - host: preprod.casetracker.justice.gov.uk
       http:
         paths:
           - path: /
