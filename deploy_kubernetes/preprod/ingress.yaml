@@ -15,9 +15,9 @@ metadata:
       SecRule REQUEST_HEADERS:User-Agent "@contains Amazonbot" "phase:request,log,deny,id:1000000"
       SecRule REQUEST_HEADERS:User-Agent "@contains gptbot" "phase:request,log,deny,id:1000001"
       SecRule REQUEST_HEADERS:User-Agent "@contains crawler" "phase:request,log,deny,id:1000002"
-      SecRule REQUEST_HEADERS:User-Agent "@contains bingbot" "phase:request,log,deny,id:1000003"
+      SecRule REQUEST_HEADERS:User-Agent "@rx bing(bot|bot/2\.0|\.com)" "phase:1,log,deny,t:lowercase,id:1000003"
       SecRule REQUEST_HEADERS:User-Agent "@rx politico(-eu|-bot|bot@politico\.eu)" "phase:1,log,deny,t:lowercase,id:1000004"
-      SecRule REQUEST_HEADERS:User-Agent "@contains awario.com" "phase:request,log,deny,id:1000005"
+      SecRule REQUEST_HEADERS:User-Agent "@rx awario(smartbot|bots@awario\.com)" "phase:1,log,deny,t:lowercase,id:1000005"
     nginx.ingress.kubernetes.io/whitelist-source-range: >-
       194.33.196.0/24, 
       194.33.192.0/24, 
