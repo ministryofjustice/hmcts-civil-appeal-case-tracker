@@ -16,7 +16,7 @@ metadata:
       SecRule REQUEST_HEADERS:User-Agent "@contains gptbot" "phase:request,log,deny,id:1000001"
       SecRule REQUEST_HEADERS:User-Agent "@contains crawler" "phase:request,log,deny,id:1000002"
       SecRule REQUEST_HEADERS:User-Agent "@contains bingbot" "phase:request,log,deny,id:1000003"
-      SecRule REQUEST_HEADERS:User-Agent "@contains politico.eu" "phase:request,log,deny,id:1000004"
+      SecRule REQUEST_HEADERS:User-Agent "@rx politico(-eu|-bot|bot@politico\.eu)" "phase:1,log,deny,t:lowercase,id:1000004"
       SecRule REQUEST_HEADERS:User-Agent "@contains awario.com" "phase:request,log,deny,id:1000005"
     nginx.ingress.kubernetes.io/server-snippet: |
       location @custom_403 {
