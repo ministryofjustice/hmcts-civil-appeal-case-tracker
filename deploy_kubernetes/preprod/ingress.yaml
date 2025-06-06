@@ -12,9 +12,9 @@ metadata:
     nginx.ingress.kubernetes.io/modsecurity-snippet: |
       SecRuleEngine On
       SecDefaultAction "phase:2,pass,log,tag:github_team=dts-legacy"
-      SecRule REQUEST_HEADERS:User-Agent "@contains Amazonbot" "phase:request,log,deny,id:1000000"
-      SecRule REQUEST_HEADERS:User-Agent "@contains gptbot" "phase:request,log,deny,id:1000001"
-      SecRule REQUEST_HEADERS:User-Agent "@contains crawler" "phase:request,log,deny,id:1000002"
+      SecRule REQUEST_HEADERS:User-Agent "@contains Amazonbot" "phase:1,log,deny,id:1000000"
+      SecRule REQUEST_HEADERS:User-Agent "@contains gptbot" "phase:1,log,deny,id:1000001"
+      SecRule REQUEST_HEADERS:User-Agent "@contains crawler" "phase:1,log,deny,id:1000002"
       SecRule REQUEST_HEADERS:User-Agent "@rx bing(bot|bot/2\.0|\.com)" "phase:1,log,deny,t:lowercase,id:1000003"
       SecRule REQUEST_HEADERS:User-Agent "@rx politico(-eu|-bot|bot@politico\.eu)" "phase:1,log,deny,t:lowercase,id:1000004"
       SecRule REQUEST_HEADERS:User-Agent "@rx awario(smartbot|bots@awario\.com)" "phase:1,log,deny,t:lowercase,id:1000005"
