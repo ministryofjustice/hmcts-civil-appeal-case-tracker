@@ -28,8 +28,7 @@ metadata:
       90.209.17.46/32, 
       5.151.166.193/32, 
       94.192.178.93/32,
-      52.167.144.219/32,
-      88.97.225.161/32
+      52.167.144.219/32
     nginx.ingress.kubernetes.io/server-snippet: |
       location @custom_403 {
         return 403 "{\"msg\":\"<br/>Civil Appeal Case Tracker<br/>This is a restricted page. Please contact dts-legacy-apps-support-team@hmcts.net for access<br/>\"}";
