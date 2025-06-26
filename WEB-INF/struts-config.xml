@@ -32,7 +32,7 @@
 	parameter="/admin/info.jsp" scope="request"/>
 
 				<!-- Map /dashboard to dashboard.jsp -->
-	<action path="/dashboard"	type="org.apache.struts.action.ForwardAction"
+	<action path="/dashboard"	type="org.apache.struts.actions.ForwardAction"
 	parameter="/admin/dashboard.jsp" scope="request" />
 
 
