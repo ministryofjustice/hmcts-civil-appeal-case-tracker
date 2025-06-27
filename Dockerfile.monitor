@@ -1,4 +1,4 @@
-FROM tomcat:8.5.73-jdk8-openjdk
+FROM tomcat:9.0.106-jdk11-temurin-jammy
 
 # Install required dependencies
 RUN apt-get update && \
