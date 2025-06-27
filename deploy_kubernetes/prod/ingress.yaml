@@ -18,6 +18,7 @@ metadata:
       SecRule REQUEST_HEADERS:User-Agent "@rx bing(bot|bot/2\.0|\.com)" "phase:1,log,deny,t:lowercase,id:1000003"
       SecRule REQUEST_HEADERS:User-Agent "@rx politico(-eu|-bot|bot@politico\.eu)" "phase:1,log,deny,t:lowercase,id:1000004"
       SecRule REQUEST_HEADERS:User-Agent "@rx awario(smartbot|bots@awario\.com)" "phase:1,log,deny,t:lowercase,id:1000005"
+      SecRule REQUEST_HEADERS:User-Agent "@rx https://openai\.com/bot" "phase:1,log,deny,t:lowercase,id:1000006"
     nginx.ingress.kubernetes.io/server-snippet: |
       location @custom_403 {
         return 403 "<h1>There is a problem:</h1><br><h3>Go back to the previous page using the back arrow and enter valid content</h3>";
