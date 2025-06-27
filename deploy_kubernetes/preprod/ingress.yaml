@@ -18,6 +18,7 @@ metadata:
       SecRule REQUEST_HEADERS:User-Agent "@rx bing(bot|bot/2\.0|\.com)" "phase:1,log,deny,t:lowercase,id:1000003"
       SecRule REQUEST_HEADERS:User-Agent "@rx politico(-eu|-bot|bot@politico\.eu)" "phase:1,log,deny,t:lowercase,id:1000004"
       SecRule REQUEST_HEADERS:User-Agent "@rx awario(smartbot|bots@awario\.com)" "phase:1,log,deny,t:lowercase,id:1000005"
+      SecRule REQUEST_HEADERS:User-Agent "@rx https://openai\.com/bot" "phase:1,log,deny,t:lowercase,id:1000006"
     nginx.ingress.kubernetes.io/whitelist-source-range: >-
       194.33.196.0/24, 
       194.33.192.0/24, 
@@ -28,7 +29,7 @@ metadata:
       90.209.17.46/32, 
       5.151.166.193/32, 
       94.192.178.93/32,
-      52.167.144.219
+      52.167.144.219/32
     nginx.ingress.kubernetes.io/server-snippet: |
       location @custom_403 {
         return 403 "{\"msg\":\"<br/>Civil Appeal Case Tracker<br/>This is a restricted page. Please contact dts-legacy-apps-support-team@hmcts.net for access<br/>\"}";
