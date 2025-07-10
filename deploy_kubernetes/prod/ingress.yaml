@@ -19,6 +19,11 @@ metadata:
       SecRule REQUEST_HEADERS:User-Agent "@rx politico(-eu|-bot|bot@politico\.eu)" "phase:1,log,deny,t:lowercase,id:1000004"
       SecRule REQUEST_HEADERS:User-Agent "@rx awario(smartbot|bots@awario\.com)" "phase:1,log,deny,t:lowercase,id:1000005"
       SecRule REQUEST_HEADERS:User-Agent "@rx https://openai\.com/bot" "phase:1,log,deny,t:lowercase,id:1000006"
+      SecRule REMOTE_ADDR "@ipMatch 34.248.124.42" "deny,status:403,msg:"DOS Blocked IP",id:1100000"
+      SecRule REMOTE_ADDR "@ipMatch 34.249.147.142" "deny,status:403,msg:"DOS Blocked IP",id:1100001"
+      SecRule REMOTE_ADDR "@ipMatch 34.196.108.51" "deny,status:403,msg:"DOS Blocked IP",id:1100002"
+      SecRule REMOTE_ADDR "@ipMatch 34.195.221.239" "deny,status:403,msg:"DOS Blocked IP",id:1100003"
+      SecRule REMOTE_ADDR "@ipMatch 34.248.222.208" "deny,status:403,msg:"DOS Blocked IP",id:1100004"
     nginx.ingress.kubernetes.io/server-snippet: |
       location @custom_403 {
         return 403 "<h1>There is a problem:</h1><br><h3>Go back to the previous page using the back arrow and enter valid content</h3>";
