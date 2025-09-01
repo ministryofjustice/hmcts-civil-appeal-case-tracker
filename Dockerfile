@@ -8,7 +8,7 @@ ENV DB_HOST="172.22.5.164" \
     ADMIN_USER=admin \
     ADMIN_PASS=admin
 
-This is no set in deployment.yaml to avoid the base image overwriting what we set in the dockerfile
+#This is no set in deployment.yaml to avoid the base image overwriting what we set in the dockerfile
 #ENV CATALINA_OPTS "-Xms2048m -Xmx2048m -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:/usr/local/tomcat/logs/gc.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5 -XX:GCLogFileSize=10M"
 
 RUN mkdir -p /opt
