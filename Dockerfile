@@ -8,25 +8,8 @@ ENV DB_HOST="172.22.5.164" \
     ADMIN_USER=admin \
     ADMIN_PASS=admin
 
+This is no set in deployment.yaml to avoid the base image overwriting what we set in the dockerfile
 #ENV CATALINA_OPTS "-Xms2048m -Xmx2048m -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:/usr/local/tomcat/logs/gc.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5 -XX:GCLogFileSize=10M"
-ENV CATALINA_OPTS "\
-  -Xms2048m \
-  -Xmx3072m \
-  -XX:+UseG1GC \
-  -XX:+UseStringDeduplication \
-  -XX:MaxMetaspaceSize=256m \
-  -XX:ReservedCodeCacheSize=128m \
-  -XX:MaxDirectMemorySize=256m \
-  -Xss512k \
-  -XX:+HeapDumpOnOutOfMemoryError \
-  -XX:HeapDumpPath=/usr/local/tomcat/logs \
-  -XX:+ExitOnOutOfMemoryError \
-  -XX:+PrintGCDetails \
-  -XX:+PrintGCDateStamps \
-  -Xloggc:/usr/local/tomcat/logs/gc.log \
-  -XX:+UseGCLogFileRotation \
-  -XX:NumberOfGCLogFiles=5 \
-  -XX:GCLogFileSize=10M"
 
 RUN mkdir -p /opt
 RUN rm -rf /usr/local/tomcat/webapps/ROOT && rm -rf /usr/local/tomcat/webapps/docs && rm -rf /usr/local/tomcat/webapps/examples

@@ -60,6 +60,24 @@ spec:
                 secretKeyRef:
                   name: case-tracker-csv-upload-login
                   key: admin_pass
+            - name: CATALINA_OPTS
+              value: >-
+                -Xms2048m -Xmx2048m
+                -XX:+UseG1GC
+                -XX:+UseStringDeduplication
+                -XX:MaxMetaspaceSize=256m
+                -XX:ReservedCodeCacheSize=128m
+                -XX:MaxDirectMemorySize=256m
+                -Xss512k
+                -XX:+HeapDumpOnOutOfMemoryError
+                -XX:HeapDumpPath=/usr/local/tomcat/logs
+                -XX:+ExitOnOutOfMemoryError
+                -XX:+PrintGCDetails
+                -XX:+PrintGCDateStamps
+                -Xloggc:/usr/local/tomcat/logs/gc.log
+                -XX:+UseGCLogFileRotation
+                -XX:NumberOfGCLogFiles=5
+                -XX:GCLogFileSize=10M
           readinessProbe:
             httpGet:
               path: /
