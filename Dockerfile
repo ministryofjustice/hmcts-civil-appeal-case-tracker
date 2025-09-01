@@ -11,7 +11,7 @@ ENV DB_HOST="172.22.5.164" \
 #ENV CATALINA_OPTS "-Xms2048m -Xmx2048m -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:/usr/local/tomcat/logs/gc.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5 -XX:GCLogFileSize=10M"
 ENV CATALINA_OPTS "\
   -Xms2048m \
-  -Xmx2048m \
+  -Xmx3072m \
   -XX:+UseG1GC \
   -XX:+UseStringDeduplication \
   -XX:MaxMetaspaceSize=256m \
