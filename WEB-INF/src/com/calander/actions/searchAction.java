@@ -40,8 +40,21 @@ public class searchAction extends Action {
 
         session.clear();
         session.close();
-        request.getSession().setAttribute("results", arrResults);
+
+        if (isUiRequest(request)) {
+            request.getSession(true).setAttribute("results", arrResults);
+        } else {
+            request.setAttribute("results", arrResults);
+        }
 
         return mapping.findForward("success");
+    }
+
+    private boolean isUiRequest(HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        if (referer != null && referer.contains("casetracker.justice.gov.uk")) {
+            return true;
+        }
+        return false;
     }
 }
