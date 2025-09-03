@@ -119,12 +119,12 @@
                                 </div>
                             </div>
 
+                            <!-- Session-scoped results (UI paging) -->
                             <logic:present name="results" scope="session">
                                 <div class="formwrap">
                                     <span class="tl"></span>
                                     <span class="tr"><span></span></span>
                                     <div class="formcon">
-
                                         <h2>Search results</h2>
                                         <div class="result">
                                             <display:table id="result" name="sessionScope.results" requestURI="/search.do"
@@ -136,7 +136,27 @@
                                                 <display:column property="title1" title="Title"/>
                                             </display:table>
                                         </div>
+                                    </div>
+                                </div>
+                            </logic:present>
 
+                            <!-- Request-scoped results (API/bot users) -->
+                            <logic:present name="results" scope="request">
+                                <div class="formwrap">
+                                    <span class="tl"></span>
+                                    <span class="tr"><span></span></span>
+                                    <div class="formcon">
+                                        <h2>Search results</h2>
+                                        <div class="result">
+                                            <display:table id="result" name="requestScope.results" requestURI="/search.do"
+                                                           pagesize="50" sort="list">
+                                                <display:setProperty
+                                                        name="paging.banner.placement">top</display:setProperty>
+                                                <display:column property="case_no" title="Case number" paramId="case_id"
+                                                                paramProperty="case_no" href="getDetail.do"/>
+                                                <display:column property="title1" title="Title"/>
+                                            </display:table>
+                                        </div>
                                     </div>
                                 </div>
                             </logic:present>
