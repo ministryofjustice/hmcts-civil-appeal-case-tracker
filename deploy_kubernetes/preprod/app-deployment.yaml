@@ -78,6 +78,7 @@ spec:
                 -XX:+UseGCLogFileRotation
                 -XX:NumberOfGCLogFiles=5
                 -XX:GCLogFileSize=10M
+                -Dorg.apache.jasper.runtime.JspFactoryImpl.USE_POOL=false
           readinessProbe:
             httpGet:
               path: /
