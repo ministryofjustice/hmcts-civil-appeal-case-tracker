@@ -55,9 +55,14 @@
 			
 			<forward name="success" path="/detail.jsp"></forward>
 			<forward name="error" path="/error.jsp"></forward>
-	</action>  
- 	
- 	</action-mappings> 
+	</action>
+
+    <action path="/health"
+            type="dts.legacy.utils.HealthCheckAction"
+            scope="request">
+    </action>
+
+    </action-mappings>
 
  	<!-- ========== Plugins =========================== -->
  
