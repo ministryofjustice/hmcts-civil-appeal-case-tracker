@@ -24,7 +24,7 @@ public class HealthCheckAction extends Action {
             // Write a simple health check message
             response.getWriter().write("OK");
         } catch (IOException e) {
-            System.out.println("Failed to write response to health check request");
+            System.out.println("Failed to write a response to health check request");
         }
 
         // Return null to indicate no further processing is needed
