@@ -81,7 +81,7 @@ spec:
                 -Dorg.apache.jasper.runtime.JspFactoryImpl.USE_POOL=false
           readinessProbe:
             httpGet:
-              path: /health
+              path: /healthz
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 5
