@@ -13,6 +13,18 @@
     <listener>
         <listener-class>dts.legacy.utils.SessionTrackingListener</listener-class>
     </listener>
+
+    <filter>
+        <filter-name>healthCheckFilter</filter-name>
+        <filter-class>dts.legacy.utils.HealthCheckFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>healthCheckFilter</filter-name>
+        <url-pattern>/health</url-pattern>
+    </filter-mapping>
+
+
     <!-- session timeout -->
     <session-config>
         <session-timeout>15</session-timeout>

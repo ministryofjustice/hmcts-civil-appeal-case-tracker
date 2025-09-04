@@ -57,11 +57,6 @@
 			<forward name="error" path="/error.jsp"></forward>
 	</action>
 
-    <action path="/healthz"
-            type="dts.legacy.utils.HealthCheckAction"
-            scope="request">
-    </action>
-
     </action-mappings>
 
  	<!-- ========== Plugins =========================== -->
