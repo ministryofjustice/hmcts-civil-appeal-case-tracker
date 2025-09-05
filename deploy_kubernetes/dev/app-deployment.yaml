@@ -84,7 +84,7 @@ spec:
               path: /health
               port: 8080
             initialDelaySeconds: 3
-            periodSeconds: 3
+            periodSeconds: 5
             timeoutSeconds: 5
             failureThreshold: 3
             successThreshold: 1
