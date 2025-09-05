@@ -52,7 +52,7 @@ public class searchAction extends Action {
 
     private boolean isUiRequest(HttpServletRequest request) {
         String referer = request.getHeader("Referer");
-        if (referer != null && referer.contains("casetracker.justice.gov.uk")) {
+        if (referer != null && (referer.contains("casetracker.justice.gov.uk") || referer.contains("localhost")) ) {
             return true;
         }
         return false;
