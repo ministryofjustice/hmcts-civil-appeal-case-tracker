@@ -19,6 +19,9 @@ public class SessionTrackingListener implements HttpSessionListener {
     @Override
     public void sessionDestroyed(HttpSessionEvent event) {
         int count = activeSessions.decrementAndGet();
+        if (count%100 == 0) {
+            System.out.println("After destroy active sessions: " + count);
+        }
     }
 
     /** Optional helper method for external metrics collection */
