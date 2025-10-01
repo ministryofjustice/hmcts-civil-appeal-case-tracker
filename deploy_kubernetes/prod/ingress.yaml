@@ -9,7 +9,6 @@ metadata:
     external-dns.alpha.kubernetes.io/set-identifier: civil-appeal-case-tracker-civil-appeal-case-tracker-prod-green
     external-dns.alpha.kubernetes.io/aws-weight: "100"
     nginx.ingress.kubernetes.io/enable-modsecurity: "true"
-    nginx.ingress.kubernetes.io/limit-rps: "1"
     nginx.ingress.kubernetes.io/modsecurity-snippet: |
       SecRuleEngine On
       SecDefaultAction "phase:2,pass,log,tag:github_team=dts-legacy"
