@@ -199,7 +199,6 @@
     </div>
 </div>
 <!--BEGIN_EXCLUDE-->
-<script type="text/javascript" src="/dg_scripts/ProphetInsert.js"></script>
 <script>
     function goBack() {
         window.history.back();

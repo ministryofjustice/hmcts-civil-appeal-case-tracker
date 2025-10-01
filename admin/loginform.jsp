@@ -121,7 +121,6 @@
     </div>
 </div>
 <!--BEGIN_EXCLUDE-->
-<script type="text/javascript" src="/dg_scripts/ProphetInsert.js"></script>
 <noscript>
     <div>
         <img src='http://directgov.stcllctrs.com/OWCPZPDTRUV/noScript.bmp' alt="Scipt is not enabled"/>
