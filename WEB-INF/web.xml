@@ -131,7 +131,7 @@
     </error-page>
     <error-page>
         <error-code>429</error-code>
-        <location>/error.jsp</location>
+        <location>/error-limit.jsp</location>
     </error-page>
     <error-page>
         <error-code>500</error-code>
