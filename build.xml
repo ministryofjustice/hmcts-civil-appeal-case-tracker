@@ -170,11 +170,13 @@
 		<copy todir="${build.dir}">
 			<fileset dir=".">
 				<include name="error.jsp" />
+                <include name="error-limit.jsp" />
 				<include name="index.jsp" />
 				<include name="search.jsp" />
 				<include name="detail.jsp" />
 				<include name="Version.txt" />
 				<include name="HTMLCalendar.htm" />
+                <include name="favicon.ico" />
 			</fileset>
 		</copy>
 		<echo>

@@ -24,9 +24,12 @@
         <url-pattern>/health</url-pattern>
     </filter-mapping>
 
+    <!-- Implement Rate Limiting inside tomcat to prevent DOS from external data scrapers -->
     <filter>
+        <!-- <filter-name>RateLimitFilter</filter-name> -->
+        <!-- <filter-class>org.apache.catalina.filters.RateLimitFilter</filter-class> -->
         <filter-name>RateLimitFilter</filter-name>
-        <filter-class>org.apache.catalina.filters.RateLimitFilter</filter-class>
+        <filter-class>dts.legacy.utils.RateLimiter</filter-class>
         <init-param>
             <param-name>bucketRequests</param-name>
             <param-value>10</param-value>  <!-- allow 10 requests per bucketDuration -->
@@ -44,7 +47,7 @@
 
     <filter-mapping>
         <filter-name>RateLimitFilter</filter-name>
-        <url-pattern>/search.do*</url-pattern>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
 
 
@@ -118,5 +121,23 @@
             <taglib-location>/WEB-INF/c.tld</taglib-location>
         </taglib>
     </jsp-config>
+
+    <!-- Avoid default tomcat error handling -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>429</error-code>
+        <location>/error-limit.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error.jsp</location>
+    </error-page>
 
 </web-app>
