@@ -15,13 +15,11 @@ ENV DB_HOST="172.22.5.164" \
 RUN mkdir -p /opt
 RUN rm -rf /usr/local/tomcat/webapps/ROOT && rm -rf /usr/local/tomcat/webapps/docs && rm -rf /usr/local/tomcat/webapps/examples
 
+#Add main war file to tomcat server as ROOT.war and add the necessary config files
 ADD "deploy/CACT.war" /usr/local/tomcat/webapps/ROOT.war
 ADD context.xml /usr/local/tomcat/conf/context.xml
-ADD favicon.ico /usr/local/tomcat/webapps/ROOT
-
-# Copy error.jsp to webapps/ROOT
-RUN mkdir -p $CATALINA_HOME/webapps/ROOT
-COPY error.jsp $CATALINA_HOME/webapps/ROOT/error.jsp
+ADD favicon.ico /usr/local/tomcat/webapps/ROOT/favicon.ico
+ADD error.jsp /usr/local/tomcat/webapps/ROOT/error.jsp
 
 
 RUN adduser --disabled-password tomcat -u 1001 && chown -R tomcat:tomcat /usr/local/tomcat
