@@ -18,8 +18,6 @@ RUN rm -rf /usr/local/tomcat/webapps/ROOT && rm -rf /usr/local/tomcat/webapps/do
 #Add main war file to tomcat server as ROOT.war and add the necessary config files
 ADD "deploy/CACT.war" /usr/local/tomcat/webapps/ROOT.war
 ADD context.xml /usr/local/tomcat/conf/context.xml
-COPY favicon.ico /usr/local/tomcat/webapps/ROOT/favicon.ico
-#ADD error.jsp /usr/local/tomcat/webapps/ROOT/error.jsp
 
 
 RUN adduser --disabled-password tomcat -u 1001 && chown -R tomcat:tomcat /usr/local/tomcat

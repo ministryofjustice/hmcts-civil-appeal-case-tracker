@@ -175,6 +175,7 @@
 				<include name="detail.jsp" />
 				<include name="Version.txt" />
 				<include name="HTMLCalendar.htm" />
+                <include name="favicon.ico" />
 			</fileset>
 		</copy>
 		<echo>
