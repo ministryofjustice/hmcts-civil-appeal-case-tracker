@@ -26,8 +26,10 @@
 
     <!-- Implement Rate Limiting inside tomcat to prevent DOS from external data scrapers -->
     <filter>
+        <!-- <filter-name>RateLimitFilter</filter-name> -->
+        <!-- <filter-class>org.apache.catalina.filters.RateLimitFilter</filter-class> -->
         <filter-name>RateLimitFilter</filter-name>
-        <filter-class>org.apache.catalina.filters.RateLimitFilter</filter-class>
+        <filter-class>dts.legacy.utils.RateLimiter</filter-class>
         <init-param>
             <param-name>bucketRequests</param-name>
             <param-value>10</param-value>  <!-- allow 10 requests per bucketDuration -->
