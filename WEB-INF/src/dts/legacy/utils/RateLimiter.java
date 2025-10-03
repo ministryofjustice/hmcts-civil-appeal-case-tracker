@@ -43,13 +43,10 @@ public class RateLimiter implements Filter {
 
             if (count > maxRequests) {
                 response.setStatus(429);
-                response.getWriter().write("Too Many Requests");
+                response.getWriter().write("Too Many Requests in last 60 seconds");
                 return;
             }
-        } else {
-            System.out.println("Don't test limit: path <" + path + ">");
         }
-
         chain.doFilter(request, response);
     }
 
