@@ -1,4 +1,4 @@
-FROM tomcat:9.0.107-jdk8-temurin-jammy
+FROM tomcat:9.0.107-jdk11-temurin-jammy
 
 ENV DB_HOST="172.22.5.164" \
     DB_PORT="1433" \

@@ -25,31 +25,29 @@
     </filter-mapping>
 
     <!-- Implement Rate Limiting inside tomcat to prevent DOS from external data scrapers -->
+    <!-- Each pod has its own unique tomcat, so the maxRequests is effectively double this number (on average) -->
     <filter>
-        <!-- <filter-name>RateLimitFilter</filter-name> -->
-        <!-- <filter-class>org.apache.catalina.filters.RateLimitFilter</filter-class> -->
-        <filter-name>RateLimitFilter</filter-name>
-        <filter-class>dts.legacy.utils.RateLimiter</filter-class>
+        <filter-name>IpRateLimitFilter</filter-name>
+        <filter-class>dts.legacy.utils.IpRateLimitFilter</filter-class>
         <init-param>
-            <param-name>bucketRequests</param-name>
-            <param-value>10</param-value>  <!-- allow 10 requests per bucketDuration -->
+            <param-name>maxRequests</param-name>
+            <param-value>5</param-value>
         </init-param>
         <init-param>
-            <param-name>bucketDuration</param-name>
-            <param-value>60</param-value>  <!-- 60 seconds window -->
+            <param-name>windowSeconds</param-name>
+            <param-value>60</param-value>
         </init-param>
-        <init-param>
-            <param-name>statusCode</param-name>
-            <param-value>429</param-value>
-        </init-param>
-        <!-- enforce default = true; you could also set enforce=false if you want to handle blocking logic yourself -->
     </filter>
 
+    <!-- Map the filter to URLs you want (one or more mappings) -->
     <filter-mapping>
-        <filter-name>RateLimitFilter</filter-name>
-        <url-pattern>/*</url-pattern>
+        <filter-name>IpRateLimitFilter</filter-name>
+        <url-pattern>/search.do</url-pattern>
     </filter-mapping>
-
+    <filter-mapping>
+        <filter-name>IpRateLimitFilter</filter-name>
+        <url-pattern>/getDetail.do</url-pattern>
+    </filter-mapping>
 
     <!-- session timeout -->
     <session-config>
