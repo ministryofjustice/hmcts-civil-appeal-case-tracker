@@ -121,7 +121,7 @@
 	=================================
 	-->
 	<target name="compile" depends="make_move_directories" description="compile source files">
-		<javac srcdir="WEB-INF/src" destdir="${build.dir}/WEB-INF/classes" debug="on" includeantruntime="false">
+		<javac source="11" target="11" includeantruntime="false" srcdir="WEB-INF/src" destdir="${build.dir}/WEB-INF/classes" debug="on" includeantruntime="false">
 			<classpath refid="build_classpath" />
 		</javac>
 	</target>
@@ -233,7 +233,7 @@
 	</target>
 	<target name="compile-tests" depends="compile">
 		<mkdir dir="${test.build.dir}" />
-		<javac srcdir="${test.dir}" destdir="${test.build.dir}" includeantruntime="false" debug="true" verbose="true">
+		<javac source="11" target="11" srcdir="${test.dir}" destdir="${test.build.dir}" includeantruntime="false" debug="true" verbose="true">
 			<classpath refid="test_classpath" />
 		</javac>
 	</target>
