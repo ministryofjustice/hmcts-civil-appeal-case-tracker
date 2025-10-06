@@ -121,7 +121,7 @@
 	=================================
 	-->
 	<target name="compile" depends="make_move_directories" description="compile source files">
-		<javac source="11" target="11" srcdir="WEB-INF/src" destdir="${build.dir}/WEB-INF/classes" debug="on" includeantruntime="false">
+		<javac srcdir="WEB-INF/src" destdir="${build.dir}/WEB-INF/classes" debug="on" includeantruntime="false">
 			<classpath refid="build_classpath" />
 		</javac>
 	</target>

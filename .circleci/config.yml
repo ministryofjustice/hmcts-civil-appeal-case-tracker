@@ -11,8 +11,11 @@ jobs:
       ecr_endpoint:
         type: string
     executor: aws-ecr/default
-    machine:
-      image: ubuntu-2204:edge
+    #machine:
+    #image: ubuntu-2204:edge
+    # Instead of the machine stanza, use docker:
+    docker:
+      - image: circleci/openjdk:11-jdk  # primary container for build steps
     steps:
       - checkout
       - when:
