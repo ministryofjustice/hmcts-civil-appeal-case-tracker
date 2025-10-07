@@ -78,7 +78,6 @@ public class IpRateLimitFilter implements Filter {
                 }
             }
         }
-
         chain.doFilter(request, response);
     }
 

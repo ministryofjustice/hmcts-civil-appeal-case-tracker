@@ -20,33 +20,46 @@ import java.util.regex.Pattern;
 public class searchAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
+
+        System.out.println("searchAction 1");
+
         String searchString = request.getParameter("search").toString().toLowerCase();
 
+        System.out.println("searchAction 2");
+
         Pattern pattern = Pattern.compile("^[A-Za-z0-9_, \\-\\)\\(\\.]++$");
+        System.out.println("searchAction 3");
         if(!pattern.matcher(searchString).matches()) {
             searchString = "";
         }
+        System.out.println("searchAction 4");
 
         //getting session object from Hibernate Util class
         SessionFactory factory = (SessionFactory) servlet.getServletContext().getAttribute(HibernatePlugin.KEY_NAME);
         Session session = factory.openSession();
+        System.out.println("searchAction 5");
 
         Query query = session.createQuery("from Calander c where lower(c.search_date) like :date or lower(c.case_no) like :case or lower(title1) like :title order by c.case_no");
         query.setString("date", "%" + searchString + "%");
         query.setString("case", "%" + searchString + "%");
         query.setString("title", "%" + searchString + "%");
+        System.out.println("searchAction 6");
 
         List arrResults = query.list();
+        System.out.println("searchAction 7");
 
         session.clear();
         session.close();
+        System.out.println("searchAction 8");
 
         if (isUiRequest(request)) {
+            System.out.println("searchAction 9");
             request.getSession(true).setAttribute("results", arrResults);
+            System.out.println("searchAction 10");
         } else {
             request.setAttribute("results", arrResults);
         }
-
+        System.out.println("searchAction 11");
         return mapping.findForward("success");
     }
 
