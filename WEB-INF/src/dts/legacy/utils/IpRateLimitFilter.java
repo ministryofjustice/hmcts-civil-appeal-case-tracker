@@ -36,7 +36,7 @@ public class IpRateLimitFilter implements Filter {
         // Build a Caffeine cache with eviction:
         windows = Caffeine.newBuilder()
                 .expireAfterAccess(Duration.ofMinutes(10))    // expire entries 10 min after last access
-                .maximumSize(10_000)                         // cap number of IP entries
+                .maximumSize(10000)                         // cap number of IP entries
                 .build();
     }
 

@@ -60,7 +60,13 @@ public class searchAction extends Action {
             request.setAttribute("results", arrResults);
         }
         System.out.println("searchAction 11");
-        return mapping.findForward("success");
+
+        try {
+            return mapping.findForward("success");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw ex; // or return mapping.findForward("error");
+        }
     }
 
     private boolean isUiRequest(HttpServletRequest request) {
