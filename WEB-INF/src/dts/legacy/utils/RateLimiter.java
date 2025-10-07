@@ -35,7 +35,6 @@ public class RateLimiter implements Filter {
         boolean shouldLimit = path.contains("/search.do") || path.contains("/getDetail.do");
 
         if (shouldLimit) {
-            //String ip = request.getRemoteAddr();
             String ip = request.getHeader("X-Forwarded-For");
             SlidingWindow window = windows.computeIfAbsent(ip, (k) -> new SlidingWindow(windowMillis));
             int count = window.increment();
