@@ -75,10 +75,10 @@ public class IpRateLimitFilter implements Filter {
             }
             int newCount = window.count.incrementAndGet();
 
-            System.out.println("TestLimit: path <" + path + "> ip <" + ip + "> Max <" + maxRequests +
-                    "> Current <" +newCount + ">");
-
             if (newCount > maxRequests) {
+                System.out.println("IpRateLimit: path <" + path + "> ip <" + ip + "> Max <" + maxRequests +
+                        "> Current <" +newCount + ">");
+
                 response.setStatus(429);
                 response.getWriter().write("Too Many Requests in last 60 seconds");
                 return;
@@ -86,7 +86,7 @@ public class IpRateLimitFilter implements Filter {
         }
 
         // #TODO - DEBUG only to verify removal of ip addresses after timeout
-        verifyIpCache();
+        //verifyIpCache();
 
         chain.doFilter(request, response);
     }
