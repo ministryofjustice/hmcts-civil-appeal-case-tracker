@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.ConcurrentMap;
+import static com.calander.actions.searchAction.isUiRequest;
 
 public class IpRateLimitFilter implements Filter {
     private static class Window {
@@ -49,42 +50,44 @@ public class IpRateLimitFilter implements Filter {
         String path = request.getRequestURI();
 
         /*
+        Filtering is only applied to non-ui requests
+
         The paths are currently explicitly specified by the filter in web.xml
         Should there be a requirement to add more intelligent filtering by path
         then the web.xml can be changed to filter "/*" and the logic can be applied
-        according to the path in here
+        according to the path in this doFilter method
 
         boolean shouldLimit = path.contains("/search.do") || path.contains("/getDetail.do");
          */
 
-        String ip = request.getHeader("X-Forwarded-For");
-        if (ip != null && !ip.isEmpty()) {
-            ip = ip.split(",")[0].trim();
-        } else {
-            ip = request.getRemoteAddr();
-        }
+        if (!isUiRequest(request.getHeader("Referer"))) {
 
-        String referer = request.getHeader("Referer");
-        System.out.println("IpRateLimit: Referer <" + referer + ">");
-
-        long now = System.currentTimeMillis();
-        Window window = ipCache.get(ip, k -> new Window(now));
-
-        synchronized (window) {
-            if (now - window.windowStartMillis > windowMillis) {
-                // reset window
-                window.windowStartMillis = now;
-                window.count.set(0);
+            String ip = request.getHeader("X-Forwarded-For");
+            if (ip != null && !ip.isEmpty()) {
+                ip = ip.split(",")[0].trim();
+            } else {
+                ip = request.getRemoteAddr();
             }
-            int newCount = window.count.incrementAndGet();
 
-            if (newCount > maxRequests) {
-                System.out.println("IpRateLimit: path <" + path + "> ip <" + ip + "> Max <" + maxRequests +
-                        "> Current <" +newCount + ">");
+            long now = System.currentTimeMillis();
+            Window window = ipCache.get(ip, k -> new Window(now));
 
-                response.setStatus(429);
-                response.getWriter().write("Too Many Requests in last 60 seconds");
-                return;
+            synchronized (window) {
+                if (now - window.windowStartMillis > windowMillis) {
+                    // reset window
+                    window.windowStartMillis = now;
+                    window.count.set(0);
+                }
+                int newCount = window.count.incrementAndGet();
+
+                if (newCount > maxRequests) {
+                    System.out.println("IpRateLimit: path <" + path + "> ip <" + ip + "> Max <" + maxRequests +
+                            "> Current <" + newCount + ">");
+
+                    response.setStatus(429);
+                    response.getWriter().write("Too Many Requests in last 60 seconds");
+                    return;
+                }
             }
         }
 
@@ -98,7 +101,7 @@ public class IpRateLimitFilter implements Filter {
         // Get a view of the cache as a ConcurrentMap
         ConcurrentMap<String, Window> mapView = ipCache.asMap();
 
-// Iterate over keys
+        // Iterate over keys
         for (String ip : mapView.keySet()) {
             Window w = mapView.get(ip);
             System.out.println("IP: " + ip + ", windowStart=" + w.windowStartMillis + ", count=" + w.count.get());

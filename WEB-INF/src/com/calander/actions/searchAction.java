@@ -42,7 +42,7 @@ public class searchAction extends Action {
         session.clear();
         session.close();
 
-        if (isUiRequest(request)) {
+        if (isUiRequest(request.getHeader("Referer"))) {
             request.getSession(true).setAttribute("results", arrResults);
         } else {
             request.setAttribute("results", arrResults);
@@ -56,8 +56,7 @@ public class searchAction extends Action {
         }
     }
 
-    private boolean isUiRequest(HttpServletRequest request) {
-        String referer = request.getHeader("Referer");
+    public static boolean isUiRequest(String referer) {
         if (referer != null && (referer.contains("casetracker.justice.gov.uk") || referer.contains("localhost")) ) {
             return true;
         }
