@@ -64,6 +64,9 @@ public class IpRateLimitFilter implements Filter {
             ip = request.getRemoteAddr();
         }
 
+        String referer = request.getHeader("Referer");
+        System.out.println("IpRateLimit: Referer <" + referer + ">");
+
         long now = System.currentTimeMillis();
         Window window = ipCache.get(ip, k -> new Window(now));
 
