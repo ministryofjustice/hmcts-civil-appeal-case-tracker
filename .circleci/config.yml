@@ -25,7 +25,7 @@ jobs:
             - run:
                 name: Build and Test
                 command: |
-                  docker run --mount type=bind,source="$(pwd)",target=/dockerrun/ paulushc/apacheant ant -buildfile /dockerrun/ clean build-and-test war
+                  docker run --mount type=bind,source="$(pwd)",target=/dockerrun/ perrit/apache-ant ant -buildfile /dockerrun/ clean build-and-test war
             - run:
                 name: Verify WAR file
                 command: |
@@ -68,7 +68,7 @@ jobs:
             - run:
                 name: Build and Test
                 command: |
-                  docker run --mount type=bind,source="$(pwd)",target=/dockerrun/ paulushc/apacheant ant -buildfile /dockerrun/ clean build-and-test war
+                  docker run --mount type=bind,source="$(pwd)",target=/dockerrun/ perrit/apache-ant ant -buildfile /dockerrun/ clean build-and-test war
             - run:
                 name: Verify WAR file
                 command: |
@@ -111,7 +111,7 @@ jobs:
             - run:
                 name: Build and Test
                 command: |
-                  docker run --mount type=bind,source="$(pwd)",target=/dockerrun/ paulushc/apacheant ant -buildfile /dockerrun/ clean build-and-test war
+                  docker run --mount type=bind,source="$(pwd)",target=/dockerrun/ perrit/apache-ant ant -buildfile /dockerrun/ clean build-and-test war
             - run:
                 name: Verify WAR file
                 command: |

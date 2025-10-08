@@ -30,9 +30,6 @@
 	
 	<action path="/info" type="org.apache.struts.actions.ForwardAction"
 	parameter="/admin/info.jsp" scope="request"/>	
-	
-	
-
 
 	<action path="/dumpData"
 			type="com.calander.actions.dumpDatabase"
@@ -61,11 +58,11 @@
 
  	<!-- ========== Plugins =========================== -->
  
- <plug-in className="com.calander.plugin.HibernatePlugin">
+  <plug-in className="com.calander.plugin.HibernatePlugin">
     <set-property property="path" value="/hibernate.cfg.xml"/>
   </plug-in>
   <plug-in className="com.jgsullivan.struts.plugins.QuartzPlugIn">
 		<set-property property="configPath" value="/WEB-INF/quartz-config.xml" />
-	</plug-in>
+  </plug-in>
   
 </struts-config>

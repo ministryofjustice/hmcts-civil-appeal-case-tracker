@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 public class searchAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
+
         String searchString = request.getParameter("search").toString().toLowerCase();
 
         Pattern pattern = Pattern.compile("^[A-Za-z0-9_, \\-\\)\\(\\.]++$");
@@ -41,17 +42,21 @@ public class searchAction extends Action {
         session.clear();
         session.close();
 
-        if (isUiRequest(request)) {
+        if (isUiRequest(request.getHeader("Referer"))) {
             request.getSession(true).setAttribute("results", arrResults);
         } else {
             request.setAttribute("results", arrResults);
         }
 
-        return mapping.findForward("success");
+        try {
+            return mapping.findForward("success");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw ex; // or return mapping.findForward("error");
+        }
     }
 
-    private boolean isUiRequest(HttpServletRequest request) {
-        String referer = request.getHeader("Referer");
+    public static boolean isUiRequest(String referer) {
         if (referer != null && (referer.contains("casetracker.justice.gov.uk") || referer.contains("localhost")) ) {
             return true;
         }

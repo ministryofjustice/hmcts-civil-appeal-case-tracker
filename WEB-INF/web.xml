@@ -24,6 +24,30 @@
         <url-pattern>/health</url-pattern>
     </filter-mapping>
 
+    <!-- Implement Rate Limiting inside tomcat to prevent DOS from external data scrapers -->
+    <!-- Each pod has its own unique tomcat, so the maxRequests is effectively double this number (on average) -->
+    <filter>
+        <filter-name>IpRateLimitFilter</filter-name>
+        <filter-class>dts.legacy.utils.IpRateLimitFilter</filter-class>
+        <init-param>
+            <param-name>maxRequests</param-name>
+            <param-value>15</param-value>
+        </init-param>
+        <init-param>
+            <param-name>windowSeconds</param-name>
+            <param-value>60</param-value>
+        </init-param>
+    </filter>
+
+    <!-- Map the filter to URLs you want (one or more mappings) -->
+    <filter-mapping>
+        <filter-name>IpRateLimitFilter</filter-name>
+        <url-pattern>/search.do</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>IpRateLimitFilter</filter-name>
+        <url-pattern>/getDetail.do</url-pattern>
+    </filter-mapping>
 
     <!-- session timeout -->
     <session-config>
@@ -95,5 +119,23 @@
             <taglib-location>/WEB-INF/c.tld</taglib-location>
         </taglib>
     </jsp-config>
+
+    <!-- Avoid default tomcat error handling -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>429</error-code>
+        <location>/error-limit.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error.jsp</location>
+    </error-page>
 
 </web-app>

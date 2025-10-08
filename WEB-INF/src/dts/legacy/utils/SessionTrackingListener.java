@@ -10,15 +10,18 @@ public class SessionTrackingListener implements HttpSessionListener {
     @Override
     public void sessionCreated(HttpSessionEvent event) {
         int count = activeSessions.incrementAndGet();
-        System.out.println("Session created: " + event.getSession().getId()
-                + " | Active sessions: " + count);
+        if (count%100 == 0) {
+            System.out.println("Sessions created: " + event.getSession().getId()
+                    + " | Active sessions: " + count);
+        }
     }
 
     @Override
     public void sessionDestroyed(HttpSessionEvent event) {
         int count = activeSessions.decrementAndGet();
-        System.out.println("Session destroyed: " + event.getSession().getId()
-                + " | Active sessions: " + count);
+        if (count%100 == 0) {
+            System.out.println("After destroy active sessions: " + count);
+        }
     }
 
     /** Optional helper method for external metrics collection */

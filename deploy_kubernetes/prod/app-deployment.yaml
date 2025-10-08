@@ -72,12 +72,7 @@ spec:
                 -XX:+HeapDumpOnOutOfMemoryError
                 -XX:HeapDumpPath=/usr/local/tomcat/logs
                 -XX:+ExitOnOutOfMemoryError
-                -XX:+PrintGCDetails
-                -XX:+PrintGCDateStamps
-                -Xloggc:/usr/local/tomcat/logs/gc.log
-                -XX:+UseGCLogFileRotation
-                -XX:NumberOfGCLogFiles=5
-                -XX:GCLogFileSize=10M
+                -Xlog:gc*:file=/usr/local/tomcat/logs/gc.log:time,uptime:filecount=5,filesize=10M
                 -Dorg.apache.jasper.runtime.JspFactoryImpl.USE_POOL=false
           readinessProbe:
             httpGet:
