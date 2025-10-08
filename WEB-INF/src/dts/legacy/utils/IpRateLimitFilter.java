@@ -47,39 +47,47 @@ public class IpRateLimitFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         String path = request.getRequestURI();
+
+        /*
+        The paths are currently explicitly specified by the filter in web.xml
+        Should there be a requirement to add more intelligent filtering by path
+        then the web.xml can be changed to filter "/*" and the logic can be applied
+        according to the path in here
+
         boolean shouldLimit = path.contains("/search.do") || path.contains("/getDetail.do");
+         */
 
-        if (shouldLimit) {
-            String ip = request.getHeader("X-Forwarded-For");
-            if (ip != null && !ip.isEmpty()) {
-                ip = ip.split(",")[0].trim();
-            } else {
-                ip = request.getRemoteAddr();
-            }
-
-            long now = System.currentTimeMillis();
-            Window window = ipCache.get(ip, k -> new Window(now));
-
-            synchronized (window) {
-                if (now - window.windowStartMillis > windowMillis) {
-                    // reset window
-                    window.windowStartMillis = now;
-                    window.count.set(0);
-                }
-                int newCount = window.count.incrementAndGet();
-
-                System.out.println("TestLimit: path <" + path + "> ip <" + ip + "> Max <" + maxRequests +
-                        "> Current <" +newCount + ">");
-
-                if (newCount > maxRequests) {
-                    response.setStatus(429);
-                    response.getWriter().write("Too Many Requests in last 60 seconds");
-                    return;
-                }
-            }
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip != null && !ip.isEmpty()) {
+            ip = ip.split(",")[0].trim();
         } else {
-            verifyIpCache();
+            ip = request.getRemoteAddr();
         }
+
+        long now = System.currentTimeMillis();
+        Window window = ipCache.get(ip, k -> new Window(now));
+
+        synchronized (window) {
+            if (now - window.windowStartMillis > windowMillis) {
+                // reset window
+                window.windowStartMillis = now;
+                window.count.set(0);
+            }
+            int newCount = window.count.incrementAndGet();
+
+            System.out.println("TestLimit: path <" + path + "> ip <" + ip + "> Max <" + maxRequests +
+                    "> Current <" +newCount + ">");
+
+            if (newCount > maxRequests) {
+                response.setStatus(429);
+                response.getWriter().write("Too Many Requests in last 60 seconds");
+                return;
+            }
+        }
+
+        // #TODO - DEBUG only to verify removal of ip addresses after timeout
+        verifyIpCache();
+
         chain.doFilter(request, response);
     }
 
