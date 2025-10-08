@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.ConcurrentMap;
 
 public class IpRateLimitFilter implements Filter {
     private static class Window {
@@ -21,7 +21,7 @@ public class IpRateLimitFilter implements Filter {
         }
     }
 
-    private Cache<String, Window> windows;
+    private Cache<String, Window> ipCache;
     private int maxRequests;
     private long windowMillis;
 
@@ -34,7 +34,7 @@ public class IpRateLimitFilter implements Filter {
         windowMillis = wsec * 1000L;
 
         // Build a Caffeine cache with eviction:
-        windows = Caffeine.newBuilder()
+        ipCache = Caffeine.newBuilder()
                 .expireAfterAccess(Duration.ofMinutes(10))    // expire entries 10 min after last access
                 .maximumSize(10000)                         // cap number of IP entries
                 .build();
@@ -58,7 +58,7 @@ public class IpRateLimitFilter implements Filter {
             }
 
             long now = System.currentTimeMillis();
-            Window window = windows.get(ip, k -> new Window(now));
+            Window window = ipCache.get(ip, k -> new Window(now));
 
             synchronized (window) {
                 if (now - window.windowStartMillis > windowMillis) {
@@ -77,12 +77,25 @@ public class IpRateLimitFilter implements Filter {
                     return;
                 }
             }
+        } else {
+            verifyIpCache();
         }
         chain.doFilter(request, response);
     }
 
+    private void verifyIpCache() {
+        // Get a view of the cache as a ConcurrentMap
+        ConcurrentMap<String, Window> mapView = ipCache.asMap();
+
+// Iterate over keys
+        for (String ip : mapView.keySet()) {
+            Window w = mapView.get(ip);
+            System.out.println("IP: " + ip + ", windowStart=" + w.windowStartMillis + ", count=" + w.count.get());
+        }
+    }
+
     @Override
     public void destroy() {
-        windows.invalidateAll();
+        ipCache.invalidateAll();
     }
 }
