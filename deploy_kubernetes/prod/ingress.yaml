@@ -19,6 +19,7 @@ metadata:
       SecRule REQUEST_HEADERS:User-Agent "@rx politico(-eu|-bot|bot@politico\.eu)" "phase:1,log,deny,t:lowercase,id:1000004"
       SecRule REQUEST_HEADERS:User-Agent "@rx awario(smartbot|bots@awario\.com)" "phase:1,log,deny,t:lowercase,id:1000005"
       SecRule REQUEST_HEADERS:User-Agent "@rx https://openai\.com/bot" "phase:1,log,deny,t:lowercase,id:1000006"
+      SecRule REQUEST_HEADERS:User-Agent "@rx http://mj12bot.com/" "phase:1,log,deny,t:lowercase,id:1000007"
       SecRule REMOTE_ADDR "@ipMatch 34.248.124.42" "deny,status:403,msg:"DOS Blocked IP",id:1100000"
       SecRule REMOTE_ADDR "@ipMatch 34.249.147.142" "deny,status:403,msg:"DOS Blocked IP",id:1100001"
       SecRule REMOTE_ADDR "@ipMatch 34.196.108.51" "deny,status:403,msg:"DOS Blocked IP",id:1100002"
