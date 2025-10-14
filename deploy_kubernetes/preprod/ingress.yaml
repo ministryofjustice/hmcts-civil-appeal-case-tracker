@@ -19,6 +19,7 @@ metadata:
       SecRule REQUEST_HEADERS:User-Agent "@rx politico(-eu|-bot|bot@politico\.eu)" "phase:1,log,deny,t:lowercase,id:1000004"
       SecRule REQUEST_HEADERS:User-Agent "@rx awario(smartbot|bots@awario\.com)" "phase:1,log,deny,t:lowercase,id:1000005"
       SecRule REQUEST_HEADERS:User-Agent "@rx https://openai\.com/bot" "phase:1,log,deny,t:lowercase,id:1000006"
+      SecRule REQUEST_HEADERS:User-Agent "@rx MJ12bot" "phase:1,log,deny,t:lowercase,id:1000007"
     nginx.ingress.kubernetes.io/whitelist-source-range: >-
       194.33.196.0/24, 
       194.33.192.0/24, 
