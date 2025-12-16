@@ -72,8 +72,8 @@ public class CsvImportJob implements Job {
             }
             LOGGER.info("Database not updated today. Proceeding with CSV import.");
 
-            String result = null;
-            String url = "https://cloud-platform-ab00007072890fd153cef39e574f738e.s3.eu-west-2.amazonaws.com/data.csv";
+            String url = getS3BucketObjectUrl();
+            LOGGER.info("url is: {}", url);
             URL u = new URL(url);
             InputStream is = u.openStream();
             BufferedReader reader1 = new BufferedReader(new InputStreamReader(is));
@@ -102,6 +102,14 @@ public class CsvImportJob implements Job {
             session.close();
         }
         System.out.println("Scheduler Finished");
+    }
+
+    private static String getS3BucketObjectUrl() {
+        String bucketName = System.getenv("S3_BUCKET_NAME");
+        if (bucketName == null || bucketName.isEmpty()) {
+            throw new IllegalArgumentException("S3_BUCKET_NAME environment variable is not set");
+        }
+        return String.format("https://%s.s3.eu-west-2.amazonaws.com/data.csv", bucketName);
     }
 
     public static boolean isLastUpdatedYesterday(Session session) {
