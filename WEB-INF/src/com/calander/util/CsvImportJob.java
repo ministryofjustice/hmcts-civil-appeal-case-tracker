@@ -49,7 +49,7 @@ public class CsvImportJob implements Job {
 
     public static int randomWaitTimeInMillis() {
         Random rand = new Random();
-        int upperBound = 60; // Random wait time in seconds (1 hour)
+        int upperBound = 3600; // Random wait time in seconds (1 hour)
         return rand.nextInt(upperBound * 1000); // convert seconds to milliseconds
     }
 
@@ -65,15 +65,14 @@ public class CsvImportJob implements Job {
         Session session = factory.openSession();
 
         try {
-//            LOGGER.info("Checking if database was updated today");
-//            if (isLastUpdatedYesterday(session)) {
-//                LOGGER.info("Database already updated today. Skipping CSV import.");
-//                return;
-//            }
-//            LOGGER.info("Database not updated today. Proceeding with CSV import.");
+            LOGGER.info("Checking if database was updated today");
+            if (isLastUpdatedYesterday(session)) {
+                LOGGER.info("Database already updated today. Skipping CSV import.");
+                return;
+            }
+            LOGGER.info("Database not updated today. Proceeding with CSV import.");
 
             String url = getS3BucketObjectUrl();
-            LOGGER.info("url is: {}", url);
             URL u = new URL(url);
             InputStream is = u.openStream();
             BufferedReader reader1 = new BufferedReader(new InputStreamReader(is));
