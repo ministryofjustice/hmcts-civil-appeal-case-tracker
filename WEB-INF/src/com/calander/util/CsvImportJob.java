@@ -65,12 +65,12 @@ public class CsvImportJob implements Job {
         Session session = factory.openSession();
 
         try {
-            LOGGER.info("Checking if database was updated today");
-            if (isLastUpdatedYesterday(session)) {
-                LOGGER.info("Database already updated today. Skipping CSV import.");
-                return;
-            }
-            LOGGER.info("Database not updated today. Proceeding with CSV import.");
+//            LOGGER.info("Checking if database was updated today");
+//            if (isLastUpdatedYesterday(session)) {
+//                LOGGER.info("Database already updated today. Skipping CSV import.");
+//                return;
+//            }
+//            LOGGER.info("Database not updated today. Proceeding with CSV import.");
 
             String url = getS3BucketObjectUrl();
             LOGGER.info("url is: {}", url);
