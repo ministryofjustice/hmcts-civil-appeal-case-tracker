@@ -23,10 +23,6 @@ public class caseDetailAction extends Action {
 
         String case_id = request.getParameter("case_id");
 
-        if (case_id == null) {
-            throw new NullPointerException("case_id parameter is missing");
-        }
-
         Pattern pattern = Pattern.compile("^[0-9]++$");
        /* if(!pattern.matcher(case_id).matches()) {
             case_id = "";
