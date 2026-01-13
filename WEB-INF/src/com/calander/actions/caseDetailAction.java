@@ -45,7 +45,5 @@ public class caseDetailAction extends Action {
         session.clear();
         session.close();
         return mapping.findForward(mappingResult);
-
-        //LOGGER.info(calander.getCase_no());
     }
 }
