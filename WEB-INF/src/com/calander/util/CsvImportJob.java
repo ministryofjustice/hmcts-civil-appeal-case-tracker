@@ -59,6 +59,10 @@ public class CsvImportJob implements Job {
         SessionFactory factory = null;
         try {
             factory = (SessionFactory) hibernatePlugin.getconnection();
+
+            if (factory == null) {
+                LOGGER.error("Hibernate SessionFactory is null" );
+            }
         } catch (Exception e) {
             throw new RuntimeException("Hibernate Plugin unable to get connection");
         }
@@ -78,7 +82,7 @@ public class CsvImportJob implements Job {
             BufferedReader reader1 = new BufferedReader(new InputStreamReader(is));
             CSVReader reader = new CSVReader(reader1);
 
-            LOGGER.info("coming in run schedular>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            LOGGER.info("Deleting 'calender' table contents");
 
             session.beginTransaction();
             session.createQuery("delete Calander").executeUpdate();
@@ -87,7 +91,7 @@ public class CsvImportJob implements Job {
             session.getTransaction().commit();
             LOGGER.info("Success {} rows added in database", rowCount);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOGGER.error("Exception occurred during CSV import: ", ex);
             session.getTransaction().rollback();
             LOGGER.error("Import Failed: {}", ex.getMessage());
             session.flush();
