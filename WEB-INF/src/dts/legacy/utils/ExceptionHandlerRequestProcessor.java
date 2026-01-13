@@ -31,7 +31,7 @@ public class ExceptionHandlerRequestProcessor extends RequestProcessor {
 
         LOGGER.error("Exception Message: " + exception.getMessage());
         LOGGER.error("Exception Class: " + exception.getClass().getName());
-        LOGGER.error("Stack trace: " + exception);
+        LOGGER.error("Stack trace: ", exception);
 
         return super.processException(request, response, exception, form, mapping);
     }
