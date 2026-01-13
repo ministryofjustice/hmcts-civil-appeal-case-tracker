@@ -36,7 +36,7 @@ public class CsvImportJob implements Job {
         // Generates random wait time so that the tasks dont upload simultaneously
         // causing a duplication of data
         int waitTime = randomWaitTimeInMillis();
-        System.out.println(MessageFormat.format("Wait {0} milliseconds, {1} seconds", waitTime, (waitTime / 1000)));
+        LOGGER.info(MessageFormat.format("Wait {0} milliseconds, {1} seconds", waitTime, (waitTime / 1000)));
 
         try {
             Thread.sleep(waitTime);
@@ -54,7 +54,7 @@ public class CsvImportJob implements Job {
     }
 
     public static void downloadCsvFromS3BucketAndReplaceDatabaseWithContents() {
-        System.out.println("Cron job running!");
+        LOGGER.info("Cron job running!");
         HibernatePlugin hibernatePlugin = new HibernatePlugin();
         SessionFactory factory = null;
         try {
@@ -78,7 +78,7 @@ public class CsvImportJob implements Job {
             BufferedReader reader1 = new BufferedReader(new InputStreamReader(is));
             CSVReader reader = new CSVReader(reader1);
 
-            System.out.println("coming in run schedular>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            LOGGER.info("coming in run schedular>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
             session.beginTransaction();
             session.createQuery("delete Calander").executeUpdate();
@@ -100,7 +100,7 @@ public class CsvImportJob implements Job {
             session.clear();
             session.close();
         }
-        System.out.println("Scheduler Finished");
+        LOGGER.info("Scheduler Finished");
     }
 
     private static String getS3BucketObjectUrl() {

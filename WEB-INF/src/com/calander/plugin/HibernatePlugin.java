@@ -57,7 +57,7 @@ public class HibernatePlugin
             factory = cfg.buildSessionFactory();
             servlet.getServletContext().setAttribute(KEY_NAME, factory);
         } catch (Exception e) {
-            System.out.println((new StringBuilder("Could not build Hibernate config: ")).append(e.getMessage()).toString());
+            LOGGER.error((new StringBuilder("Could not build Hibernate config: ")).append(e.getMessage()).toString());
             e.printStackTrace();
         }
     }
@@ -91,7 +91,7 @@ public class HibernatePlugin
             return factory;
             //servlet.getServletContext().setAttribute(KEY_NAME, factory);
         } catch (Exception e) {
-            System.out.println((new StringBuilder("Could not build Hibernate config: ")).append(e.getMessage()).toString());
+            LOGGER.error((new StringBuilder("Could not build Hibernate config: ")).append(e.getMessage()).toString());
             e.printStackTrace();
         }
 		return factory;
