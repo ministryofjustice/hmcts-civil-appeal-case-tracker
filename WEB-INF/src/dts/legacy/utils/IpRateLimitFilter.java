@@ -10,9 +10,11 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.ConcurrentMap;
+import org.apache.log4j.Logger;
 import static com.calander.actions.searchAction.isUiRequest;
 
 public class IpRateLimitFilter implements Filter {
+    private static final Logger LOGGER = Logger.getLogger(IpRateLimitFilter.class);
     private static class Window {
         long windowStartMillis;
         AtomicInteger count = new AtomicInteger(0);
@@ -81,7 +83,7 @@ public class IpRateLimitFilter implements Filter {
                 int newCount = window.count.incrementAndGet();
 
                 if (newCount > maxRequests) {
-                    System.out.println("IpRateLimit: path <" + path + "> ip <" + ip + "> Max <" + maxRequests +
+                    LOGGER.info("IpRateLimit: path <" + path + "> ip <" + ip + "> Max <" + maxRequests +
                             "> Current <" + newCount + ">");
 
                     response.setStatus(429);
@@ -104,7 +106,7 @@ public class IpRateLimitFilter implements Filter {
         // Iterate over keys
         for (String ip : mapView.keySet()) {
             Window w = mapView.get(ip);
-            System.out.println("IP: " + ip + ", windowStart=" + w.windowStartMillis + ", count=" + w.count.get());
+            LOGGER.info("IP: " + ip + ", windowStart=" + w.windowStartMillis + ", count=" + w.count.get());
         }
     }
 

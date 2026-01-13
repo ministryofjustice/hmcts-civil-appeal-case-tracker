@@ -34,9 +34,6 @@ public class caseDetailAction extends Action {
 
         Query query = session.createQuery("from Calander c where c.case_no=:case");
         query.setString("case", case_id);
-        //query.
-        //System.out.println(query.getQueryString());
-        //System.out.println("result list size is "+query.list().size());
         String mappingResult = "success";
         if (query.list().size() > 0) {
             Calander calander = (Calander) query.list().get(0);
@@ -48,7 +45,5 @@ public class caseDetailAction extends Action {
         session.clear();
         session.close();
         return mapping.findForward(mappingResult);
-
-        //System.out.println(calander.getCase_no());
     }
 }
