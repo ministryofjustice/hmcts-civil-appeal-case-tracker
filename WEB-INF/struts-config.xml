@@ -56,7 +56,10 @@
 
     </action-mappings>
 
- 	<!-- ========== Plugins =========================== -->
+    <!-- ========== Controller Configuration ============================== -->
+    <controller processorClass="dts.legacy.utils.ExceptionHandlerRequestProcessor"/>
+
+    <!-- ========== Plugins =========================== -->
  
   <plug-in className="com.calander.plugin.HibernatePlugin">
     <set-property property="path" value="/hibernate.cfg.xml"/>
