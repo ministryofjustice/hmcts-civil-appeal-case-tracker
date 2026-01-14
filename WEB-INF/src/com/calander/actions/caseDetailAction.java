@@ -23,10 +23,9 @@ public class caseDetailAction extends Action {
 
         String case_id = request.getParameter("case_id");
 
-        Pattern pattern = Pattern.compile("^[0-9]++$");
-       /* if(!pattern.matcher(case_id).matches()) {
-            case_id = "";
-        }*/
+        if (case_id == null || case_id.trim().isEmpty()) {
+            return mapping.findForward("success");
+        }
 
         //getting session object from Hibernate Util class
         SessionFactory factory = (SessionFactory) servlet.getServletContext().getAttribute(HibernatePlugin.KEY_NAME);
