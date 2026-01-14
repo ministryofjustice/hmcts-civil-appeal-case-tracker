@@ -21,7 +21,7 @@ public class searchAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
 
-        String searchString = sanitizeSearchInput(request.getParameter("search").toLowerCase());
+        String searchString = sanitizeSearchInput(request.getParameter("search"));
         if (searchString.isEmpty()) {
             return mapping.findForward("success");
         }
@@ -63,7 +63,7 @@ public class searchAction extends Action {
         if (!pattern.matcher(searchString.trim()).matches()) {
             return "";
         }
-        return searchString;
+        return searchString.toLowerCase();
     }
 
     public static boolean isUiRequest(String referer) {
