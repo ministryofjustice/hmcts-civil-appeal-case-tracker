@@ -23,14 +23,6 @@ public class ExceptionHandlerRequestProcessor extends RequestProcessor {
         LOGGER.error("===== STRUTS UNHANDLED EXCEPTION =====");
         LOGGER.error("URI: " + request.getRequestURI());
         LOGGER.error("Query: " + request.getQueryString());
-
-        if (mapping != null) {
-            LOGGER.error("Action Mapping Path: " + mapping.getPath());
-            LOGGER.error("Action Mapping Type: " + mapping.getType());
-        }
-
-        LOGGER.error("Exception Message: " + exception.getMessage());
-        LOGGER.error("Exception Class: " + exception.getClass().getName());
         LOGGER.error("Stack trace: ", exception);
 
         return super.processException(request, response, exception, form, mapping);

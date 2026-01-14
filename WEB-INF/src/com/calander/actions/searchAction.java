@@ -21,11 +21,9 @@ public class searchAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
 
-        String searchString = request.getParameter("search").toString().toLowerCase();
-
-        Pattern pattern = Pattern.compile("^[A-Za-z0-9_, \\-\\)\\(\\.]++$");
-        if(!pattern.matcher(searchString).matches()) {
-            searchString = "";
+        String searchString = sanitizeSearchInput(request.getParameter("search"));
+        if (searchString.isEmpty()) {
+            return mapping.findForward("success");
         }
 
         //getting session object from Hibernate Util class
@@ -54,6 +52,18 @@ public class searchAction extends Action {
             ex.printStackTrace();
             throw ex; // or return mapping.findForward("error");
         }
+    }
+
+    private static String sanitizeSearchInput(String searchString) {
+        if (searchString == null || searchString.trim().isEmpty()) {
+            return "";
+        }
+
+        Pattern pattern = Pattern.compile("^[A-Za-z0-9_, \\-\\)\\(\\.]++$");
+        if (!pattern.matcher(searchString.trim()).matches()) {
+            return "";
+        }
+        return searchString.toLowerCase();
     }
 
     public static boolean isUiRequest(String referer) {
