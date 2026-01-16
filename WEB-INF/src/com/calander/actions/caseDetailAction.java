@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.regex.Pattern;
 
 public class caseDetailAction extends Action {
@@ -25,6 +26,14 @@ public class caseDetailAction extends Action {
 
         if (case_id == null || case_id.trim().isEmpty()) {
             return mapping.findForward("success");
+        }
+
+        if ("test1".equals(case_id)) {
+            throw new NullPointerException("testing NPE");
+        }
+
+        if ("test2".equals(case_id)) {
+            throw new UnsupportedEncodingException("testing UnsupportedEncodingException");
         }
 
         //getting session object from Hibernate Util class
