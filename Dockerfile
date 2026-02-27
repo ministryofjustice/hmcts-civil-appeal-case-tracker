@@ -12,7 +12,7 @@ ADD context.xml /usr/local/tomcat/conf/context.xml
 RUN rm -rf /usr/local/tomcat/webapps/{ROOT,examples,host-manager,manager,docs}
 
 # Copy snippet.xml to /tmp
-COPY deploy/error-snippet.xml /tmp/error-snippet.xml
+COPY deploy_assets/error-snippet.xml /tmp/error-snippet.xml
 
 # Modify web.xml to insert the snippet before </web-app>
 RUN sed -i "/<\/web-app>/i $(cat /tmp/error-snippet.xml)" $CATALINA_HOME/conf/web.xml && \
@@ -20,7 +20,7 @@ RUN sed -i "/<\/web-app>/i $(cat /tmp/error-snippet.xml)" $CATALINA_HOME/conf/we
 
 # Copy error.jsp to webapps/ROOT
 RUN mkdir -p $CATALINA_HOME/webapps/ROOT
-COPY deploy/error.jsp $CATALINA_HOME/webapps/ROOT/error.jsp
+COPY deploy_assets/error.jsp $CATALINA_HOME/webapps/ROOT/error.jsp
 
 RUN adduser --disabled-password tomcat -u 1001 && chown -R tomcat:tomcat /usr/local/tomcat
 USER 1001
