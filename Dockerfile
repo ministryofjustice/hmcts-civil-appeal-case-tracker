@@ -5,6 +5,9 @@ FROM tomcat:9.0.107-jdk11-temurin-jammy
 
 #Add main war file to tomcat server as ROOT.war and add the necessary config files
 USER root
+
+RUN adduser --disabled-password tomcat -u 1001
+
 ADD "deploy/CACT.war" /usr/local/tomcat/webapps/ROOT.war
 ADD context.xml /usr/local/tomcat/conf/context.xml
 
@@ -22,5 +25,8 @@ RUN sed -i "/<\/web-app>/i $(cat /tmp/error-snippet.xml)" $CATALINA_HOME/conf/we
 RUN mkdir -p $CATALINA_HOME/webapps/ROOT
 COPY deploy_assets/error.jsp $CATALINA_HOME/webapps/ROOT/error.jsp
 
-RUN adduser --disabled-password tomcat -u 1001 && chown -R tomcat:tomcat /usr/local/tomcat
+RUN chown -R 1001:1001 /usr/local/tomcat
+
 USER 1001
+
+CMD ["catalina.sh", "run"]
