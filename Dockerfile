@@ -8,7 +8,7 @@ USER root
 
 RUN adduser --disabled-password tomcat -u 1001
 
-ADD "deploy/CACT.war" /usr/local/tomcat/webapps/ROOT.war
+ADD "deploy/CACT.war" /usr/local/tomcat/webapps/CACT.war
 ADD context.xml /usr/local/tomcat/conf/context.xml
 
 # Remove default index files
