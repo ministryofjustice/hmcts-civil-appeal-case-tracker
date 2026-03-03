@@ -10,6 +10,7 @@ COPY --chown=1001:1001 context.xml /usr/local/tomcat/conf/context.xml
 
 # Modify web.xml to insert the error code config before </web-app>
 COPY deploy_assets/error-snippet.xml /tmp/error-snippet.xml
+COPY deploy_assets/error.jsp /usr/local/tomcat/webapps/ROOT/error.jsp
 
 RUN sed -i "/<\/web-app>/i $(cat /tmp/error-snippet.xml)" $CATALINA_HOME/conf/web.xml && \
     rm /tmp/error-snippet.xml
