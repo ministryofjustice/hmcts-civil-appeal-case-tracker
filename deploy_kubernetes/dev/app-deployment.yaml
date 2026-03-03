@@ -86,5 +86,5 @@ spec:
             initialDelaySeconds: 3
             periodSeconds: 5
             timeoutSeconds: 5
-            failureThreshold: 3
+            failureThreshold: 10
             successThreshold: 1
