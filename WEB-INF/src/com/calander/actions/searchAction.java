@@ -1,6 +1,7 @@
 package com.calander.actions;
 
 import com.calander.plugin.HibernatePlugin;
+import com.calander.util.CsvImportJob;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -8,18 +9,25 @@ import org.apache.struts.action.ActionMapping;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.regex.Pattern;
 
 
 public class searchAction extends Action {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(searchAction.class);
+
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
+
 
         String searchString = sanitizeSearchInput(request.getParameter("search"));
         if (searchString.isEmpty()) {
@@ -36,6 +44,8 @@ public class searchAction extends Action {
         query.setString("title", "%" + searchString + "%");
 
         List arrResults = query.list();
+
+        LOGGER.info(MessageFormat.format("Returned <{0}> rows for search using string <{1}> on search_date or case_no or title1 ", arrResults.size(), searchString));
 
         session.clear();
         session.close();
