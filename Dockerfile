@@ -1,24 +1,19 @@
 FROM tomcat:9.0.107-jdk11-temurin-jammy
 
-ENV DB_HOST="172.22.5.164" \
-    DB_PORT="1433" \
-    DB_USER="cact_user" \
-    DB_PASSWORD="cact_user" \
-    DB_NAME="CACT" \
-    ADMIN_USER=admin \
-    ADMIN_PASS=admin
+ENV CATALINA_OPTS="-Xmx512M -XX:MaxMetaspaceSize=256m"
 
-#This is no set in deployment.yaml to avoid the base image overwriting what we set in the dockerfile
-#ENV CATALINA_OPTS "-Xms2048m -Xmx2048m -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:/usr/local/tomcat/logs/gc.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5 -XX:GCLogFileSize=10M"
+RUN rm -rf  /usr/local/tomcat/webapps/{ROOT,examples,host-manager,manager,docs} \
+    && mkdir -p /file/
 
-#Remove all default files
-RUN mkdir -p /opt
-RUN rm -rf /usr/local/tomcat/webapps/ROOT && rm -rf /usr/local/tomcat/webapps/docs && rm -rf /usr/local/tomcat/webapps/examples
+COPY --chown=1001:1001 "deploy/CACT.war" /usr/local/tomcat/webapps/ROOT.war
+COPY --chown=1001:1001 context.xml /usr/local/tomcat/conf/context.xml
 
-#Add main war file to tomcat server as ROOT.war and add the necessary config files
-ADD "deploy/CACT.war" /usr/local/tomcat/webapps/ROOT.war
-ADD context.xml /usr/local/tomcat/conf/context.xml
+# Modify web.xml to insert the error code config before </web-app>
+COPY deploy_assets/error-snippet.xml /tmp/error-snippet.xml
 
+RUN sed -i "/<\/web-app>/i $(cat /tmp/error-snippet.xml)" $CATALINA_HOME/conf/web.xml && \
+    rm /tmp/error-snippet.xml
 
 RUN adduser --disabled-password tomcat -u 1001 && chown -R tomcat:tomcat /usr/local/tomcat
+
 USER 1001
