@@ -29,13 +29,10 @@ public class searchAction extends Action {
             throws IOException, ServletException, Exception {
 
 
-        LOGGER.info(MessageFormat.format("Search param <{0}>", request.getParameter("search")));
         String searchString = sanitizeSearchInput(request.getParameter("search"));
         if (searchString.isEmpty()) {
             return mapping.findForward("success");
         }
-
-        LOGGER.info(MessageFormat.format("Sanitized string <{0}>", searchString));
 
         //getting session object from Hibernate Util class
         SessionFactory factory = (SessionFactory) servlet.getServletContext().getAttribute(HibernatePlugin.KEY_NAME);
@@ -46,11 +43,9 @@ public class searchAction extends Action {
         query.setString("case", "%" + searchString + "%");
         query.setString("title", "%" + searchString + "%");
 
-        LOGGER.info(MessageFormat.format("Query String <{0}>", query.getQueryString()));
-
         List arrResults = query.list();
 
-        LOGGER.info(MessageFormat.format("Results <{0}>", arrResults.size()));
+        LOGGER.info(MessageFormat.format("Returned <{0}> rows for search using string <{1}> on search_date or case_no or title1 ", arrResults.size(), searchString));
 
         session.clear();
         session.close();
