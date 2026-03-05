@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Arrays;
 
 public class CsvProcessor {
 
@@ -19,11 +20,14 @@ public class CsvProcessor {
         int rowCount = 0;
 
         while ((nextLine = reader.readNext()) != null) {
-            LOGGER.info(MessageFormat.format("{0}: <{1}>", rowCount, nextLine));
+            LOGGER.info("Row " + rowCount + ": " + Arrays.toString(nextLine));
             calander = new Calander();
             calander.setProperties(nextLine);
             session.save(calander);
-            LOGGER.info(MessageFormat.format("Saved row {0}", rowCount));
+            session.flush();
+            session.clear();
+            LOGGER.info("Saved row " + rowCount);
+
             rowCount++;
         }
 
