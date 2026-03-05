@@ -19,7 +19,7 @@ public class CsvProcessor {
         int rowCount = 0;
 
         while ((nextLine = reader.readNext()) != null) {
-            LOGGER.info(MessageFormat.format("{0}: <{0}>", rowCount, nextLine));
+            LOGGER.info(MessageFormat.format("{0}: <{1}>", rowCount, nextLine));
             calander = new Calander();
             calander.setProperties(nextLine);
             session.save(calander);
