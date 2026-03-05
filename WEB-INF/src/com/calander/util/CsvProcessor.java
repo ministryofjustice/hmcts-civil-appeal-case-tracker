@@ -20,7 +20,21 @@ public class CsvProcessor {
         int rowCount = 0;
 
         while ((nextLine = reader.readNext()) != null) {
-            LOGGER.info("Row " + rowCount + ": " + Arrays.toString(nextLine));
+
+            if (nextLine.length != 26) {
+                LOGGER.warn("Row " + rowCount + " has " + nextLine.length + " columns (expected 26)");
+
+                for (int i = 0; i < nextLine.length; i++) {
+                    String value = nextLine[i];
+                    int len = (value == null) ? 0 : value.length();
+
+                    LOGGER.warn("Row " + rowCount + " Col " + i +
+                            " Length=" + len +
+                            " Value=[" + value + "]");
+                }
+            } else {
+                LOGGER.info("Row " + rowCount + ": " + Arrays.toString(nextLine));
+            }
             calander = new Calander();
             calander.setProperties(nextLine);
             session.save(calander);
