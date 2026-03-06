@@ -33,7 +33,7 @@ public class CsvProcessor {
                 LOGGER.error("Row " + rowCount + " has " + nextLine.length + " columns (expected 67)");
             } else {
 
-                LOGGER.info("Row " + rowCount + ": " + Arrays.toString(nextLine));
+                //LOGGER.info("Row " + rowCount + ": " + Arrays.toString(nextLine));
                 for (int i = maxFields; i < nextLine.length; i++) {
                     String value = nextLine[i];
                     int len = (value == null) ? 0 : value.length();
@@ -51,8 +51,6 @@ public class CsvProcessor {
             session.save(calander);
             session.flush();
             session.clear();
-            LOGGER.info("Saved row " + rowCount);
-
             rowCount++;
         }
 
