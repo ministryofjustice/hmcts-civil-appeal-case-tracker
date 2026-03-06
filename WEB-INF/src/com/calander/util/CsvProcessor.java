@@ -33,6 +33,17 @@ public class CsvProcessor {
                 LOGGER.error("Row " + rowCount + " has " + nextLine.length + " columns (expected 67)");
             } else {
 
+                if (nextLine[1].equals("CA-2026-000401")) {
+                    for (int i = 0; i < maxFields; i++) {
+                        String value = nextLine[i];
+                        int len = (value == null) ? 0 : value.length();
+
+                        LOGGER.warn("Row " + rowCount + " Col " + i +
+                                " Length=" + len +
+                                " Value=[" + value + "]");
+                    }
+                }
+
                 //LOGGER.info("Row " + rowCount + ": " + Arrays.toString(nextLine));
                 for (int i = maxFields; i < nextLine.length; i++) {
                     String value = nextLine[i];
@@ -40,6 +51,7 @@ public class CsvProcessor {
 
                     // Print out any values on rows where there is data after column 25
                     if(len > 0) {
+                        LOGGER.info("Row " + rowCount + ": " + Arrays.toString(nextLine));
                         LOGGER.warn("Row " + rowCount + " Col " + i +
                                 " Length=" + len +
                                 " Value=[" + value + "]");
