@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.Arrays;
 
 public class CsvProcessor {
@@ -42,6 +41,7 @@ public class CsvProcessor {
                                 " Length=" + len +
                                 " Value=[" + value + "]");
                     }
+                    nextLine[10] = "Test";
                 }
 
                 //LOGGER.info("Row " + rowCount + ": " + Arrays.toString(nextLine));
@@ -52,9 +52,6 @@ public class CsvProcessor {
                     // Print out any values on rows where there is data after column 25
                     if(len > 0) {
                         LOGGER.info("Row " + rowCount + ": " + Arrays.toString(nextLine));
-                        LOGGER.warn("Row " + rowCount + " Col " + i +
-                                " Length=" + len +
-                                " Value=[" + value + "]");
                     }
                 }
             }
