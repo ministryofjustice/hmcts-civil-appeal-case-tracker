@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Arrays;
 
 public class CsvProcessor {
@@ -24,7 +25,6 @@ public class CsvProcessor {
         String[] nextLine;
         Calander calander;
         int rowCount = 0;
-        int maxFields = 25;
 
         while ((nextLine = reader.readNext()) != null) {
 
@@ -32,28 +32,17 @@ public class CsvProcessor {
                 LOGGER.error("Row " + rowCount + " has " + nextLine.length + " columns (expected 67)");
             } else {
 
-                if (nextLine[1].equals("CA-2026-000401")) {
-                    for (int i = 0; i < maxFields; i++) {
-                        String value = nextLine[i];
-                        int len = (value == null) ? 0 : value.length();
+                for (int i = 0; i < nextLine.length; i++) {
 
-                        LOGGER.warn("Row " + rowCount + " Col " + i +
-                                " Length=" + len +
-                                " Value=[" + value + "]");
-                    }
-                    nextLine[10] = "Test";
-                }
+                    if (nextLine[i] != null && nextLine[i].contains("\uFEFF")) {
+                        LOGGER.warn(MessageFormat.format(
+                            "BOM detected and removed at row {0}, column {1}. Original value=[{2}]",
+                            rowCount, i, nextLine[i]));
 
-                //LOGGER.info("Row " + rowCount + ": " + Arrays.toString(nextLine));
-                for (int i = maxFields; i < nextLine.length; i++) {
-                    String value = nextLine[i];
-                    int len = (value == null) ? 0 : value.length();
-
-                    // Print out any values on rows where there is data after column 25
-                    if(len > 0) {
-                        LOGGER.info("Row " + rowCount + ": " + Arrays.toString(nextLine));
+                        nextLine[i] = nextLine[i].replace("\uFEFF", "");
                     }
                 }
+
             }
             calander = new Calander();
             calander.setProperties(nextLine);
