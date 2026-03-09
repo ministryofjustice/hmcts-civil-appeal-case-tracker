@@ -238,6 +238,16 @@ public class Calander {
     }
 
     public void setProperties(String[] data) {
+
+        // Ensure at least 25 columns
+        if (data.length < 25) {
+            throw new IllegalArgumentException("Row has insufficient columns: " + data.length);
+        }
+
+        // Column limits
+        int title1Limit = 255;
+        int title2Limit = 255;
+
         this.setSearch_date(data[0]);
         this.setCase_no(data[1]);
         this.setHeading_status(data[2]);
@@ -247,21 +257,76 @@ public class Calander {
         this.setLcourt(data[6]);
         this.setVenue(data[7]);
         this.setCase_ref(data[8]);
-        this.setTitle1(data[9] + " " + data[10]);
-        this.setTitle2(data[10]);
+
+        // Safely combine columns 9 and 10 into title1
+        String combinedTitle1 = (data[9] + " " + data[10]).trim();
+        if (combinedTitle1.length() > title1Limit) {
+            combinedTitle1 = combinedTitle1.substring(0, title1Limit);
+        }
+        this.setTitle1(combinedTitle1);
+
+        // Use only column 10 for title2, truncate if necessary
+        String title2 = data[10].trim();
+        if (title2.length() > title2Limit) {
+            title2 = title2.substring(0, title2Limit);
+        }
+        this.setTitle2(title2);
+
         this.setType(data[11]);
         this.setLc_judge(data[12]);
         this.setNature(data[13]);
         this.setLast_updated(data[14]);
         this.setResult(data[15]);
         this.setStatus(data[16]);
-        this.setTrack_line1(data[17]);
-        this.setTrack_line2(data[18]);
-        this.setTrack_line3(data[19]);
-        this.setTrack_line4(data[20]);
-        this.setTrack_line5(data[21]);
-        this.setTrack_line6(data[22]);
-        this.setTrack_line7(data[23]);
-        this.setTrack_line8(data[24]);
+
+        String[] tracks = buildTrackLines(data);
+        this.setTrack_line1(tracks[0]);
+        this.setTrack_line2(tracks[1]);
+        this.setTrack_line3(tracks[2]);
+        this.setTrack_line4(tracks[3]);
+        this.setTrack_line5(tracks[4]);
+        this.setTrack_line6(tracks[5]);
+        this.setTrack_line7(tracks[6]);
+        this.setTrack_line8(tracks[7]);
+    }
+
+    private String[] buildTrackLines(String[] data) {
+
+        String[] tracks = new String[8];
+
+        int source = 17;
+        int target = 0;
+
+        while (source < data.length && target < 8) {
+
+            String first = safe(data[source]);
+
+            String second = "";
+            if (source + 1 < data.length) {
+                second = safe(data[source + 1]);
+            }
+
+            String combined = first + "<br/>" + second;
+
+            if (!second.isEmpty() && combined.length() <= 255) {
+
+                tracks[target] = combined;
+                source += 2;
+
+            } else {
+
+                tracks[target] = first;
+                source += 1;
+
+            }
+
+            target++;
+        }
+
+        return tracks;
+    }
+
+    private String safe(String s) {
+        return s == null ? "" : s.trim();
     }
 }

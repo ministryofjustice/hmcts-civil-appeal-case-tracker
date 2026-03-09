@@ -7,8 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.Arrays;
 
 public class CsvProcessor {
 
@@ -28,22 +26,15 @@ public class CsvProcessor {
 
         while ((nextLine = reader.readNext()) != null) {
 
-            if (nextLine.length != 67) {
-                LOGGER.error("Row " + rowCount + " has " + nextLine.length + " columns (expected 67)");
-            } else {
+            // Clean and validate first 25 columns
+            String[] cleanLine = CsvValidator.cleanRow(nextLine, rowCount);
 
-                for (int i = 0; i < nextLine.length; i++) {
-
-                    if (nextLine[i] != null && nextLine[i].contains("\uFEFF")) {
-                        LOGGER.warn(MessageFormat.format(
-                            "BOM detected and removed at row {0}, column {1}. Original value=[{2}]",
-                            rowCount, i, nextLine[i]));
-
-                        nextLine[i] = nextLine[i].replace("\uFEFF", "");
-                    }
-                }
-
+            if (cleanLine == null) {
+                LOGGER.error("Skipping row {}", rowCount);
+                rowCount++;
+                continue;
             }
+
             calander = new Calander();
             calander.setProperties(nextLine);
             session.save(calander);
