@@ -80,48 +80,4 @@ public class CsvValidator {
 
         return sanitized;
     }
-
-
-    private String[] buildTrackLines(String[] data) {
-
-        String[] tracks = new String[8];
-
-        int source = 17;
-        int target = 0;
-
-        while (source < data.length && target < 8) {
-
-            String first = safe(data[source]);
-
-            String second = "";
-            if (source + 1 < data.length) {
-                second = safe(data[source + 1]);
-            }
-
-            String combined = first + "<br/>" + second;
-
-            if (!second.isEmpty() && combined.length() <= 255) {
-
-                tracks[target] = combined;
-                source += 2;
-
-            } else {
-
-                tracks[target] = first;
-                source += 1;
-
-            }
-
-            target++;
-        }
-
-        return tracks;
-    }
-
-    private String safe(String s) {
-        return s == null ? "" : s.trim();
-    }
-
-
-
 }

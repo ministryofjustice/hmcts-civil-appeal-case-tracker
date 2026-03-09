@@ -306,7 +306,7 @@ public class Calander {
                 second = safe(data[source + 1]);
             }
 
-            String combined = first + "<br/>" + second;
+            String combined = first + "\n" + second;
 
             if (!second.isEmpty() && combined.length() <= 255) {
 
