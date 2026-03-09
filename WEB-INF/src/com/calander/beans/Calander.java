@@ -2,7 +2,7 @@ package com.calander.beans;
 
 public class Calander {
 
-    static final int MAX_TRACKS = 8
+    static final int MAX_TRACKS = 8;
 
     private int case_id;
     private String search_date;
