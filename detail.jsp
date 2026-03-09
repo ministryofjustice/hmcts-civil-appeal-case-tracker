@@ -116,9 +116,9 @@
                                                 <p><strong>Type:</strong>&nbsp;<bean:write name="detail"
                                                                                            property="type"/></p>
                                                 <p>
-                                                    <strong>Appeal / Application:</strong><br/>
-                                                    <bean:write name="detail" property="lc_judge"/><br/>
-                                                    <bean:write name="detail" property="lcourt"/><br/>
+                                                    <strong>Appeal / Application:</strong>
+                                                    <bean:write name="detail" property="lc_judge"/>
+                                                    <bean:write name="detail" property="lcourt"/>
                                                     <bean:write name="detail" property="nature"/>
                                                 </p>
                                                 <p><strong>Hearing Status:</strong>&nbsp;<bean:write name="detail"
@@ -127,9 +127,9 @@
                                                 <p><strong>Venue:</strong>&nbsp;<bean:write name="detail"
                                                                                             property="venue"/></p>
                                                 <p>
-                                                    <strong>Constitution:</strong><br/>
-                                                    <bean:write name="detail" property="judge1"/><br/>
-                                                    <bean:write name="detail" property="judge2"/><br/>
+                                                    <strong>Constitution:</strong>
+                                                    <bean:write name="detail" property="judge1"/>
+                                                    <bean:write name="detail" property="judge2"/>
                                                     <bean:write name="detail" property="judge3"/>
                                                 </p>
                                             </div>
@@ -149,13 +149,13 @@
                                         <div class="formblock underline">
                                             <h3>Tracking Information:</h3>
                                             <p>
-                                                <bean:write name="detail" property="track_line1"/><br/>
-                                                <bean:write name="detail" property="track_line2"/><br/>
-                                                <bean:write name="detail" property="track_line3"/><br/>
-                                                <bean:write name="detail" property="track_line4"/><br/>
-                                                <bean:write name="detail" property="track_line5"/><br/>
-                                                <bean:write name="detail" property="track_line6"/><br/>
-                                                <bean:write name="detail" property="track_line7"/><br/>
+                                                <bean:write name="detail" property="track_line1"/>
+                                                <bean:write name="detail" property="track_line2"/>
+                                                <bean:write name="detail" property="track_line3"/>
+                                                <bean:write name="detail" property="track_line4"/>
+                                                <bean:write name="detail" property="track_line5"/>
+                                                <bean:write name="detail" property="track_line6"/>
+                                                <bean:write name="detail" property="track_line7"/>
                                                 <bean:write name="detail" property="track_line8"/>
                                             </p>
                                         </div>
