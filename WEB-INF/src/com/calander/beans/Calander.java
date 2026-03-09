@@ -2,6 +2,8 @@ package com.calander.beans;
 
 public class Calander {
 
+    static final int MAX_TRACKS = 8
+
     private int case_id;
     private String search_date;
     private String case_no;
@@ -292,18 +294,18 @@ public class Calander {
 
     private String[] buildTrackLines(String[] data) {
 
-        String[] tracks = new String[8];
+        String[] tracks = new String[MAX_TRACKS];
 
         int source = 17;
         int target = 0;
 
         while (source < data.length && target < 8) {
 
-            String first = safe(data[source]);
+            String first = trimOrNull(data[source]);
 
             String second = "";
             if (source + 1 < data.length) {
-                second = safe(data[source + 1]);
+                second = trimOrNull(data[source + 1]);
             }
 
             String combined = first + "\n" + second;
@@ -326,7 +328,7 @@ public class Calander {
         return tracks;
     }
 
-    private String safe(String s) {
+    private String trimOrNull(String s) {
         return s == null ? "" : s.trim();
     }
 }
