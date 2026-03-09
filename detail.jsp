@@ -9,6 +9,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <!-- InstanceBegin template="/Templates/default.dwt" codeOutsideHTMLIsLocked="false" -->
 <head>
+
+    <style>
+        .formblock p {
+            white-space: pre-line;
+        }
+    </style>
+
     <!-- InstanceBeginEditable name="doctitle" -->
     <title>Case tracker &ndash; Justice UK</title>
     <!-- InstanceEndEditable -->
