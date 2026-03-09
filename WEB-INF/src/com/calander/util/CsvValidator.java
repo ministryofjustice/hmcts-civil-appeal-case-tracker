@@ -36,11 +36,6 @@ public class CsvValidator {
             return null;
         }
 
-        if (row.length > EXPECTED_IMPORT_COLUMNS) {
-            LOGGER.warn("Row {} contains {} columns ({} expected for base import, remaining used for tracking lines)",
-                    rowNumber, row.length, EXPECTED_IMPORT_COLUMNS);
-        }
-
         String[] sanitized = new String[row.length];
 
         for (int i = 0; i < row.length; i++) {
@@ -63,16 +58,16 @@ public class CsvValidator {
 
             value = sb.toString().trim();
 
-            // Only enforce DB length limits for imported columns
-            if (i < EXPECTED_IMPORT_COLUMNS) {
+            // Enforce DB length limits
+            int limit = VARCHAR50_COLUMNS.contains(i) ? 50 : 255;
+            if (value.length() > limit) {
+                LOGGER.warn("Row {} column {} exceeds max length {}. Truncating from {}",
+                        rowNumber, i, limit, value.length());
+                value = value.substring(0, limit);
+            }
 
-                int limit = VARCHAR50_COLUMNS.contains(i) ? 50 : 255;
-
-                if (value.length() > limit) {
-                    LOGGER.warn("Row {} column {} exceeds max length {}. Truncating from {}",
-                            rowNumber, i, limit, value.length());
-                    value = value.substring(0, limit);
-                }
+            if ( (i > EXPECTED_IMPORT_COLUMNS) && (!value.isEmpty())) {
+                LOGGER.warn("Row {} column {} has data for Tracking Lines",rowNumber, i);
             }
 
             sanitized[i] = value;
