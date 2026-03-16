@@ -11,7 +11,7 @@ COPY --chown=1001:1001 context.xml /usr/local/tomcat/conf/context.xml
 # Modify web.xml to insert the error code config before </web-app>
 COPY deploy_assets/error-snippet.xml /tmp/error-snippet.xml
 
-Temporary copy to llow Bing to authorise a reindex of a cached page
+#Temporary copy to llow Bing to authorise a reindex of a cached page
 COPY --chown=1001:1001 deploy_assets/BingSiteAuth.xml /usr/local/tomcat/webapps/ROOT/BingSiteAuth.xml
 
 RUN sed -i "/<\/web-app>/i $(cat /tmp/error-snippet.xml)" $CATALINA_HOME/conf/web.xml && \
