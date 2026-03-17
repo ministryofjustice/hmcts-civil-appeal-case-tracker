@@ -177,6 +177,7 @@
 				<include name="Version.txt" />
 				<include name="HTMLCalendar.htm" />
                 <include name="favicon.ico" />
+				<include name="BingSiteAuth.xml" />
 			</fileset>
 		</copy>
 		<echo>
