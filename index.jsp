@@ -30,6 +30,7 @@
     <meta name="DC.language" content="ENG"/>
     <meta name="DC.coverage" content="England, Wales"/>
     <meta name="DC.rights.copyright" content="Crown Copyright"/>
+    <meta name="msvalidate.01" content="21A3C1B9D46FA62915F198C3C2AC99D9" />
     <!-- InstanceEndEditable -->
 
     <link rel="shortcut icon" href="favicon.ico"/>
