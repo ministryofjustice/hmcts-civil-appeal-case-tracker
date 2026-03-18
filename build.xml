@@ -178,6 +178,7 @@
 				<include name="HTMLCalendar.htm" />
                 <include name="favicon.ico" />
 				<include name="BingSiteAuth.xml" />
+				<include name="google1c247fb6360b4f72.html" />
 			</fileset>
 		</copy>
 		<echo>
