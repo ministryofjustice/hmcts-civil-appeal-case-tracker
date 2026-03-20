@@ -43,6 +43,9 @@ public class caseDetailAction extends Action {
         }
         session.clear();
         session.close();
+
+        // Don't allow browsers to cache search results as cases may be anonymised
+        response.setHeader("X-Robots-Tag", "noindex, nofollow");
         return mapping.findForward(mappingResult);
     }
 }
