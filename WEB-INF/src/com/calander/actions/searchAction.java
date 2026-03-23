@@ -30,9 +30,11 @@ public class searchAction extends Action {
 
 
         String searchString = sanitizeSearchInput(request.getParameter("search"));
+        /*
         if (searchString.isEmpty()) {
             return mapping.findForward("success");
         }
+        */
 
         //getting session object from Hibernate Util class
         SessionFactory factory = (SessionFactory) servlet.getServletContext().getAttribute(HibernatePlugin.KEY_NAME);
