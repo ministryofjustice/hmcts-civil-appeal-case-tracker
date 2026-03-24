@@ -84,14 +84,14 @@
                     <div id="Content">
                         <div class="holder">
                             <!-- InstanceBeginEditable name="main" -->
-                            <% 
-                            
-                            // Check if the request has been triggered by the "Next page" link 
+                            <%
+
+                            // Check if the request has been triggered by the "Next page" link
                             boolean isNextPageLink="nextPage".equals(request.getParameter("action"));
 
-                            // Clear the search results if it's the "Next page" link 
-                            if (isNextPageLink) { request.getSession().removeAttribute("results"); } 
-                            
+                            // Clear the search results if it's the "Next page" link
+                            if (isNextPageLink) { request.getSession().removeAttribute("results"); }
+
                             %>
 
                             <div class="steps">
@@ -119,88 +119,16 @@
                                 </div>
                             </div>
 
-                            // Output format for non-ui requests requires paging parameters (not a DisplayTag table
-                            <logic:present name="results" scope="request">
-                                <div class="formwrap">
-                                    <span class="tl"></span>
-                                    <span class="tr"><span></span></span>
-                                    <div class="formcon">
-                                        <h2>Search results</h2>
-
-                                        <!-- Paging banner (DisplayTag-like) -->
-                                        <div class="paging">
-                                            <logic:greaterThan name="page" value="1">
-                                                <a href="search.do?search=${param.search}&page=${page - 1}&pageSize=${pageSize}">
-                                                    Previous
-                                                </a>
-                                            </logic:greaterThan>
-
-                                            Page ${page}
-
-                                            <logic:equal name="hasNextPage" value="true">
-                                                <a href="search.do?search=${param.search}&page=${page + 1}&pageSize=${pageSize}">
-                                                    Next
-                                                </a>
-                                            </logic:equal>
-                                        </div>
-
-                                        <div class="result">
-                                            <!-- Table structure mimics DisplayTag output -->
-                                            <table id="result" class="displaytag">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Case number</th>
-                                                        <th>Title</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <logic:iterate id="row" name="results">
-                                                        <tr>
-                                                            <td>
-                                                                <a href="getDetail.do?case_id=<bean:write name='row' property='case_no'/>">
-                                                                    <bean:write name="row" property="case_no"/>
-                                                                </a>
-                                                            </td>
-                                                            <td>
-                                                                <bean:write name="row" property="title1"/>
-                                                            </td>
-                                                        </tr>
-                                                    </logic:iterate>
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                        <!-- Bottom paging (optional but matches DisplayTag feel) -->
-                                        <div class="paging">
-                                            <logic:greaterThan name="page" value="1">
-                                                <a href="search.do?search=${param.search}&page=${page - 1}&pageSize=${pageSize}">
-                                                    Previous
-                                                </a>
-                                            </logic:greaterThan>
-
-                                            Page ${page}
-
-                                            <logic:equal name="hasNextPage" value="true">
-                                                <a href="search.do?search=${param.search}&page=${page + 1}&pageSize=${pageSize}">
-                                                    Next
-                                                </a>
-                                            </logic:equal>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </logic:present>
-
-                            <!-- Request-scoped results (API/bot users) -->
-                            <logic:present name="results" scope="request">
+                            <!-- Session-scoped results (UI paging) -->
+                            <logic:present name="results" scope="session">
                                 <div class="formwrap">
                                     <span class="tl"></span>
                                     <span class="tr"><span></span></span>
                                     <div class="formcon">
                                         <h2>Search results</h2>
                                         <div class="result">
-                                            <display:table id="result" name="requestScope.results" requestURI="/search.do"
-                                                           pagesize="5" sort="list">
+                                            <display:table id="result" name="sessionScope.results" requestURI="/search.do"
+                                                           pagesize="15" sort="list">
                                                 <display:setProperty
                                                         name="paging.banner.placement">top</display:setProperty>
                                                 <display:column property="case_no" title="Case number" paramId="case_id"
@@ -211,6 +139,82 @@
                                     </div>
                                 </div>
                             </logic:present>
+
+                            <!-- Request-scoped results (API/bot users) -->
+
+
+<logic:present name="results" scope="request">
+    <div class="formwrap">
+        <span class="tl"></span>
+        <span class="tr"><span></span></span>
+        <div class="formcon">
+            <h2>Search results</h2>
+
+            <!-- Paging banner (DisplayTag-like) -->
+            <div class="paging">
+                <logic:greaterThan name="page" value="1">
+                    <a href="search.do?search=${param.search}&page=${page - 1}&pageSize=${pageSize}">
+                        Previous
+                    </a>
+                </logic:greaterThan>
+
+                Page ${page}
+
+                <logic:equal name="hasNextPage" value="true">
+                    <a href="search.do?search=${param.search}&page=${page + 1}&pageSize=${pageSize}">
+                        Next
+                    </a>
+                </logic:equal>
+            </div>
+
+            <div class="result">
+                <!-- Table structure mimics DisplayTag output -->
+                <table id="result" class="displaytag">
+                    <thead>
+                        <tr>
+                            <th>Case number</th>
+                            <th>Title</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <logic:iterate id="row" name="results">
+                            <tr>
+                                <td>
+                                    <a href="getDetail.do?case_id=<bean:write name='row' property='case_no'/>">
+                                        <bean:write name="row" property="case_no"/>
+                                    </a>
+                                </td>
+                                <td>
+                                    <bean:write name="row" property="title1"/>
+                                </td>
+                            </tr>
+                        </logic:iterate>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Bottom paging (optional but matches DisplayTag feel) -->
+            <div class="paging">
+                <logic:greaterThan name="page" value="1">
+                    <a href="search.do?search=${param.search}&page=${page - 1}&pageSize=${pageSize}">
+                        Previous
+                    </a>
+                </logic:greaterThan>
+
+                Page ${page}
+
+                <logic:equal name="hasNextPage" value="true">
+                    <a href="search.do?search=${param.search}&page=${page + 1}&pageSize=${pageSize}">
+                        Next
+                    </a>
+                </logic:equal>
+            </div>
+
+        </div>
+    </div>
+</logic:present>
+
+
 
                             <div class="submitc">
                                 <div class="function previous">

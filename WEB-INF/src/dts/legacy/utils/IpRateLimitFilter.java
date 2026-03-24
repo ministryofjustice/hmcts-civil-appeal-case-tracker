@@ -62,7 +62,7 @@ public class IpRateLimitFilter implements Filter {
         boolean shouldLimit = path.contains("/search.do") || path.contains("/getDetail.do");
          */
 
-        if (!isUiRequest(request.getHeader("Referer"))) {
+        if (!isUiRequest(request)) {
 
             String ip = request.getHeader("X-Forwarded-For");
             if (ip != null && !ip.isEmpty()) {
