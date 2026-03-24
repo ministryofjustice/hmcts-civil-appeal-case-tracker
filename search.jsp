@@ -149,7 +149,7 @@
                                         <h2>Search results</h2>
                                         <div class="result">
                                             <display:table id="result" name="requestScope.results" requestURI="/search.do"
-                                                           pagesize="50" sort="list">
+                                                           pagesize="5" sort="list">
                                                 <display:setProperty
                                                         name="paging.banner.placement">top</display:setProperty>
                                                 <display:column property="case_no" title="Case number" paramId="case_id"
