@@ -148,26 +148,42 @@
                                     <div class="formcon">
                                         <h2>Search results</h2>
 
-                                        <!-- Paging banner (DisplayTag-like) -->
-                                        <div class="paging">
-                                            <logic:greaterThan name="page" value="1">
-                                                <a href="search.do?search=${param.search}&page=${page - 1}&pageSize=${pageSize}">
-                                                    Previous
-                                                </a>
-                                            </logic:greaterThan>
-
-                                            Page ${page}
-
-                                            <logic:equal name="hasNextPage" value="true">
-                                                <a href="search.do?search=${param.search}&page=${page + 1}&pageSize=${pageSize}">
-                                                    Next
-                                                </a>
-                                            </logic:equal>
-                                        </div>
-
                                         <div class="result">
-                                            <!-- Table structure mimics DisplayTag output -->
-                                            <table id="result" class="displaytag">
+
+                                            <!-- DisplayTag-like banner -->
+                                            <span class="pagebanner">
+                                                <bean:write name="totalResults"/> items found, displaying
+                                                <bean:write name="startIndex"/> to <bean:write name="endIndex"/>.
+                                            </span>
+
+                                            <!-- DisplayTag-like paging links -->
+                                            <span class="pagelinks">
+
+                                                <!-- First / Prev -->
+                                                <logic:greaterThan name="page" value="1">
+                                                    [<a href="search.do?search=${param.search}&page=1">First</a>/
+                                                    <a href="search.do?search=${param.search}&page=${page - 1}">Prev</a>]
+                                                </logic:greaterThan>
+                                                <logic:lessEqual name="page" value="1">
+                                                    [First/Prev]
+                                                </logic:lessEqual>
+
+                                                <!-- Current page -->
+                                                <strong><bean:write name="page"/></strong>
+
+                                                <!-- Next / Last -->
+                                                <logic:equal name="hasNextPage" value="true">
+                                                    [<a href="search.do?search=${param.search}&page=${page + 1}">Next</a>/
+                                                    <a href="search.do?search=${param.search}&page=${totalPages}">Last</a>]
+                                                </logic:equal>
+                                                <logic:notEqual name="hasNextPage" value="true">
+                                                    [Next/Last]
+                                                </logic:notEqual>
+
+                                            </span>
+
+                                            <!-- Table -->
+                                            <table class="table" id="result">
                                                 <thead>
                                                     <tr>
                                                         <th>Case number</th>
@@ -189,28 +205,13 @@
                                                     </logic:iterate>
                                                 </tbody>
                                             </table>
+
                                         </div>
-
-                                        <!-- Bottom paging (optional but matches DisplayTag feel) -->
-                                        <div class="paging">
-                                            <logic:greaterThan name="page" value="1">
-                                                <a href="search.do?search=${param.search}&page=${page - 1}&pageSize=${pageSize}">
-                                                    Previous
-                                                </a>
-                                            </logic:greaterThan>
-
-                                            Page ${page}
-
-                                            <logic:equal name="hasNextPage" value="true">
-                                                <a href="search.do?search=${param.search}&page=${page + 1}&pageSize=${pageSize}">
-                                                    Next
-                                                </a>
-                                            </logic:equal>
-                                        </div>
-
                                     </div>
                                 </div>
                             </logic:present>
+
+
 
                             <div class="submitc">
                                 <div class="function previous">
