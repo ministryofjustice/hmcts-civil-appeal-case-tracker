@@ -211,8 +211,6 @@
                                 </div>
                             </logic:present>
 
-
-
                             <div class="submitc">
                                 <div class="function previous">
                                     <span class="tl"></span>

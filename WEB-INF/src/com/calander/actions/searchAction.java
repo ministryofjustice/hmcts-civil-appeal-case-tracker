@@ -54,7 +54,8 @@ public class searchAction extends Action {
             query.setTimeout(5); // safety
 
             if (isUi) {
-                // 🔵 UI MODE (unchanged behaviour, but capped)
+
+                // UI mode - restrict query to 1000 results
 
                 query.setMaxResults(1000); // IMPORTANT: prevent abuse
 
@@ -70,8 +71,8 @@ public class searchAction extends Action {
                 return mapping.findForward("success");
 
             } else {
-                // 🟢 API MODE (stateless pagination)
 
+                // Non-ui request now requires paging to support scraping
                 int page = getPage(request);
                 int pageSize = getPageSize(request);
 
@@ -87,10 +88,21 @@ public class searchAction extends Action {
                         searchString, page, pageSize, results.size()
                 ));
 
+
+                int startIndex = (page - 1) * pageSize + 1;
+                int endIndex = startIndex + results.size() - 1;
+
+                Long totalResults = getTotalCount(session, searchString);
+                int totalPages = (int) Math.ceil((double) totalResults / pageSize);
+
+                request.setAttribute("totalResults", totalResults);
+                request.setAttribute("startIndex", startIndex);
+                request.setAttribute("endIndex", endIndex);
+                request.setAttribute("totalPages", totalPages);
                 request.setAttribute("results", results);
                 request.setAttribute("page", page);
                 request.setAttribute("pageSize", pageSize);
-                request.setAttribute("hasNextPage", hasNextPage);
+                request.setAttribute("hasNextPage", String.valueOf(hasNextPage));
 
                 return mapping.findForward("success");
             }
@@ -104,6 +116,20 @@ public class searchAction extends Action {
                 session.close();
             }
         }
+    }
+
+    private Long getTotalCount(Session session, String searchString) {
+
+        String hql = "select count(*) from Calander c " +
+                "where lower(c.search_date) like :search " +
+                "or lower(c.case_no) like :search " +
+                "or lower(c.title1) like :search";
+
+        Query countQuery = session.createQuery(hql);
+        countQuery.setString("search", "%" + searchString.toLowerCase() + "%");
+        countQuery.setTimeout(5); // safety
+
+        return (Long) countQuery.uniqueResult();
     }
 
     private int getPage(HttpServletRequest request) {
