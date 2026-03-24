@@ -100,9 +100,9 @@ public class searchAction extends Action {
                 request.setAttribute("endIndex", endIndex);
                 request.setAttribute("totalPages", totalPages);
                 request.setAttribute("results", results);
-                request.setAttribute("page", page);
-                request.setAttribute("pageSize", pageSize);
                 request.setAttribute("hasNextPage", String.valueOf(hasNextPage));
+                request.setAttribute("page", Integer.valueOf(page));
+                request.setAttribute("pageSize", Integer.valueOf(pageSize));
 
                 return mapping.findForward("success");
             }
@@ -127,9 +127,10 @@ public class searchAction extends Action {
 
         Query countQuery = session.createQuery(hql);
         countQuery.setString("search", "%" + searchString.toLowerCase() + "%");
-        countQuery.setTimeout(5); // safety
+        countQuery.setTimeout(5);
 
-        return (Long) countQuery.uniqueResult();
+        Number result = (Number) countQuery.uniqueResult();
+        return result.longValue();
     }
 
     private int getPage(HttpServletRequest request) {
