@@ -150,53 +150,45 @@
 
                                             <!-- Page banner -->
                                             <span class="pagebanner">
-                                                <bean:write name="totalResults"/> items found, displaying
-                                                <bean:write name="startIndex"/> to <bean:write name="endIndex"/>.
+                                                <bean:write name="totalResults" ignore="true"/> items found, displaying
+                                                <bean:write name="startIndex" ignore="true"/> to
+                                                <bean:write name="endIndex" ignore="true"/>.
                                             </span>
 
                                             <!-- Page links -->
                                             <span class="pagelinks">
-
                                                 <%
                                                     String search = request.getParameter("search");
                                                     if (search == null) search = "";
 
-                                                    int page = ((Integer) request.getAttribute("page")).intValue();
-                                                    int totalPages = ((Integer) request.getAttribute("totalPages")).intValue();
+                                                    // Safe extraction with defaults
+                                                    Integer pageObj = (Integer) request.getAttribute("page");
+                                                    Integer totalPagesObj = (Integer) request.getAttribute("totalPages");
                                                     String hasNextPage = (String) request.getAttribute("hasNextPage");
+
+                                                    int page = (pageObj != null) ? pageObj.intValue() : 1;
+                                                    int totalPages = (totalPagesObj != null) ? totalPagesObj.intValue() : 1;
+                                                    boolean hasNext = "true".equalsIgnoreCase(hasNextPage);
                                                 %>
 
                                                 <!-- First / Prev -->
-                                                <%
-                                                    if (page > 1) {
-                                                %>
+                                                <% if (page > 1) { %>
                                                     [<a href="search.do?search=<%= search %>&page=1">First</a>/
-                                                    <a href="search.do?search=<%= search %>&page=<%= page - 1 %>">Prev</a>]
-                                                <%
-                                                    } else {
-                                                %>
+                                                     <a href="search.do?search=<%= search %>&page=<%= page - 1 %>">Prev</a>]
+                                                <% } else { %>
                                                     [First/Prev]
-                                                <%
-                                                    }
-                                                %>
+                                                <% } %>
 
-                                                <!-- Page numbers (simple version like DisplayTag) -->
+                                                <!-- Current page -->
                                                 <strong><%= page %></strong>
 
                                                 <!-- Next / Last -->
-                                                <%
-                                                    if ("true".equals(hasNextPage)) {
-                                                %>
+                                                <% if (hasNext) { %>
                                                     [<a href="search.do?search=<%= search %>&page=<%= page + 1 %>">Next</a>/
-                                                    <a href="search.do?search=<%= search %>&page=<%= totalPages %>">Last</a>]
-                                                <%
-                                                    } else {
-                                                %>
+                                                     <a href="search.do?search=<%= search %>&page=<%= totalPages %>">Last</a>]
+                                                <% } else { %>
                                                     [Next/Last]
-                                                <%
-                                                    }
-                                                %>
-
+                                                <% } %>
                                             </span>
 
                                             <!-- Results table -->
