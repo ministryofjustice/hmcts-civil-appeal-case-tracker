@@ -62,9 +62,6 @@
 </head>
 
 
-<%
-    try {
-%>
 
 <body>
 <a name="top" id="top"></a>
@@ -89,6 +86,11 @@
                     <div id="Content">
                         <div class="holder">
                             <!-- InstanceBeginEditable name="main" -->
+
+
+                        <%
+                            try {
+                        %>
 
                             <div class="steps">
                                 <h2>Ways to Search</h2>
@@ -237,6 +239,15 @@
                                     <span class="br"></span>
                                 </div>
                             </div>
+
+                        <%
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                throw e;
+                            }
+                        %>
+
+
                             <!-- InstanceEndEditable -->
                         </div>
 
@@ -275,12 +286,6 @@
 <!--END_EXCLUDE-->
 </body>
 
-<%
-    } catch (Exception e) {
-        e.printStackTrace();
-        throw e;
-    }
-%>
 
 <script>
     (function (i, s, o, g, r, a, m) {
