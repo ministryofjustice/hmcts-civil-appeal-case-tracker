@@ -141,6 +141,16 @@
                             <!-- Output format for non-ui requests. Needs paging parameters; not DisplayTag table -->
                             <logic:present name="results" scope="request">
                               <logic:present name="startIndex" scope="request">
+
+
+                              <% if (exception != null) { %>
+                                  <h2>Exception occurred:</h2>
+                                  <pre><%= exception.getMessage() %></pre>
+                                  <h3>Stack trace:</h3>
+                                  <pre><% exception.printStackTrace(new java.io.PrintWriter(out)); %></pre>
+                              <% } %>
+
+
                                 <div class="formwrap">
                                     <span class="tl"></span>
                                     <span class="tr"><span></span></span>
