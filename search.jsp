@@ -150,39 +150,58 @@
 
                                         <div class="result">
 
-                                            <!-- DisplayTag-like banner -->
+                                            <!-- Page banner -->
                                             <span class="pagebanner">
                                                 <bean:write name="totalResults"/> items found, displaying
                                                 <bean:write name="startIndex"/> to <bean:write name="endIndex"/>.
                                             </span>
 
-                                            <!-- DisplayTag-like paging links -->
+                                            <!-- Page links -->
                                             <span class="pagelinks">
 
-                                                <!-- First / Prev -->
-                                                <logic:greaterThan name="page" value="1">
-                                                    [<a href="search.do?search=${param.search}&page=1">First</a>/
-                                                    <a href="search.do?search=${param.search}&page=${page - 1}">Prev</a>]
-                                                </logic:greaterThan>
-                                                <logic:lessEqual name="page" value="1">
-                                                    [First/Prev]
-                                                </logic:lessEqual>
+                                                <%
+                                                    String search = request.getParameter("search");
+                                                    if (search == null) search = "";
 
-                                                <!-- Current page -->
-                                                <strong><bean:write name="page"/></strong>
+                                                    int page = ((Integer) request.getAttribute("page")).intValue();
+                                                    int totalPages = ((Integer) request.getAttribute("totalPages")).intValue();
+                                                    String hasNextPage = (String) request.getAttribute("hasNextPage");
+                                                %>
+
+                                                <!-- First / Prev -->
+                                                <%
+                                                    if (page > 1) {
+                                                %>
+                                                    [<a href="search.do?search=<%= search %>&page=1">First</a>/
+                                                    <a href="search.do?search=<%= search %>&page=<%= page - 1 %>">Prev</a>]
+                                                <%
+                                                    } else {
+                                                %>
+                                                    [First/Prev]
+                                                <%
+                                                    }
+                                                %>
+
+                                                <!-- Page numbers (simple version like DisplayTag) -->
+                                                <strong><%= page %></strong>
 
                                                 <!-- Next / Last -->
-                                                <logic:equal name="hasNextPage" value="true">
-                                                    [<a href="search.do?search=${param.search}&page=${page + 1}">Next</a>/
-                                                    <a href="search.do?search=${param.search}&page=${totalPages}">Last</a>]
-                                                </logic:equal>
-                                                <logic:notEqual name="hasNextPage" value="true">
+                                                <%
+                                                    if ("true".equals(hasNextPage)) {
+                                                %>
+                                                    [<a href="search.do?search=<%= search %>&page=<%= page + 1 %>">Next</a>/
+                                                    <a href="search.do?search=<%= search %>&page=<%= totalPages %>">Last</a>]
+                                                <%
+                                                    } else {
+                                                %>
                                                     [Next/Last]
-                                                </logic:notEqual>
+                                                <%
+                                                    }
+                                                %>
 
                                             </span>
 
-                                            <!-- Table -->
+                                            <!-- Results table -->
                                             <table class="table" id="result">
                                                 <thead>
                                                     <tr>
