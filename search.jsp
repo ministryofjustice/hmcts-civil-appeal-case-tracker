@@ -111,7 +111,7 @@
                             </div>
 
 
-<%--
+
                             <!-- Session-scoped results (UI paging) -->
                             <logic:present name="results" scope="session">
                                 <div class="formwrap">
@@ -133,7 +133,7 @@
                                 </div>
                             </logic:present>
 
-
+<%--
                             <!-- Output format for non-ui requests. Needs paging parameters; not DisplayTag table -->
                             <logic:present name="results" scope="request">
                                 <div class="formwrap">
@@ -224,7 +224,6 @@
                                 </div>
                             </logic:present>
 --%>
-
 
 
                             <div class="submitc">
