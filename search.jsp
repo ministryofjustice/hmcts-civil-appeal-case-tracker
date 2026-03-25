@@ -88,9 +88,6 @@
                             <!-- InstanceBeginEditable name="main" -->
 
 
-                        <%
-                            try {
-                        %>
 
                             <div class="steps">
                                 <h2>Ways to Search</h2>
@@ -139,6 +136,10 @@
                                     </div>
                                 </div>
                             </logic:present>
+
+                        <%
+                            try {
+                        %>
 
                             <!-- Output format for non-ui requests. Needs paging parameters; not DisplayTag table -->
                             <logic:present name="results" scope="request">
@@ -230,6 +231,13 @@
                                 </div>
                             </logic:present>
 
+                        <%
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                throw e;
+                            }
+                        %>
+
                             <div class="submitc">
                                 <div class="function previous">
                                     <span class="tl"></span>
@@ -240,12 +248,7 @@
                                 </div>
                             </div>
 
-                        <%
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                throw e;
-                            }
-                        %>
+
 
 
                             <!-- InstanceEndEditable -->
