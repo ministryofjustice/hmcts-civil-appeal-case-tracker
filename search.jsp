@@ -137,12 +137,9 @@
                                 </div>
                             </logic:present>
 
-                        <%
-                            try {
-                        %>
-
                             <!-- Output format for non-ui requests. Needs paging parameters; not DisplayTag table -->
                             <logic:present name="results" scope="request">
+                              <logic:present name="startIndex" scope="request">
                                 <div class="formwrap">
                                     <span class="tl"></span>
                                     <span class="tr"><span></span></span>
@@ -229,14 +226,8 @@
                                         </div>
                                     </div>
                                 </div>
+                              </logic:present>
                             </logic:present>
-
-                        <%
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                throw e;
-                            }
-                        %>
 
                             <div class="submitc">
                                 <div class="function previous">
