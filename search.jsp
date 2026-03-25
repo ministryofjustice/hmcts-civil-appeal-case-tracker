@@ -5,6 +5,21 @@
 <%@ taglib uri="/WEB-INF/displaytag.tld" prefix="display" %>
 <%@ page import="java.sql.Date" %>
 
+<%-- FORCE exception output at the VERY beginning --%>
+<%
+    if (exception != null) {
+        out.clear();  // important: clear any partial output
+        response.setContentType("text/plain");
+        out.println("=== EXCEPTION OCCURRED IN SEARCH.JSP ===");
+        out.println("Message: " + exception.getMessage());
+        out.println("Exception type: " + exception.getClass().getName());
+        out.println("\nStack trace:");
+        exception.printStackTrace(new PrintWriter(out));
+        out.flush();
+        return;   // STOP processing the rest of the JSP
+    }
+%>
+
 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><!-- InstanceBegin template="/Templates/default.dwt" codeOutsideHTMLIsLocked="false" -->
 <head>
@@ -115,8 +130,6 @@
                                 </div>
                             </div>
 
-
-
                             <!-- Session-scoped results (UI paging) -->
                             <logic:present name="results" scope="session">
                                 <div class="formwrap">
@@ -141,16 +154,6 @@
                             <!-- Output format for non-ui requests. Needs paging parameters; not DisplayTag table -->
                             <logic:present name="results" scope="request">
                               <logic:present name="startIndex" scope="request">
-
-
-                              <% if (exception != null) { %>
-                                  <h2>Exception occurred:</h2>
-                                  <pre><%= exception.getMessage() %></pre>
-                                  <h3>Stack trace:</h3>
-                                  <pre><% exception.printStackTrace(new java.io.PrintWriter(out)); %></pre>
-                              <% } %>
-
-
                                 <div class="formwrap">
                                     <span class="tl"></span>
                                     <span class="tr"><span></span></span>
