@@ -61,6 +61,11 @@
     <script language="JavaScript" type="text/javascript" src="js/general.js"></script>
 </head>
 
+
+<%
+    try {
+%>
+
 <body>
 <a name="top" id="top"></a>
 <div class="iewrapper">
@@ -269,6 +274,14 @@
 </noscript>
 <!--END_EXCLUDE-->
 </body>
+
+<%
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw e;
+    }
+%>
+
 <script>
     (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
