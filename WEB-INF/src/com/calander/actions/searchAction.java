@@ -97,10 +97,10 @@ public class searchAction extends Action {
 
                 request.setAttribute("searchString", searchString);
                 request.setAttribute("totalResults", totalResults);
-                request.setAttribute("startIndex", startIndex);
-                request.setAttribute("endIndex", endIndex);
-                request.setAttribute("totalPages", totalPages);
                 request.setAttribute("results", results);
+                request.setAttribute("startIndex", Integer.valueOf(startIndex));
+                request.setAttribute("endIndex", Integer.valueOf(endIndex));
+                request.setAttribute("totalPages", Integer.valueOf(totalPages));
                 request.setAttribute("hasNextPage", String.valueOf(hasNextPage));
                 request.setAttribute("page", Integer.valueOf(page));
                 request.setAttribute("pageSize", Integer.valueOf(pageSize));
