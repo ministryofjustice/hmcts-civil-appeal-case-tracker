@@ -95,6 +95,7 @@ public class searchAction extends Action {
                 Long totalResults = getTotalCount(session, searchString);
                 int totalPages = (int) Math.ceil((double) totalResults / pageSize);
 
+                request.setAttribute("searchString", searchString);
                 request.setAttribute("totalResults", totalResults);
                 request.setAttribute("startIndex", startIndex);
                 request.setAttribute("endIndex", endIndex);
