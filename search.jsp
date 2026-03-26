@@ -147,6 +147,8 @@
                                     <span class="tr"><span></span></span>
                                     <div class="formcon">
                                         <h2>Search results</h2>
+
+                                        <%--
                                         <p>
                                             Showing results
                                             <bean:write name="startIndex" scope="request"/>
@@ -159,6 +161,8 @@
                                             of
                                             <bean:write name="totalPages" scope="request"/>)
                                         </p>
+                                        --%>
+
                                         <div class="result">
                                             <table class="its" cellspacing="0">
                                                 <thead>
