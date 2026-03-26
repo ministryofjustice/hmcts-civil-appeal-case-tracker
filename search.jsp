@@ -150,7 +150,11 @@
 
                                         <p>
                                         <%
+
+                                        <%--
                                             Long   totalResults = (Long)    request.getAttribute("totalResults");
+                                        --%>
+
                                             Integer startIndex  = (Integer) request.getAttribute("startIndex");
                                             Integer endIndex    = (Integer) request.getAttribute("endIndex");
                                             Integer page        = (Integer) request.getAttribute("page");
