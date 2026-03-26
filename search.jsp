@@ -151,102 +151,68 @@
                                 </div>
                             </logic:present>
 
-<!-- Output format for non-ui requests (DB-paged, scraper-friendly) -->
-<!-- This replaces your entire current non-UI block -->
-<logic:present name="results" scope="request">
-  <logic:present name="startIndex" scope="request">
+                            <!-- Request-scoped results (API/non-UI users) -->
+                            <logic:present name="results" scope="request">
+                                <div class="formwrap">
+                                    <span class="tl"></span>
+                                    <span class="tr"><span></span></span>
+                                    <div class="formcon">
+                                        <h2>Search results</h2>
+                                        <p>
+                                            Showing results
+                                            <bean:write name="startIndex" scope="request"/>
+                                            &ndash;
+                                            <bean:write name="endIndex" scope="request"/>
+                                            of
+                                            <bean:write name="totalResults" scope="request"/>
+                                            (page
+                                            <bean:write name="page" scope="request"/>
+                                            of
+                                            <bean:write name="totalPages" scope="request"/>)
+                                        </p>
+                                        <div class="result">
+                                            <table class="its" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Case number</th>
+                                                        <th>Title</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <logic:iterate id="result" name="results" scope="request">
+                                                        <tr>
+                                                            <td>
+                                                                <a href="getDetail.do?case_id=<bean:write name="result" property="case_no"/>">
+                                                                    <bean:write name="result" property="case_no"/>
+                                                                </a>
+                                                            </td>
+                                                            <td><bean:write name="result" property="title1"/></td>
+                                                        </tr>
+                                                    </logic:iterate>
+                                                </tbody>
+                                            </table>
+                                        </div>
 
-    <%-- TEMPORARY: Catch ANY exception inside the non-UI block and print it inline --%>
-    <% try { %>
+                                        <!-- Paging controls for non-UI clients -->
+                                        <logic:equal name="hasNextPage" value="true" scope="request">
+                                            <p>
+                                                Next page:
+                                                <bean:define id="nextPage" name="page" scope="request" type="java.lang.Integer"/>
+                                                <% int nextPageNum = ((Integer)request.getAttribute("page")) + 1; %>
+                                                <a href="search.do?search=<bean:write name="searchString" scope="request"/>&amp;page=<%= nextPageNum %>&amp;pageSize=<bean:write name="pageSize" scope="request"/>">
+                                                    search.do?search=<bean:write name="searchString" scope="request"/>&amp;page=<%= nextPageNum %>&amp;pageSize=<bean:write name="pageSize" scope="request"/>
+                                                </a>
+                                            </p>
+                                        </logic:equal>
 
-      <div class="formwrap">
-          <span class="tl"></span>
-          <span class="tr"><span></span></span>
-          <div class="formcon">
-              <h2>Search results</h2>
+                                        <logic:equal name="hasNextPage" value="false" scope="request">
+                                            <p>No further pages.</p>
+                                        </logic:equal>
 
-              <div class="result">
+                                    </div>
+                                </div>
+                            </logic:present>
 
-                  <!-- Page banner (already safe) -->
-                  <span class="pagebanner">
-                      <bean:write name="totalResults" ignore="true"/> items found, displaying
-                      <bean:write name="startIndex" ignore="true"/> to
-                      <bean:write name="endIndex" ignore="true"/>.
-                  </span>
-
-                  <!-- Page links (already safe from previous fix) -->
-                  <span class="pagelinks">
-                      <%
-                          String search = request.getParameter("search");
-                          if (search == null) search = "";
-
-                          Integer pageObj      = (Integer) request.getAttribute("page");
-                          Integer totalPagesObj = (Integer) request.getAttribute("totalPages");
-                          String  hasNextStr   = (String)  request.getAttribute("hasNextPage");
-
-                          int pageNum    = (pageObj != null) ? pageObj.intValue() : 1;
-                          int totalPages = (totalPagesObj != null) ? totalPagesObj.intValue() : 1;
-                          boolean hasNext = "true".equalsIgnoreCase(hasNextStr);
-                      %>
-
-                      <!-- First / Prev -->
-                      <% if (pageNum > 1) { %>
-                          [<a href="search.do?search=<%= search %>&page=1">First</a>/
-                           <a href="search.do?search=<%= search %>&page=<%= pageNum - 1 %>">Prev</a>]
-                      <% } else { %>
-                          [First/Prev]
-                      <% } %>
-
-                      <strong><%= pageNum %></strong>
-
-                      <!-- Next / Last -->
-                      <% if (hasNext) { %>
-                          [<a href="search.do?search=<%= search %>&page=<%= pageNum + 1 %>">Next</a>/
-                           <a href="search.do?search=<%= search %>&page=<%= totalPages %>">Last</a>]
-                      <% } else { %>
-                          [Next/Last]
-                      <% } %>
-                  </span>
-
-                  <!-- Results table - now fully protected -->
-                  <table class="table" id="result">
-                      <thead>
-                          <tr>
-                              <th>Case number</th>
-                              <th>Title</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <logic:iterate id="row" name="results">
-                              <tr>
-                                  <td>
-                                      <a href="getDetail.do?case_id=<bean:write name='row' property='case_no' ignore='true'/>">
-                                          <bean:write name="row" property="case_no" ignore="true"/>
-                                      </a>
-                                  </td>
-                                  <td>
-                                      <bean:write name="row" property="title1" ignore="true"/>
-                                  </td>
-                              </tr>
-                          </logic:iterate>
-                      </tbody>
-                  </table>
-
-              </div>
-          </div>
-      </div>
-
-    <% } catch (Exception e) { %>
-        <!-- This will now appear in the curl response if anything throws -->
-        <h2>=== EXCEPTION CAUGHT IN NON-UI BLOCK ===</h2>
-        <pre>Message: <%= e.getMessage() %></pre>
-        <pre>Type: <%= e.getClass().getName() %></pre>
-        <h3>Stack trace:</h3>
-        <pre><% e.printStackTrace(new java.io.PrintWriter(out)); %></pre>
-    <% } %>
-
-  </logic:present>
-</logic:present>
                             <div class="submitc">
                                 <div class="function previous">
                                     <span class="tl"></span>
@@ -256,13 +222,8 @@
                                     <span class="br"></span>
                                 </div>
                             </div>
-
-
-
-
                             <!-- InstanceEndEditable -->
                         </div>
-
                     </div>
                 </div>
             </div>
