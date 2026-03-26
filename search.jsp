@@ -151,6 +151,7 @@
                                 </div>
                             </logic:present>
 
+<%--
                             <!-- Request-scoped results (API/non-UI users) -->
                             <logic:present name="results" scope="request">
                                 <div class="formwrap">
@@ -212,6 +213,8 @@
                                     </div>
                                 </div>
                             </logic:present>
+
+                            --%>
 
                             <div class="submitc">
                                 <div class="function previous">
