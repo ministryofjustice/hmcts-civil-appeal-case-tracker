@@ -155,11 +155,14 @@
                                             Integer endIndex    = (Integer) request.getAttribute("endIndex");
                                             Integer page        = (Integer) request.getAttribute("page");
                                             Integer totalPages  = (Integer) request.getAttribute("totalPages");
+
+                                            if (totalResults != null) {
                                         %>
-                                            Showing results <%= startIndex %> &ndash; <%= endIndex %>
-                                            of <%= totalResults %>
-                                            (page <%= page %> of <%= totalPages %>)
+                                                Showing results <%= startIndex %> &ndash; <%= endIndex %>
+                                                of <%= totalResults %>
+                                                (page <%= page %> of <%= totalPages %>)
                                         </p>
+                                        <% } %>
 
                                         <div class="result">
                                             <table class="its" cellspacing="0">
