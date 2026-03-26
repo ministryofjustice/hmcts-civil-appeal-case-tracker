@@ -148,26 +148,20 @@
                                     <div class="formcon">
                                         <h2>Search results</h2>
 
+                                        <%--
                                         <p>
                                         <%
-
-                                        <%--
                                             Long   totalResults = (Long)    request.getAttribute("totalResults");
                                             Integer startIndex  = (Integer) request.getAttribute("startIndex");
                                             Integer endIndex    = (Integer) request.getAttribute("endIndex");
-                                        --%>
-
-
                                             Integer page        = (Integer) request.getAttribute("page");
                                             Integer totalPages  = (Integer) request.getAttribute("totalPages");
                                         %>
-
-                                        <%--
                                                 Showing results <%= startIndex %> &ndash; <%= endIndex %>
                                                 of <%= totalResults %>
                                                 (page <%= page %> of <%= totalPages %>)
-                                        --%>
                                         </p>
+                                        --%>
 
                                         <div class="result">
                                             <table class="its" cellspacing="0">
