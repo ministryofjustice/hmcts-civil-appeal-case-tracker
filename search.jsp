@@ -140,23 +140,64 @@
                                 </div>
                             </logic:present>
 
-                            <!-- Request-scoped results (API/bot users) -->
+                            <!-- Request-scoped results (API/non-UI users) -->
                             <logic:present name="results" scope="request">
                                 <div class="formwrap">
                                     <span class="tl"></span>
                                     <span class="tr"><span></span></span>
                                     <div class="formcon">
                                         <h2>Search results</h2>
+                                        <p>
+                                            Showing results
+                                            <bean:write name="startIndex" scope="request"/>
+                                            &ndash;
+                                            <bean:write name="endIndex" scope="request"/>
+                                            of
+                                            <bean:write name="totalResults" scope="request"/>
+                                            (page
+                                            <bean:write name="page" scope="request"/>
+                                            of
+                                            <bean:write name="totalPages" scope="request"/>)
+                                        </p>
                                         <div class="result">
-                                            <display:table id="result" name="requestScope.results" requestURI="/search.do"
-                                                           pagesize="50" sort="list">
-                                                <display:setProperty
-                                                        name="paging.banner.placement">top</display:setProperty>
-                                                <display:column property="case_no" title="Case number" paramId="case_id"
-                                                                paramProperty="case_no" href="getDetail.do"/>
-                                                <display:column property="title1" title="Title"/>
-                                            </display:table>
+                                            <table class="its" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Case number</th>
+                                                        <th>Title</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <logic:iterate id="result" name="results" scope="request">
+                                                        <tr>
+                                                            <td>
+                                                                <a href="getDetail.do?case_id=<bean:write name="result" property="case_no"/>">
+                                                                    <bean:write name="result" property="case_no"/>
+                                                                </a>
+                                                            </td>
+                                                            <td><bean:write name="result" property="title1"/></td>
+                                                        </tr>
+                                                    </logic:iterate>
+                                                </tbody>
+                                            </table>
                                         </div>
+
+                                        <!-- Paging controls for non-UI clients -->
+                                        <logic:equal name="hasNextPage" value="true" scope="request">
+                                            <p>
+                                                Next page:
+                                                <bean:define id="nextPage" name="page" scope="request" type="java.lang.Integer"/>
+                                                <% int nextPageNum = ((Integer)request.getAttribute("page")) + 1; %>
+                                                <a href="search.do?search=<bean:write name="searchString" scope="request"/>&amp;page=<%= nextPageNum %>&amp;pageSize=<bean:write name="pageSize" scope="request"/>">
+                                                    search.do?search=<bean:write name="searchString" scope="request"/>&amp;page=<%= nextPageNum %>&amp;pageSize=<bean:write name="pageSize" scope="request"/>
+                                                </a>
+                                            </p>
+                                        </logic:equal>
+
+                                        <logic:equal name="hasNextPage" value="false" scope="request">
+                                            <p>No further pages.</p>
+                                        </logic:equal>
+
                                     </div>
                                 </div>
                             </logic:present>
