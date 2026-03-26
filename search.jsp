@@ -149,9 +149,6 @@
                                         <h2>Search results</h2>
 
                                         <p>
-                                        <%
-                                            Integer page        = (Integer) request.getAttribute("page");
-                                        %>
                                         </p>
 
                                         <div class="result">
