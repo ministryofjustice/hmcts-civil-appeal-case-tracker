@@ -183,20 +183,22 @@
                                         </div>
 
                                         <!-- Paging controls for non-UI clients -->
-                                        <logic:equal name="hasNextPage" value="true" scope="request">
+                                        <%
+                                            String hasNextPage = (String) request.getAttribute("hasNextPage");
+                                            if ("true".equals(hasNextPage)) {
+                                                int nextPageNum = ((Integer) request.getAttribute("page")) + 1;
+                                                int pageSize    = ((Integer) request.getAttribute("pageSize"));
+                                                String srchStr  = (String)  request.getAttribute("searchString");
+                                        %>
                                             <p>
                                                 Next page:
-                                                <bean:define id="nextPage" name="page" scope="request" type="java.lang.Integer"/>
-                                                <% int nextPageNum = ((Integer)request.getAttribute("page")) + 1; %>
-                                                <a href="search.do?search=<bean:write name="searchString" scope="request"/>&amp;page=<%= nextPageNum %>&amp;pageSize=<bean:write name="pageSize" scope="request"/>">
-                                                    search.do?search=<bean:write name="searchString" scope="request"/>&amp;page=<%= nextPageNum %>&amp;pageSize=<bean:write name="pageSize" scope="request"/>
+                                                <a href="search.do?search=<%= srchStr %>&amp;page=<%= nextPageNum %>&amp;pageSize=<%= pageSize %>">
+                                                    search.do?search=<%= srchStr %>&amp;page=<%= nextPageNum %>&amp;pageSize=<%= pageSize %>
                                                 </a>
                                             </p>
-                                        </logic:equal>
-
-                                        <logic:equal name="hasNextPage" value="false" scope="request">
+                                        <% } else { %>
                                             <p>No further pages.</p>
-                                        </logic:equal>
+                                        <% } %>
 
                                     </div>
                                 </div>
