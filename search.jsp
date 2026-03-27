@@ -159,15 +159,9 @@
                                                 Long   totalResults = (Long)    request.getAttribute("totalResults");
                                         %>
                                             <p>
-                                                StartIndex <%= startIndex %>
-                                                EndIndex <%= endIndex %>
-                                                Page <%= pageNum %>
-                                                Total Pages <%= totalPages %>)
-                                                Total Results <%= totalResults %>
-
-                                                    Showing results <%= startIndex %> &ndash; <%= endIndex %>
-                                                    of <%= totalResults %>
-                                                    (page <%= page %> of <%= totalPages %>)
+                                                Showing results <%= startIndex %> &ndash; <%= endIndex %>
+                                                of <%= totalResults %>
+                                                (page <%= page %> of <%= totalPages %>)
                                             </p>
                                         <%
                                             }
