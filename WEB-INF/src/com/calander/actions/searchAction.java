@@ -67,6 +67,8 @@ public class searchAction extends Action {
                 ));
 
                 request.getSession(true).setAttribute("results", results);
+                request.getSession(true).setAttribute("isUI", "true");
+
 
                 return mapping.findForward("success");
 
@@ -95,6 +97,7 @@ public class searchAction extends Action {
                 Long totalResults = getTotalCount(session, searchString);
                 int totalPages = (int) Math.ceil((double) totalResults / pageSize);
 
+                request.setAttribute("isUI", "false");
                 request.setAttribute("searchString", searchString);
                 request.setAttribute("totalResults", totalResults);
                 request.setAttribute("results", results);

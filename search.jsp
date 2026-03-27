@@ -120,7 +120,7 @@
                             </div>
 
                             <!-- Session-scoped results (UI paging) -->
-                            <logic:present name="results" scope="session">
+                            <logic:equal name="isUI" value="true" scope="session">
                                 <div class="formwrap">
                                     <span class="tl"></span>
                                     <span class="tr"><span></span></span>
@@ -141,7 +141,7 @@
                             </logic:present>
 
                             <!-- Request-scoped results (API/non-UI users) -->
-                            <logic:present name="results" scope="request">
+                            <logic:equal name="isUI" value="false" scope="request">
                                 <div class="formwrap">
                                     <span class="tl"></span>
                                     <span class="tr"><span></span></span>
@@ -150,14 +150,10 @@
 
                                         <%
                                             String hasNextPage1 = (String) request.getAttribute("hasNextPage");
-                                            if (hasNextPage1 != null) {
                                         %>
                                             <p>
                                                 Has Next Page <%= hasNextPage1 %>
                                             </p>
-                                        <%
-                                            }
-                                        %>
 
                                         <div class="result">
                                             <table class="its" cellspacing="0">
@@ -202,7 +198,7 @@
 
                                     </div>
                                 </div>
-                            </logic:present>
+                            </logic:equal>
 
                             <div class="submitc">
                                 <div class="function previous">
