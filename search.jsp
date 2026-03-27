@@ -150,6 +150,13 @@
 
                                         <%
                                             String hasNextPage1 = (String) request.getAttribute("hasNextPage");
+                                            if (hasNextPage1 != null) {
+                                        %>
+                                            <p>
+                                                Has Next Page <%= hasNextPage1 %>
+                                            </p>
+                                        <%
+                                            }
                                         %>
 
                                         <div class="result">
