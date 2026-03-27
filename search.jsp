@@ -148,6 +148,10 @@
                                     <div class="formcon">
                                         <h2>Search results</h2>
 
+                                        <%
+                                        int page         = ((Integer) request.getAttribute("page"))
+                                        %>
+
                                         <p>
                                         </p>
 
