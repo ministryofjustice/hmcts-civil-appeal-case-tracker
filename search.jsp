@@ -149,12 +149,8 @@
                                         <h2>Search results</h2>
 
                                         <%
-                                        String hasNextPage = (String) request.getAttribute("hasNextPage");
+                                            String hasNextPage1 = (String) request.getAttribute("hasNextPage");
                                         %>
-
-                                        <p>
-                                        hasNextPage<%= hasNextPage %>
-                                        </p>
 
                                         <div class="result">
                                             <table class="its" cellspacing="0">
