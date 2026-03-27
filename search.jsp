@@ -149,10 +149,11 @@
                                         <h2>Search results</h2>
 
                                         <%
-                                        int page         = ((Integer) request.getAttribute("page"))
+                                        String hasNextPage = (String) request.getAttribute("hasNextPage");
                                         %>
 
                                         <p>
+                                        hasNextPage<%= hasNextPage %>
                                         </p>
 
                                         <div class="result">
