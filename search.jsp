@@ -151,11 +151,12 @@
                                         <%
                                             String isUI = (String) request.getAttribute("isUI");
                                             if ("false".equals(isUI)) {
-                                                String hasNextPage1 = (String) request.getAttribute("hasNextPage");
+                                                String hasNextPage1 = (String)  request.getAttribute("hasNextPage");
                                                 Integer startIndex  = (Integer) request.getAttribute("startIndex");
                                                 Integer endIndex    = (Integer) request.getAttribute("endIndex");
                                                 Integer pageNum     = (Integer) request.getAttribute("page");
                                                 Integer totalPages  = (Integer) request.getAttribute("totalPages");
+                                                Long   totalResults = (Long)    request.getAttribute("totalResults");
                                         %>
                                             <p>
                                                 StartIndex <%= startIndex %>
