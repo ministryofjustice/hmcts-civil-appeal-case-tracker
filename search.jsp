@@ -164,6 +164,10 @@
                                                 Page <%= pageNum %>
                                                 Total Pages <%= totalPages %>)
                                                 Total Results <%= totalResults %>
+
+                                                    Showing results <%= startIndex %> &ndash; <%= endIndex %>
+                                                    of <%= totalResults %>
+                                                    (page <%= page %> of <%= totalPages %>)
                                             </p>
                                         <%
                                             }
