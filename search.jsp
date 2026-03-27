@@ -149,14 +149,19 @@
                                         <h2>Search results</h2>
 
                                         <%
-
                                             String isUI = (String) request.getAttribute("isUI");
-                                            String hasNextPage1 = (String) request.getAttribute("hasNextPage");
-
                                             if ("false".equals(isUI)) {
+                                                String hasNextPage1 = (String) request.getAttribute("hasNextPage");
+                                                Long   totalResults = (Long)    request.getAttribute("totalResults");
+                                                Integer startIndex  = (Integer) request.getAttribute("startIndex");
+                                                Integer endIndex    = (Integer) request.getAttribute("endIndex");
+                                                Integer page        = (Integer) request.getAttribute("page");
+                                                Integer totalPages  = (Integer) request.getAttribute("totalPages");
                                         %>
                                             <p>
-                                                Has Next Page <%= hasNextPage1 %>
+                                                Showing results <%= startIndex %> &ndash; <%= endIndex %>
+                                                of <%= totalResults %>
+                                                (page <%= page %> of <%= totalPages %>)
                                             </p>
                                         <%
                                             }
