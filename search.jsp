@@ -119,7 +119,6 @@
                                 </div>
                             </div>
 
-                            <!-- Session-scoped results (UI paging) -->
                             <logic:equal name="isUI" value="true" scope="session">
                                 <div class="formwrap">
                                     <span class="tl"></span>
@@ -140,13 +139,13 @@
                                 </div>
                             </logic:equal>
 
-                            <!-- Request-scoped results (API/non-UI users) -->
                             <logic:equal name="isUI" value="false" scope="request">
                                 <div class="formwrap">
                                     <span class="tl"></span>
                                     <span class="tr"><span></span></span>
                                     <div class="formcon">
                                         <h2>Search results</h2>
+                                        <div class="result">
 
                                         <%
                                             String isUI = (String) request.getAttribute("isUI");
@@ -158,16 +157,28 @@
                                                 Integer totalPages  = (Integer) request.getAttribute("totalPages");
                                                 Long   totalResults = (Long)    request.getAttribute("totalResults");
                                         %>
-                                            <p>
-                                                Showing results <%= startIndex %> &ndash; <%= endIndex %>
-                                                of <%= totalResults %>
-                                                (page <%= page %> of <%= totalPages %>)
-                                            </p>
+                                        <span class="pagebanner">
+                                            <%= totalResults %> items found, displaying <%= startIndex %> to <%= endIndex %>
+
+                                        <!-- Paging controls for non-UI clients -->
+                                        <%
+                                                String hasNextPage = (String) request.getAttribute("hasNextPage");
+                                                if ("true".equals(hasNextPage)) {
+                                                    int nextPageNum = ((Integer) request.getAttribute("page")) + 1;
+                                                    int pageSize    = ((Integer) request.getAttribute("pageSize"));
+                                                    String srchStr  = (String)  request.getAttribute("searchString");
+                                        %>
+                                                Next:
+                                                <a href="search.do?search=<%= srchStr %>&amp;page=<%= nextPageNum %>&amp;pageSize=<%= pageSize %>">
+                                                    search.do?search=<%= srchStr %>&amp;page=<%= nextPageNum %>&amp;pageSize=<%= pageSize %>
+                                                </a>
+                                        <% } else { %>
+                                            <p>No further pages.</p>
+                                        <% } %>
+                                        </span>
                                         <%
                                             }
                                         %>
-
-                                        <div class="result">
                                             <table class="its" cellspacing="0">
                                                 <thead>
                                                     <tr>
@@ -190,23 +201,6 @@
                                             </table>
                                         </div>
 
-                                        <!-- Paging controls for non-UI clients -->
-                                        <%
-                                            String hasNextPage = (String) request.getAttribute("hasNextPage");
-                                            if ("true".equals(hasNextPage)) {
-                                                int nextPageNum = ((Integer) request.getAttribute("page")) + 1;
-                                                int pageSize    = ((Integer) request.getAttribute("pageSize"));
-                                                String srchStr  = (String)  request.getAttribute("searchString");
-                                        %>
-                                            <p>
-                                                Next page:
-                                                <a href="search.do?search=<%= srchStr %>&amp;page=<%= nextPageNum %>&amp;pageSize=<%= pageSize %>">
-                                                    search.do?search=<%= srchStr %>&amp;page=<%= nextPageNum %>&amp;pageSize=<%= pageSize %>
-                                                </a>
-                                            </p>
-                                        <% } else { %>
-                                            <p>No further pages.</p>
-                                        <% } %>
 
                                     </div>
                                 </div>
@@ -252,7 +246,7 @@
 <!--BEGIN_EXCLUDE-->
 <noscript>
     <div>
-        <img src='http://directgov.stcllctrs.com/OWCPZPDTRUV/noScript.bmp' alt="Scipt is not enabled"/>
+        <img src='http://directgov.stcllctrs.com/OWCPZPDTRUV/noScript.bmp' alt="Script is not enabled"/>
     </div>
 </noscript>
 <!--END_EXCLUDE-->
