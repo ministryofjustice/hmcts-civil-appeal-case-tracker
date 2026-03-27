@@ -159,8 +159,6 @@
                                         %>
                                         <span class="pagebanner">
                                             <%= totalResults %> items found, displaying <%= startIndex %> to <%= endIndex %>
-
-                                        <!-- Paging controls for non-UI clients -->
                                         <%
                                                 String hasNextPage = (String) request.getAttribute("hasNextPage");
                                                 if ("true".equals(hasNextPage)) {
@@ -168,10 +166,10 @@
                                                     int pageSize    = ((Integer) request.getAttribute("pageSize"));
                                                     String srchStr  = (String)  request.getAttribute("searchString");
                                         %>
-                                                Next:
-                                                <a href="search.do?search=<%= srchStr %>&amp;page=<%= nextPageNum %>&amp;pageSize=<%= pageSize %>">
-                                                    search.do?search=<%= srchStr %>&amp;page=<%= nextPageNum %>&amp;pageSize=<%= pageSize %>
-                                                </a>
+                                        </span>
+                                        <span class="pagelinks">
+                                            [<a href="search.do?search=<%= srchStr %>&amp;page=<%= nextPageNum %>&amp;pageSize=<%= pageSize %>">
+                                            Next</a>]
                                         <% } else { %>
                                             <p>No further pages.</p>
                                         <% } %>
