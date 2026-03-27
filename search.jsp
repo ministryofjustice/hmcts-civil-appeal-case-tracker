@@ -163,6 +163,7 @@
                                                 EndIndex <%= endIndex %>
                                                 Page <%= pageNum %>
                                                 Total Pages <%= totalPages %>)
+                                                Total Results <%= totalResults %>
                                             </p>
                                         <%
                                             }
