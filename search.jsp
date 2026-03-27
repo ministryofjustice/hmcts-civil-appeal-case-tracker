@@ -149,11 +149,17 @@
                                         <h2>Search results</h2>
 
                                         <%
-                                            String hasNextPage1 = (String) request.getAttribute("hasNextPage");
+
+                                            String isUI = (String) request.getAttribute("isUI");
+                                            if ("false".equals(isUI)) {
+                                                String hasNextPage1 = (String) request.getAttribute("hasNextPage");
                                         %>
                                             <p>
                                                 Has Next Page <%= hasNextPage1 %>
                                             </p>
+                                        <%
+                                            }
+                                        %>
 
                                         <div class="result">
                                             <table class="its" cellspacing="0">
