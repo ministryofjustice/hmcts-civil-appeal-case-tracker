@@ -152,16 +152,16 @@
                                             String isUI = (String) request.getAttribute("isUI");
                                             if ("false".equals(isUI)) {
                                                 String hasNextPage1 = (String) request.getAttribute("hasNextPage");
-                                                Long   totalResults = (Long)    request.getAttribute("totalResults");
                                                 Integer startIndex  = (Integer) request.getAttribute("startIndex");
                                                 Integer endIndex    = (Integer) request.getAttribute("endIndex");
-                                                Integer page        = (Integer) request.getAttribute("page");
+                                                Integer pageNum     = (Integer) request.getAttribute("page");
                                                 Integer totalPages  = (Integer) request.getAttribute("totalPages");
                                         %>
                                             <p>
-                                                Showing results <%= startIndex %> &ndash; <%= endIndex %>
-                                                of <%= totalResults %>
-                                                (page <%= page %> of <%= totalPages %>)
+                                                StartIndex <%= startIndex %>
+                                                EndIndex <%= endIndex %>
+                                                Page <%= pageNum %>
+                                                Total Pages <%= totalPages %>)
                                             </p>
                                         <%
                                             }
