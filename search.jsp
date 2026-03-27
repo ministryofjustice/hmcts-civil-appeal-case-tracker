@@ -138,7 +138,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </logic:present>
+                            </logic:equal>
 
                             <!-- Request-scoped results (API/non-UI users) -->
                             <logic:equal name="isUI" value="false" scope="request">
