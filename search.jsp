@@ -151,8 +151,9 @@
                                         <%
 
                                             String isUI = (String) request.getAttribute("isUI");
+                                            String hasNextPage1 = (String) request.getAttribute("hasNextPage");
+
                                             if ("false".equals(isUI)) {
-                                                String hasNextPage1 = (String) request.getAttribute("hasNextPage");
                                         %>
                                             <p>
                                                 Has Next Page <%= hasNextPage1 %>
