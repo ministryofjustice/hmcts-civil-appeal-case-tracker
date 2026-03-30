@@ -141,10 +141,13 @@ public class searchAction extends Action {
 
         // Standard param first
         String pageParam = request.getParameter("page");
+        LOGGER.info(MessageFormat.format("getPage page={1}", pageParam));
         if (pageParam != null) {
             try {
                 return Math.max(Integer.parseInt(pageParam), 1);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+                LOGGER.info(MessageFormat.format("getPage Exception {1}", ignored.getMessage()));
+            }
         }
 
         // DisplayTag fallback (d-xxx-p)
@@ -154,7 +157,9 @@ public class searchAction extends Action {
             if (name.startsWith("d-") && name.endsWith("-p")) {
                 try {
                     return Math.max(Integer.parseInt(request.getParameter(name)), 1);
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                    LOGGER.info(MessageFormat.format("getPage Exception {1}", ignored.getMessage()));
+                }
             }
         }
 
@@ -165,6 +170,8 @@ public class searchAction extends Action {
 
         String sizeParam = request.getParameter("pageSize");
 
+        LOGGER.info(MessageFormat.format("getPageSize size={1}", sizeParam));
+
         int defaultSize = 15;
         int maxSize = 50;
 
@@ -172,6 +179,7 @@ public class searchAction extends Action {
             int size = Integer.parseInt(sizeParam);
             return Math.min(Math.max(size, 1), maxSize);
         } catch (Exception e) {
+            LOGGER.info(MessageFormat.format("getPageSize Exception {1}", e.getMessage()));
             return defaultSize;
         }
     }

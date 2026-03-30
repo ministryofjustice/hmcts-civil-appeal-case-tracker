@@ -177,7 +177,7 @@
                                         <%
                                             }
                                         %>
-                                            <table class="its" cellspacing="0">
+                                            <table class="table" id="result">
                                                 <thead>
                                                     <tr>
                                                         <th>Case number</th>
@@ -188,10 +188,7 @@
                                                     <logic:iterate id="result" name="results" scope="request">
                                                         <tr>
                                                             <td>
-                                                                <a href="getDetail.do?case_id=<bean:write name="result" property="case_no"/>">
-                                                                    <bean:write name="result" property="case_no"/>
-                                                                </a>
-                                                            </td>
+                                                            <a href="getDetail.do?case_id=<bean:write name="result" property="case_no"/>"><bean:write name="result" property="case_no"/></a></td>
                                                             <td><bean:write name="result" property="title1"/></td>
                                                         </tr>
                                                     </logic:iterate>
