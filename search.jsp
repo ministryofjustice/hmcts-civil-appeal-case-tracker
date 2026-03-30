@@ -145,6 +145,9 @@
                                     <span class="tr"><span></span></span>
                                     <div class="formcon">
                                         <h2>Search results</h2>
+
+
+
                                         <div class="result">
 
                                         <%
@@ -156,22 +159,28 @@
                                                 Integer pageNum     = (Integer) request.getAttribute("page");
                                                 Integer totalPages  = (Integer) request.getAttribute("totalPages");
                                                 Long   totalResults = (Long)    request.getAttribute("totalResults");
+
+                                                if (totalResults > 0) {
+
                                         %>
-                                        <span class="pagebanner">
-                                            <%= totalResults %> items found, displaying <%= startIndex %> to <%= endIndex %>.
+                                                <div class="result">
+                                                  <span class="pagebanner">
+                                                    <%= totalResults %> items found, displaying <%= startIndex %> to <%= endIndex %>.
                                         <%
-                                                String hasNextPage = (String) request.getAttribute("hasNextPage");
-                                                if ("true".equals(hasNextPage)) {
-                                                    int nextPageNum = ((Integer) request.getAttribute("page")) + 1;
-                                                    int pageSize    = ((Integer) request.getAttribute("pageSize"));
-                                                    String srchStr  = (String)  request.getAttribute("searchString");
-                                        %>
-                                        </span>
+                                                    String hasNextPage = (String) request.getAttribute("hasNextPage");
+                                                    if ("true".equals(hasNextPage)) {
+                                                        int nextPageNum = ((Integer) request.getAttribute("page")) + 1;
+                                                        int pageSize    = ((Integer) request.getAttribute("pageSize"));
+                                                        String srchStr  = (String)  request.getAttribute("searchString");
+                                        %></span>
                                         <span class="pagelinks">
+                                            <strong>1</strong>,
                                             [<a href="search.do?search=<%= srchStr %>&amp;page=<%= nextPageNum %>&amp;pageSize=<%= pageSize %>">
                                             Next</a>]
-                                        <% } else { %>
-                                            <p>No further pages.</p>
+                                        <% } } else { %>
+                                            <div class="result">
+                                                Nothing found to display.
+                                            </div>
                                         <% } %>
                                         </span>
                                         <%

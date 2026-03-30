@@ -198,16 +198,10 @@ public class searchAction extends Action {
 
     public static boolean isUiRequest(HttpServletRequest request) {
 
-        // Explicit override (future-proof)
-        String mode = request.getParameter("mode");
-
-        LOGGER.info(MessageFormat.format("isUiRequest mode {0}", mode));
-
-        if ("api".equalsIgnoreCase(mode)) return false;
-        if ("ui".equalsIgnoreCase(mode)) return true;
 
         // Accept header (best signal)
         String accept = request.getHeader("Accept");
+        LOGGER.info(MessageFormat.format("isUiRequest mode {0}", accept));
         if (accept != null && accept.contains("application/json")) {
             return false;
         }
