@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -25,42 +26,157 @@ public class searchAction extends Action {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(searchAction.class);
 
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+    public ActionForward execute(ActionMapping mapping, ActionForm form,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response)
             throws IOException, ServletException, Exception {
 
-
         String searchString = sanitizeSearchInput(request.getParameter("search"));
-        if (searchString.isEmpty()) {
-            return mapping.findForward("success");
-        }
 
-        //getting session object from Hibernate Util class
-        SessionFactory factory = (SessionFactory) servlet.getServletContext().getAttribute(HibernatePlugin.KEY_NAME);
-        Session session = factory.openSession();
+        SessionFactory factory = (SessionFactory) servlet.getServletContext()
+                .getAttribute(HibernatePlugin.KEY_NAME);
 
-        Query query = session.createQuery("from Calander c where lower(c.search_date) like :date or lower(c.case_no) like :case or lower(title1) like :title order by c.case_no");
-        query.setString("date", "%" + searchString + "%");
-        query.setString("case", "%" + searchString + "%");
-        query.setString("title", "%" + searchString + "%");
-
-        List arrResults = query.list();
-
-        LOGGER.info(MessageFormat.format("Returned <{0}> rows for search using string <{1}> on search_date or case_no or title1 ", arrResults.size(), searchString));
-
-        session.clear();
-        session.close();
-
-        if (isUiRequest(request.getHeader("Referer"))) {
-            request.getSession(true).setAttribute("results", arrResults);
-        } else {
-            request.setAttribute("results", arrResults);
-        }
+        Session session = null;
 
         try {
-            return mapping.findForward("success");
+            session = factory.openSession();
+
+            boolean isUi = isUiRequest(request);
+
+            String hql = "from Calander c " +
+                    "where lower(c.search_date) like :search " +
+                    "or lower(c.case_no) like :search " +
+                    "or lower(c.title1) like :search " +
+                    "order by c.case_no";
+
+            Query query = session.createQuery(hql);
+            query.setString("search", "%" + searchString.toLowerCase() + "%");
+            query.setTimeout(5); // safety
+
+            if (isUi) {
+
+                // UI mode - restrict query to 1000 results
+
+                query.setMaxResults(1000); // IMPORTANT: prevent abuse
+
+                List results = query.list();
+
+                LOGGER.info(MessageFormat.format(
+                        "[UI] Returned <{0}> rows for search <{1}>",
+                        results.size(), searchString
+                ));
+
+                request.getSession(true).setAttribute("results", results);
+                request.getSession(true).setAttribute("isUI", "true");
+
+
+                return mapping.findForward("success");
+
+            } else {
+
+                // Non-ui request now requires paging to support scraping
+                int page = getPage(request);
+                int pageSize = getPageSize(request);
+
+                query.setFirstResult((page - 1) * pageSize);
+                query.setMaxResults(pageSize);
+
+                List results = query.list();
+
+                boolean hasNextPage = results.size() == pageSize;
+
+                LOGGER.info(MessageFormat.format(
+                        "[API] Search <{0}> page={1} size={2} returned={3}",
+                        searchString, page, pageSize, results.size()
+                ));
+
+
+                int startIndex = (page - 1) * pageSize + 1;
+                int endIndex = startIndex + results.size() - 1;
+
+                Long totalResults = getTotalCount(session, searchString);
+                int totalPages = (int) Math.ceil((double) totalResults / pageSize);
+
+                request.setAttribute("isUI", "false");
+                request.setAttribute("searchString", searchString);
+                request.setAttribute("totalResults", totalResults);
+                request.setAttribute("results", results);
+                request.setAttribute("startIndex", Integer.valueOf(startIndex));
+                request.setAttribute("endIndex", Integer.valueOf(endIndex));
+                request.setAttribute("totalPages", Integer.valueOf(totalPages));
+                request.setAttribute("hasNextPage", String.valueOf(hasNextPage));
+                request.setAttribute("page", Integer.valueOf(page));
+                request.setAttribute("pageSize", Integer.valueOf(pageSize));
+
+                return mapping.findForward("success");
+            }
+
         } catch (Exception ex) {
-            ex.printStackTrace();
-            throw ex; // or return mapping.findForward("error");
+            LOGGER.error("Search failed", ex);
+            throw ex;
+        } finally {
+            if (session != null) {
+                session.clear();
+                session.close();
+            }
+        }
+    }
+
+    private Long getTotalCount(Session session, String searchString) {
+
+        String hql = "select count(*) from Calander c " +
+                "where lower(c.search_date) like :search " +
+                "or lower(c.case_no) like :search " +
+                "or lower(c.title1) like :search";
+
+        Query countQuery = session.createQuery(hql);
+        countQuery.setString("search", "%" + searchString.toLowerCase() + "%");
+        countQuery.setTimeout(5);
+
+        Number result = (Number) countQuery.uniqueResult();
+        return result.longValue();
+    }
+
+    private int getPage(HttpServletRequest request) {
+
+        // Standard param first
+        String pageParam = request.getParameter("page");
+        if (pageParam != null) {
+            try {
+                return Math.max(Integer.parseInt(pageParam), 1);
+            } catch (Exception ignored) {
+                LOGGER.info(MessageFormat.format("getPage Exception {0}", ignored.getMessage()));
+            }
+        }
+
+        // DisplayTag fallback (d-xxx-p)
+        Enumeration<?> params = request.getParameterNames();
+        while (params.hasMoreElements()) {
+            String name = (String) params.nextElement();
+            if (name.startsWith("d-") && name.endsWith("-p")) {
+                try {
+                    return Math.max(Integer.parseInt(request.getParameter(name)), 1);
+                } catch (Exception ignored) {
+                    LOGGER.info(MessageFormat.format("getPage Exception {0}", ignored.getMessage()));
+                }
+            }
+        }
+
+        return 1;
+    }
+
+    private int getPageSize(HttpServletRequest request) {
+
+        String sizeParam = request.getParameter("pageSize");
+        int defaultSize = 15;
+        int maxSize = 50;
+
+        try {
+            int size = Integer.parseInt(sizeParam);
+            return Math.min(Math.max(size, 1), maxSize);
+        } catch (Exception e) {
+            LOGGER.info(MessageFormat.format("getPageSize Exception {0}", e.getMessage()));
+            return defaultSize;
         }
     }
 
@@ -76,7 +192,20 @@ public class searchAction extends Action {
         return searchString.toLowerCase();
     }
 
-    public static boolean isUiRequest(String referer) {
+    public static boolean isUiRequest(HttpServletRequest request) {
+
+        // Accept header (best signal)
+        String accept = request.getHeader("Accept");
+        LOGGER.info(MessageFormat.format("isUiRequest mode {0}", accept));
+        if (accept != null && accept.contains("application/json")) {
+            return false;
+        }
+
+        // Default to UI
+        return true;
+    }
+
+    public static boolean isUiRequestOld(String referer) {
         if (referer != null && (referer.contains("casetracker.justice.gov.uk") || referer.contains("localhost")) ) {
             return true;
         }

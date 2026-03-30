@@ -39,8 +39,8 @@
 
 	<action path="/search"
 			type="com.calander.actions.searchAction"
-		     parameter="search"
-			scope="session">
+			parameter="search"
+			scope="request">
 			
 			<forward name="success" path="/search.jsp"></forward>
 	</action>    			
