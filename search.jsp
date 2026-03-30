@@ -171,11 +171,12 @@
                                             <strong>1</strong>,
                                             [<a href="search.do?search=<%= srchStr %>&amp;page=<%= nextPageNum %>&amp;pageSize=<%= pageSize %>">
                                             Next</a>]
-                                        <% } } else { %>
+                                        <% } else { %>
+                                        <span class="pagelinks">No more results</span>
+                                        <% } else {%>
                                             <div class="result">
                                                 Nothing found to display.
                                             </div>
-                                        <% } %>
                                         </span>
                                         <%
                                             }
@@ -196,8 +197,6 @@
                                                 </tbody>
                                             </table>
                                         </div>
-
-
                                     </div>
                                 </div>
                             </logic:equal>
