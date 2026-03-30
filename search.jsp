@@ -158,7 +158,7 @@
                                                 Long   totalResults = (Long)    request.getAttribute("totalResults");
                                         %>
                                         <span class="pagebanner">
-                                            <%= totalResults %> items found, displaying <%= startIndex %> to <%= endIndex %>
+                                            <%= totalResults %> items found, displaying <%= startIndex %> to <%= endIndex %>.
                                         <%
                                                 String hasNextPage = (String) request.getAttribute("hasNextPage");
                                                 if ("true".equals(hasNextPage)) {
@@ -189,9 +189,7 @@
                                                         <tr>
                                                             <td>
                                                             <a href="getDetail.do?case_id=<bean:write name="result" property="case_no"/>"><bean:write name="result" property="case_no"/></a></td>
-                                                            <td><bean:write name="result" property="title1"/></td>
-                                                        </tr>
-                                                    </logic:iterate>
+                                                            <td><bean:write name="result" property="title1"/></td></tr></logic:iterate>
                                                 </tbody>
                                             </table>
                                         </div>

@@ -141,12 +141,12 @@ public class searchAction extends Action {
 
         // Standard param first
         String pageParam = request.getParameter("page");
-        LOGGER.info(MessageFormat.format("getPage page={1}", pageParam));
+        LOGGER.info(MessageFormat.format("getPage page={0}", pageParam));
         if (pageParam != null) {
             try {
                 return Math.max(Integer.parseInt(pageParam), 1);
             } catch (Exception ignored) {
-                LOGGER.info(MessageFormat.format("getPage Exception {1}", ignored.getMessage()));
+                LOGGER.info(MessageFormat.format("getPage Exception {0}", ignored.getMessage()));
             }
         }
 
@@ -158,7 +158,7 @@ public class searchAction extends Action {
                 try {
                     return Math.max(Integer.parseInt(request.getParameter(name)), 1);
                 } catch (Exception ignored) {
-                    LOGGER.info(MessageFormat.format("getPage Exception {1}", ignored.getMessage()));
+                    LOGGER.info(MessageFormat.format("getPage Exception {0}", ignored.getMessage()));
                 }
             }
         }
@@ -170,7 +170,7 @@ public class searchAction extends Action {
 
         String sizeParam = request.getParameter("pageSize");
 
-        LOGGER.info(MessageFormat.format("getPageSize size={1}", sizeParam));
+        LOGGER.info(MessageFormat.format("getPageSize size={0}", sizeParam));
 
         int defaultSize = 15;
         int maxSize = 50;
@@ -179,7 +179,7 @@ public class searchAction extends Action {
             int size = Integer.parseInt(sizeParam);
             return Math.min(Math.max(size, 1), maxSize);
         } catch (Exception e) {
-            LOGGER.info(MessageFormat.format("getPageSize Exception {1}", e.getMessage()));
+            LOGGER.info(MessageFormat.format("getPageSize Exception {0}", e.getMessage()));
             return defaultSize;
         }
     }
@@ -200,6 +200,9 @@ public class searchAction extends Action {
 
         // Explicit override (future-proof)
         String mode = request.getParameter("mode");
+
+        LOGGER.info(MessageFormat.format("isUiRequest mode {0}", mode));
+
         if ("api".equalsIgnoreCase(mode)) return false;
         if ("ui".equalsIgnoreCase(mode)) return true;
 
