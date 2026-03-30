@@ -143,44 +143,49 @@
                                 <div class="formwrap">
                                     <span class="tl"></span>
                                     <span class="tr"><span></span></span>
-                                    <div class="formcon">
-                                        <h2>Search results</h2>
-                                        <%
-                                            String isUI = (String) request.getAttribute("isUI");
-                                            if ("false".equals(isUI)) {
-                                                String hasNextPage1 = (String)  request.getAttribute("hasNextPage");
-                                                Integer startIndex  = (Integer) request.getAttribute("startIndex");
-                                                Integer endIndex    = (Integer) request.getAttribute("endIndex");
-                                                Integer pageNum     = (Integer) request.getAttribute("page");
-                                                Integer totalPages  = (Integer) request.getAttribute("totalPages");
-                                                Long   totalResults = (Long)    request.getAttribute("totalResults");
+                                <div class="formcon">
+                                    <h2>Search results</h2>
+                                    <%
+                                        String isUI = (String) request.getAttribute("isUI");
+                                        if ("false".equals(isUI)) {
+                                            String hasNextPage1 = (String)  request.getAttribute("hasNextPage");
+                                            Integer startIndex   = (Integer) request.getAttribute("startIndex");
+                                            Integer endIndex     = (Integer) request.getAttribute("endIndex");
+                                            Integer pageNum      = (Integer) request.getAttribute("page");
+                                            Integer totalPages   = (Integer) request.getAttribute("totalPages");
+                                            Long   totalResults = (Long)    request.getAttribute("totalResults");
 
-                                                if (totalResults > 0) {
-                                        %>
+                                            if (totalResults > 0) {
+                                    %>
                                         <div class="result">
                                             <span class="pagebanner">
-                                                    <%= totalResults %> items found, displaying <%= startIndex %> to <%= endIndex %>.
-                                        <%
-                                                    String hasNextPage = (String) request.getAttribute("hasNextPage");
-                                                    if ("true".equals(hasNextPage)) {
-                                                        int nextPageNum = ((Integer) request.getAttribute("page")) + 1;
-                                                        int pageSize    = ((Integer) request.getAttribute("pageSize"));
-                                                        String srchStr  = (String)  request.getAttribute("searchString");
-                                        %></span>
-                                        <span class="pagelinks">
-                                            <strong>1</strong>,
-                                            [<a href="search.do?search=<%= srchStr %>&amp;page=<%= nextPageNum %>&amp;pageSize=<%= pageSize %>">
-                                            Next</a>]
-                                        <% } else { %>
-                                        <span class="pagelinks">No more results</span>
-                                        <% } else {%>
-                                            <div class="result">
-                                                Nothing found to display.
-                                            </div>
-                                        </span>
-                                        <%
+                                                <%= totalResults %> items found, displaying <%= startIndex %> to <%= endIndex %>.
+                                            </span>
+                                            <%
+                                                String hasNextPage = (String) request.getAttribute("hasNextPage");
+                                                if ("true".equals(hasNextPage)) {
+                                                    int nextPageNum = ((Integer) request.getAttribute("page")) + 1;
+                                                    int pageSize    = ((Integer) request.getAttribute("pageSize"));
+                                                    String srchStr  = (String)  request.getAttribute("searchString");
+                                            %>
+                                            <span class="pagelinks">
+                                                <strong>1</strong>,
+                                                [<a href="search.do?search=<%= srchStr %>&amp;page=<%= nextPageNum %>&amp;pageSize=<%= pageSize %>">Next</a>]
+                                            </span>
+                                            <% } else { %>
+                                            <span class="pagelinks">No more results</span>
+                                            <% } %>
+                                        </div>
+                                    <%
+                                            } else {
+                                    %>
+                                        <div class="result">
+                                            Nothing found to display.
+                                        </div>
+                                    <%
                                             }
-                                        %>
+                                        }
+                                    %>
                                             <table class="table" id="result">
                                                 <thead>
                                                     <tr>
