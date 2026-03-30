@@ -145,11 +145,6 @@
                                     <span class="tr"><span></span></span>
                                     <div class="formcon">
                                         <h2>Search results</h2>
-
-
-
-                                        <div class="result">
-
                                         <%
                                             String isUI = (String) request.getAttribute("isUI");
                                             if ("false".equals(isUI)) {
@@ -161,10 +156,9 @@
                                                 Long   totalResults = (Long)    request.getAttribute("totalResults");
 
                                                 if (totalResults > 0) {
-
                                         %>
-                                                <div class="result">
-                                                  <span class="pagebanner">
+                                        <div class="result">
+                                            <span class="pagebanner">
                                                     <%= totalResults %> items found, displaying <%= startIndex %> to <%= endIndex %>.
                                         <%
                                                     String hasNextPage = (String) request.getAttribute("hasNextPage");

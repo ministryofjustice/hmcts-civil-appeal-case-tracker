@@ -141,7 +141,6 @@ public class searchAction extends Action {
 
         // Standard param first
         String pageParam = request.getParameter("page");
-        LOGGER.info(MessageFormat.format("getPage page={0}", pageParam));
         if (pageParam != null) {
             try {
                 return Math.max(Integer.parseInt(pageParam), 1);
@@ -169,9 +168,6 @@ public class searchAction extends Action {
     private int getPageSize(HttpServletRequest request) {
 
         String sizeParam = request.getParameter("pageSize");
-
-        LOGGER.info(MessageFormat.format("getPageSize size={0}", sizeParam));
-
         int defaultSize = 15;
         int maxSize = 50;
 
@@ -197,7 +193,6 @@ public class searchAction extends Action {
     }
 
     public static boolean isUiRequest(HttpServletRequest request) {
-
 
         // Accept header (best signal)
         String accept = request.getHeader("Accept");
