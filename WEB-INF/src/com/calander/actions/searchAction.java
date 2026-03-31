@@ -205,21 +205,66 @@ public class searchAction extends Action {
 
     public static boolean isUiRequest(HttpServletRequest request) {
 
-        // Accept header (best signal)
-        String accept = request.getHeader("Accept");
-        LOGGER.info(MessageFormat.format("isUiRequest mode {0}", accept));
-        if (accept != null && accept.contains("application/json")) {
+        String accept   = request.getHeader("Accept");
+        String referer  = request.getHeader("Referer");
+        String uiParam  = request.getParameter("ui");
+        String userAgent = request.getHeader("User-Agent");
+
+        // Explicit override parameter - most reliable signal
+        // UI users can add ?ui=true to a bookmarked URL if needed
+        if ("true".equalsIgnoreCase(uiParam)) {
+            LOGGER.info("isUiRequest: explicit ui=true parameter");
+            return true;
+        }
+        if ("false".equalsIgnoreCase(uiParam)) {
+            LOGGER.info("isUiRequest: explicit ui=false parameter");
             return false;
         }
 
-        // Default to UI
-        return true;
-    }
+        // Definite non-UI signals
+        if (accept != null && accept.contains("application/json")) {
+            LOGGER.info("isUiRequest: Accept header is JSON - non-UI");
+            return false;
+        }
 
-    public static boolean isUiRequestOld(String referer) {
-        if (referer != null && (referer.contains("casetracker.justice.gov.uk") || referer.contains("localhost")) ) {
+        // curl and common API tools identify themselves clearly
+        if (userAgent != null && (
+                userAgent.startsWith("curl/") ||
+                        userAgent.startsWith("wget/") ||
+                        userAgent.startsWith("Python") ||
+                        userAgent.startsWith("Java/")  ||
+                        userAgent.startsWith("Apache-HttpClient"))) {
+            LOGGER.info(MessageFormat.format("isUiRequest: API user agent detected - non-UI: {0}", userAgent));
+            return false;
+        }
+
+        // Referer present and matches known domain - definite UI
+        if (referer != null && (
+                referer.contains("casetracker.justice.gov.uk") ||
+                        referer.contains("localhost"))) {
+            LOGGER.info("isUiRequest: Referer matches known domain - UI");
             return true;
         }
+
+        // Accept header contains text/html - likely a browser
+        if (accept != null && accept.contains("text/html")) {
+            LOGGER.info("isUiRequest: Accept header is text/html - UI");
+            return true;
+        }
+
+        // No Referer but Accept looks like a browser (bookmarked URL case)
+        if (accept != null && accept.contains("*/*") && userAgent != null && (
+                userAgent.contains("Mozilla") ||
+                        userAgent.contains("Chrome")  ||
+                        userAgent.contains("Safari")  ||
+                        userAgent.contains("Firefox") ||
+                        userAgent.contains("Edge"))) {
+            LOGGER.info("isUiRequest: Browser user agent detected - UI");
+            return true;
+        }
+
+        // Default to non-UI - safer for your session/memory concerns
+        LOGGER.info("isUiRequest: no signals matched - defaulting to non-UI");
         return false;
     }
 }
