@@ -11,10 +11,11 @@
             if (Boolean.TRUE.equals(invalidPage)) {
                 Long   totalResults = (Long)    request.getAttribute("totalResults");
                 Integer totalPages  = (Integer) request.getAttribute("totalPages");
+                Integer pageSize  = (Integer) request.getAttribute("pageSize");
         %>
             <div class="result">
                 <span class="pagebanner">
-                    Invalid page requested. There are only <%= totalPages %> page(s) for this search
+                    Invalid page requested. There are only <%= totalPages %> page(s) for this search with page size <%= pageSize %>
                     (<%= totalResults %> total results).
                 </span>
             </div>

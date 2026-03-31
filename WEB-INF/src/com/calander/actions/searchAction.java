@@ -90,6 +90,7 @@ public class searchAction extends Action {
                     request.setAttribute("invalidPage", Boolean.TRUE);
                     request.setAttribute("totalResults", totalResults);
                     request.setAttribute("totalPages", totalPages);
+                    request.setAttribute("pageSize", pageSize);
                     return mapping.findForward("error");
                 }
 
