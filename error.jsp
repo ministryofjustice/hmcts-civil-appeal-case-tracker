@@ -6,6 +6,22 @@
         <p>An error occurred or an incorrect URL was specified.</p>
         <p>Resubmit the query or report to dts-legacy-apps-support-team@hmcts.net</p>
 
+        <%
+            Boolean invalidPage = (Boolean) request.getAttribute("invalidPage");
+            if (Boolean.TRUE.equals(invalidPage)) {
+                Long   totalResults = (Long)    request.getAttribute("totalResults");
+                Integer totalPages  = (Integer) request.getAttribute("totalPages");
+        %>
+            <div class="result">
+                <span class="pagebanner">
+                    Invalid page requested. There are only <%= totalPages %> page(s) for this search
+                    (<%= totalResults %> total results).
+                </span>
+            </div>
+        <%
+            }
+        %>
+
         <div>
             <div>
                 <ul>
