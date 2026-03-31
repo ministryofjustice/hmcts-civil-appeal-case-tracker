@@ -119,7 +119,8 @@
                                 </div>
                             </div>
 
-                            <logic:equal name="isUI" value="true" scope="session">
+                            <!-- Session-scoped results (UI paging) -->
+                            <logic:present name="results" scope="session">
                                 <div class="formwrap">
                                     <span class="tl"></span>
                                     <span class="tr"><span></span></span>
@@ -137,74 +138,83 @@
                                         </div>
                                     </div>
                                 </div>
-                            </logic:equal>
+                            </logic:present>
 
-                            <logic:equal name="isUI" value="false" scope="request">
-                                <div class="formwrap">
-                                    <span class="tl"></span>
-                                    <span class="tr"><span></span></span>
-                                <div class="formcon">
-                                    <h2>Search results</h2>
-                                    <%
-                                        String isUI = (String) request.getAttribute("isUI");
-                                        if ("false".equals(isUI)) {
-                                            String hasNextPage1 = (String)  request.getAttribute("hasNextPage");
-                                            Integer startIndex   = (Integer) request.getAttribute("startIndex");
-                                            Integer endIndex     = (Integer) request.getAttribute("endIndex");
-                                            Integer pageNum      = (Integer) request.getAttribute("page");
-                                            Integer totalPages   = (Integer) request.getAttribute("totalPages");
-                                            Long   totalResults = (Long)    request.getAttribute("totalResults");
+                            <!-- Request-scoped results (API/bot users) -->
 
-                                            if (totalResults > 0) {
-                                    %>
-                                        <div class="result">
-                                            <span class="pagebanner">
-                                                <%= totalResults %> items found, displaying <%= startIndex %> to <%= endIndex %>.
-                                            </span>
-                                            <%
-                                                String hasNextPage = (String) request.getAttribute("hasNextPage");
-                                                if ("true".equals(hasNextPage)) {
-                                                    int nextPageNum = ((Integer) request.getAttribute("page")) + 1;
-                                                    int pageSize    = ((Integer) request.getAttribute("pageSize"));
-                                                    String srchStr  = (String)  request.getAttribute("searchString");
-                                            %>
-                                            <span class="pagelinks">
-                                                <strong>1</strong>,
-                                                [<a href="search.do?search=<%= srchStr %>&amp;page=<%= nextPageNum %>&amp;pageSize=<%= pageSize %>">Next</a>]
-                                            </span>
-                                            <% } else { %>
-                                            <span class="pagelinks">No more results</span>
-                                            <% } %>
-                                        </div>
-                                    <%
-                                            } else {
-                                    %>
-                                        <div class="result">
-                                            Nothing found to display.
-                                        </div>
-                                    <%
-                                            }
-                                        }
-                                    %>
-                                            <table class="table" id="result">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Case number</th>
-                                                        <th>Title</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <logic:iterate id="result" name="results" scope="request">
-                                                        <tr>
-                                                            <td>
-                                                            <a href="getDetail.do?case_id=<bean:write name="result" property="case_no"/>"><bean:write name="result" property="case_no"/></a></td>
-                                                            <td><bean:write name="result" property="title1"/></td></tr></logic:iterate>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </logic:equal>
+
+<logic:present name="results" scope="request">
+    <div class="formwrap">
+        <span class="tl"></span>
+        <span class="tr"><span></span></span>
+        <div class="formcon">
+            <h2>Search results</h2>
+
+            <!-- Paging banner (DisplayTag-like) -->
+            <div class="paging">
+                <logic:greaterThan name="page" value="1">
+                    <a href="search.do?search=${param.search}&page=${page - 1}&pageSize=${pageSize}">
+                        Previous
+                    </a>
+                </logic:greaterThan>
+
+                Page ${page}
+
+                <logic:equal name="hasNextPage" value="true">
+                    <a href="search.do?search=${param.search}&page=${page + 1}&pageSize=${pageSize}">
+                        Next
+                    </a>
+                </logic:equal>
+            </div>
+
+            <div class="result">
+                <!-- Table structure mimics DisplayTag output -->
+                <table id="result" class="displaytag">
+                    <thead>
+                        <tr>
+                            <th>Case number</th>
+                            <th>Title</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <logic:iterate id="row" name="results">
+                            <tr>
+                                <td>
+                                    <a href="getDetail.do?case_id=<bean:write name='row' property='case_no'/>">
+                                        <bean:write name="row" property="case_no"/>
+                                    </a>
+                                </td>
+                                <td>
+                                    <bean:write name="row" property="title1"/>
+                                </td>
+                            </tr>
+                        </logic:iterate>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Bottom paging (optional but matches DisplayTag feel) -->
+            <div class="paging">
+                <logic:greaterThan name="page" value="1">
+                    <a href="search.do?search=${param.search}&page=${page - 1}&pageSize=${pageSize}">
+                        Previous
+                    </a>
+                </logic:greaterThan>
+
+                Page ${page}
+
+                <logic:equal name="hasNextPage" value="true">
+                    <a href="search.do?search=${param.search}&page=${page + 1}&pageSize=${pageSize}">
+                        Next
+                    </a>
+                </logic:equal>
+            </div>
+
+        </div>
+    </div>
+</logic:present>
+
+
 
                             <div class="submitc">
                                 <div class="function previous">
@@ -217,6 +227,7 @@
                             </div>
                             <!-- InstanceEndEditable -->
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -246,13 +257,11 @@
 <!--BEGIN_EXCLUDE-->
 <noscript>
     <div>
-        <img src='http://directgov.stcllctrs.com/OWCPZPDTRUV/noScript.bmp' alt="Script is not enabled"/>
+        <img src='http://directgov.stcllctrs.com/OWCPZPDTRUV/noScript.bmp' alt="Scipt is not enabled"/>
     </div>
 </noscript>
 <!--END_EXCLUDE-->
 </body>
-
-
 <script>
     (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
