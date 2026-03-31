@@ -98,7 +98,7 @@ public class searchAction extends Action {
 
                 List results = query.list();
 
-                boolean hasNextPage = results.size() == pageSize;
+                boolean hasNextPage = (long)(page * pageSize) < totalResults;
 
                 LOGGER.info(MessageFormat.format(
                         "[API] Search <{0}> page={1} size={2} returned={3}",
