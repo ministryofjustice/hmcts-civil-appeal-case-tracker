@@ -169,7 +169,7 @@
                                                     String srchStr  = (String)  request.getAttribute("searchString");
                                             %>
                                             <span class="pagelinks">
-                                                <strong>1</strong>,
+                                                <strong><%= pageNum %></strong>,
                                                 [<a href="search.do?search=<%= srchStr %>&amp;page=<%= nextPageNum %>&amp;pageSize=<%= pageSize %>">Next</a>]
                                             </span>
                                             <% } else { %>

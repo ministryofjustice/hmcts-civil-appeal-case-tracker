@@ -82,7 +82,7 @@ public class searchAction extends Action {
                 Long totalResults = getTotalCount(session, searchString);
                 int totalPages = (int) Math.ceil((double) totalResults / pageSize);
 
-                if (page > totalPages) {
+                if ((totalResults > 0 ) && (page > totalPages)) {
                     LOGGER.info(MessageFormat.format(
                             "[API] Invalid page requested: page={0} totalPages={1} for search <{2}>",
                             page, totalPages, searchString
