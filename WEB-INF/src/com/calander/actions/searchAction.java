@@ -82,7 +82,7 @@ public class searchAction extends Action {
                 Long totalResults = getTotalCount(session, searchString);
                 int totalPages = (int) Math.ceil((double) totalResults / pageSize);
 
-                if (page > totalPages) {
+                if ((totalResults > 0 ) && (page > totalPages)) {
                     LOGGER.info(MessageFormat.format(
                             "[API] Invalid page requested: page={0} totalPages={1} for search <{2}>",
                             page, totalPages, searchString
@@ -90,6 +90,7 @@ public class searchAction extends Action {
                     request.setAttribute("invalidPage", Boolean.TRUE);
                     request.setAttribute("totalResults", totalResults);
                     request.setAttribute("totalPages", totalPages);
+                    request.setAttribute("pageSize", pageSize);
                     return mapping.findForward("error");
                 }
 
@@ -98,7 +99,7 @@ public class searchAction extends Action {
 
                 List results = query.list();
 
-                boolean hasNextPage = results.size() == pageSize;
+                boolean hasNextPage = (long)(page * pageSize) < totalResults;
 
                 LOGGER.info(MessageFormat.format(
                         "[API] Search <{0}> page={1} size={2} returned={3}",
