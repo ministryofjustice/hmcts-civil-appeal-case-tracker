@@ -29,18 +29,22 @@ function LogPosition(evt){
 
 }
 
+function ShowCalendar(controlName, START_YEAR, END_YEAR, FORMAT){
 
-function ShowCalendar(CONTROL,START_YEAR,END_YEAR,FORMAT){
+    ControlToSet = document.querySelector("[name='" + controlName + "']");
 
-ControlToSet = eval(CONTROL);
-StartYear = START_YEAR;
-EndYear = END_YEAR;
-FormatAs = FORMAT;
+    StartYear = START_YEAR;
+    EndYear = END_YEAR;
+    FormatAs = FORMAT;
 
-var strFeatures = "width=" + CalWidth + ",height=215" + ",left=" + LEFT + ",top=" + TOP;
-var CalWindow = window.open("HTMLCalendar.htm","Calendar", strFeatures)
-CalWindow.focus();
-} //End Function
+    var strFeatures = "width=" + CalWidth + ",height=215,left=" + LEFT + ",top=" + TOP;
+
+    var CalWindow = window.open("HTMLCalendar.htm","Calendar", strFeatures);
+
+    if (CalWindow) {
+        CalWindow.focus();
+    }
+}
 
 function SetDate(DATE){
 if(ControlToSet){
@@ -51,4 +55,5 @@ StartYear = null;
 EndYear = null;
 FormatAs = null;
 }
+
 

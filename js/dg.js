@@ -139,8 +139,20 @@ function addVariable() {
 
 function closeWindow() {
 	var backto = gup("backtoPage");
+
 	if (window.opener && !window.opener.closed) {
-		window.opener.location=backto;
+
+		try {
+			var url = new URL(backto, window.location.origin);
+
+			if (url.origin === window.location.origin) {
+				window.opener.location = url.pathname + url.search;
+			}
+		}
+		catch (e) {
+			// Ignore invalid URLs
+		}
+
 		window.close();
 	}
 	else {
@@ -149,11 +161,10 @@ function closeWindow() {
 }
 
 function gup(name) {
-	name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-	var regexS = "[\\?&]"+name+"=([^&#]*)";
-	var regex = new RegExp( regexS );
-	var results = regex.exec(window.location.href);
-	if (results == null) return "";
-	else return results[1];
-};
+	name = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+	var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+	var results = regex.exec(window.location.href);
+
+	return results ? results[1] : "";
+}
