@@ -149,7 +149,7 @@ if (!Function.prototype.apply) {
 
 String.prototype.extend({
   stripTags: function() {
-    return this.replace(/<\/?[^>]+>/gi, '');
+    return this.replace(/<\w+(\s+("[^"]*"|'[^']*'|[^>])+)?(\/)?>|<\/\w+>/gi, '');
   },
 
   escapeHTML: function() {
@@ -280,7 +280,7 @@ Ajax.Request.prototype = (new Ajax.Base()).extend({
 });
 
 Ajax.Updater = Class.create();
-Ajax.Updater.ScriptFragment = '(?:<script.*?>)((\n|.)*?)(?:<\/script>)';
+Ajax.Updater.ScriptFragment = '(?:<script.*?>)((\\n|.)*?)(?:<\\/script\\s*>)';
 
 Ajax.Updater.prototype.extend(Ajax.Request.prototype).extend({
   initialize: function(container, url, options) {
