@@ -148,9 +148,6 @@ if (!Function.prototype.apply) {
 }
 
 String.prototype.extend({
-  stripTags: function() {
-    return this.replace(/<\/?[^>]+>/gi, '');
-  },
 
   escapeHTML: function() {
     var div = document.createElement('div');
@@ -161,8 +158,8 @@ String.prototype.extend({
 
   unescapeHTML: function() {
     var div = document.createElement('div');
-    div.innerHTML = this.stripTags();
-    return div.childNodes[0].nodeValue;
+    div.textContent = this;
+    return div.textContent;
   }
 });
 
@@ -280,7 +277,8 @@ Ajax.Request.prototype = (new Ajax.Base()).extend({
 });
 
 Ajax.Updater = Class.create();
-Ajax.Updater.ScriptFragment = '(?:<script.*?>)((\n|.)*?)(?:<\/script>)';
+Ajax.Updater.ScriptFragment =
+    '(?:<script[^>]*>)([\\s\\S]*?)(?:<\\/script\\s*[^>]*>)';
 
 Ajax.Updater.prototype.extend(Ajax.Request.prototype).extend({
   initialize: function(container, url, options) {
