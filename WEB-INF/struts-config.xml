@@ -18,7 +18,7 @@
 		<exception
 				key="error.general"
 				type="java.lang.Exception"
-				handler="com.CBD.monitoring.MetricsExceptionHandler" />
+				handler="dts.legacy.monitoring.MetricsExceptionHandler" />
 	</global-exceptions>
    <!-- ========== Action Mapping Definitions ============================== -->   
 	
