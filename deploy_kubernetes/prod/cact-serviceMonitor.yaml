@@ -1,0 +1,11 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: civil-appeal-case-tracker-app
+spec:
+  selector:
+    matchLabels:
+      app: civil-appeal-case-tracker-app
+  endpoints:
+    - port: http
+      interval: 15s
