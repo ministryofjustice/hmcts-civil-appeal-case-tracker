@@ -14,6 +14,10 @@
         <listener-class>dts.legacy.utils.SessionTrackingListener</listener-class>
     </listener>
 
+    <listener>
+        <listener-class>dts.legacy.monitoring.MetricsInitListener</listener-class>
+    </listener>
+
     <filter>
         <filter-name>healthCheckFilter</filter-name>
         <filter-class>dts.legacy.utils.HealthCheckFilter</filter-class>
@@ -75,6 +79,15 @@
         </init-param>
         <load-on-startup>2</load-on-startup>
     </servlet>
+
+    <servlet>
+        <servlet-name>prometheus</servlet-name>
+        <servlet-class>io.prometheus.metrics.exporter.servlet.javax.PrometheusMetricsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>prometheus</servlet-name>
+        <url-pattern>/metrics</url-pattern>
+    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>action</servlet-name>
