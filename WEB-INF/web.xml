@@ -14,6 +14,10 @@
         <listener-class>dts.legacy.utils.SessionTrackingListener</listener-class>
     </listener>
 
+    <listener>
+        <listener-class>dts.legacy.monitoring.MetricsInitListener</listener-class>
+    </listener>
+
     <filter>
         <filter-name>healthCheckFilter</filter-name>
         <filter-class>dts.legacy.utils.HealthCheckFilter</filter-class>
