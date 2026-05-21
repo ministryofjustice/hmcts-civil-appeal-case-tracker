@@ -33,6 +33,11 @@ public class searchAction extends Action {
 
         String searchString = sanitizeSearchInput(request.getParameter("search"));
 
+        if (searchString.equals("test")) {
+            LOGGER.error("Testing error log metric");
+            throw new RuntimeException("throwing error to test");
+        }
+
         SessionFactory factory = (SessionFactory) servlet.getServletContext()
                 .getAttribute(HibernatePlugin.KEY_NAME);
 

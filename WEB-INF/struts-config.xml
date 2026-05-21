@@ -11,7 +11,15 @@
 	<!-- ========== Form Bean Definitions =================================== -->   
 	<form-beans>
 		
-	</form-beans> 
+	</form-beans>
+
+	<!-- ========== Global exceptions handler Configuration ================= -->
+	<global-exceptions>
+		<exception
+				key="error.general"
+				type="java.lang.Exception"
+				handler="dts.legacy.monitoring.MetricsExceptionHandler" />
+	</global-exceptions>
    <!-- ========== Action Mapping Definitions ============================== -->   
 	
 	<action-mappings>

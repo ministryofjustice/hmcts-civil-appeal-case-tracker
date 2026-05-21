@@ -1,0 +1,30 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  namespace: civil-appeal-case-tracker-prod
+  labels:
+    role: alert-rules
+  name: prometheus-custom-rules-civil-appeal-case-tracker-prod
+spec:
+  groups:
+    - name: application-rules
+      rules:
+        - alert: application_exception_alert
+          expr: increase(app_exceptions_total{namespace="civil-appeal-case-tracker-prod"}[5m]) > 0
+          for: 0m
+          labels:
+            severity: civil-appeal-case-tracker-prod
+          annotations:
+            message: "civil-appeal-case-tracker-prod has an unhandled exception ({{ $labels.exception_class }}) in {{ $labels.location }} on pod {{ $labels.pod }}"
+            runbook_url: "http://my-support-docs"
+            dashboard_url: "http://my-dashboard"
+
+        - alert: application_error_log_alert
+          expr: increase(app_error_logs_total{namespace="civil-appeal-case-tracker-prod"}[5m]) > 0
+          for: 0m
+          labels:
+            severity: civil-appeal-case-tracker-prod
+          annotations:
+            message: "civil-appeal-case-tracker-prod has an ERROR log entry from ({{ $labels.source }}) on pod {{ $labels.pod }}"
+            runbook_url: "http://my-support-docs"
+            dashboard_url: "http://my-dashboard"
