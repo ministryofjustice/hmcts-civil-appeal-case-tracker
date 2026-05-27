@@ -32,7 +32,7 @@ public class searchAction extends Action {
             throws IOException, ServletException, Exception {
 
         String searchString = sanitizeSearchInput(request.getParameter("search"));
-
+        
         SessionFactory factory = (SessionFactory) servlet.getServletContext()
                 .getAttribute(HibernatePlugin.KEY_NAME);
 
