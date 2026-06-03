@@ -36,6 +36,12 @@ sourceSets {
         java {
             srcDir 'WEB-INF/src'
         }
+        resources {
+            srcDir 'WEB-INF/src'
+            include 'hibernate.cfg.xml'
+            include 'log4j.properties'
+            include 'com/calander/beans/Calander.hbm.xml'
+        }
     }
     test {
         java {
@@ -44,24 +50,206 @@ sourceSets {
     }
 }
 
-configurations {
-    antClasspath
+compileJava {
+    options.encoding = 'UTF-8'
+    options.debug = true
+}
+
+test {
+    useJUnit()
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+        showStandardStreams = true
+    }
+    reports {
+        html.required = true
+        junitXml.required = true
+        html.outputLocation = file("${projectDir}/testreport")
+        junitXml.outputLocation = file("${projectDir}/testreport/xml")
+    }
+}
+
+war {
+    archiveFileName = 'CACT.war'
+    destinationDirectory = file("${projectDir}/deploy")
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    webXml = file('WEB-INF/web.xml')
+
+    from('.') {
+        //Root files
+        include 'error.jsp'
+        include 'error-limit.jsp'
+        include 'index.jsp'
+        include 'search.jsp'
+        include 'detail.jsp'
+        include 'Version.txt'
+        include 'HTMLCalendar.htm'
+        include 'favicon.ico'
+        include 'BingSiteAuth.xml'
+        include 'google1c247fb6360b4f72.html'
+
+        include 'WEB-INF/**'
+        include 'admin/**'
+        include 'HMCSFormUpload/**'
+        include 'asset/**'
+        include 'files/**'
+        include 'js/**'
+        include 'images/**'
+        include 'common/**'
+        include 'assets/images/**'
+        include 'assets/stylesheets/**'
+        exclude 'WEB-INF/**/*.class'
+        exclude 'WEB-INF/web.xml'
+        exclude 'WEB-INF/src/**'
+        exclude 'WEB-INF/lib/**'
+    }
+
+    from("${layout.buildDirectory.get()}/classes/java/main") {
+        into 'WEB-INF/classes'
+    }
+
+    from("${layout.buildDirectory.get()}/resources/main") {
+        into 'WEB-INF/classes'
+    }
 }
 
 dependencies {
-    antClasspath 'org.apache.ant:ant-junit:1.10.15'
-    antClasspath 'org.apache.ant:ant-junit4:1.10.15'
-}
+    // Servlet API (provided by Tomcat)
+    providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
 
-ant.properties['ant.home'] = '.'
-ant.importBuild('build.xml') { antTargetName -> 'ant-' + antTargetName }
+    // Apache Commons
+    implementation 'commons-beanutils:commons-beanutils:1.7.0'
+    implementation 'commons-codec:commons-codec:1.15'
+    implementation 'commons-collections:commons-collections:2.1.1'
+    implementation 'commons-digester:commons-digester:1.5'
+    implementation 'commons-io:commons-io:1.3'
+    implementation 'commons-lang:commons-lang:2.1'
+    implementation 'org.apache.commons:commons-lang3:3.3'
+    implementation 'commons-logging:commons-logging:1.1.3'
 
-// Make ant-junit available to Ant's classloader
-configurations.antClasspath.files.each { file ->
-    ant.project.class.classLoader.addURL(file.toURI().toURL())
+    // Hibernate & ORM
+    implementation 'antlr:antlr:2.7.6rc1'
+    implementation 'asm:asm:1.5.3'
+    implementation 'asm:asm-attrs:1.5.3'
+    implementation 'cglib:cglib:2.1_3'
+    implementation 'dom4j:dom4j:1.6.1'
+    implementation 'jaxen:jaxen:1.1-beta-7'
+
+    // Spring Framework
+    implementation 'org.springframework:spring-beans:3.0.7.RELEASE'
+    implementation 'org.springframework:spring-context:3.0.7.RELEASE'
+    implementation 'org.springframework:spring-core:3.0.7.RELEASE'
+    testImplementation 'org.springframework:spring-test:3.0.7.RELEASE'
+
+    // AWS SDK
+    implementation 'com.amazonaws:aws-java-sdk-core:1.12.8'
+    implementation 'com.amazonaws:aws-java-sdk-kms:1.12.8'
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.8'
+    implementation 'com.amazonaws:jmespath-java:1.12.8'
+
+    // Jackson (2.12.3 — used by AWS SDK)
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.12.3'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.12.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.12.3'
+
+    // HTTP
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'org.apache.httpcomponents:httpcore:4.4.13'
+
+    // Netty
+    implementation 'io.netty:netty-buffer:4.1.61.Final'
+    implementation 'io.netty:netty-codec:4.1.61.Final'
+    implementation 'io.netty:netty-codec-http:4.1.61.Final'
+    implementation 'io.netty:netty-common:4.1.61.Final'
+    implementation 'io.netty:netty-handler:4.1.61.Final'
+    implementation 'io.netty:netty-resolver:4.1.61.Final'
+    implementation 'io.netty:netty-transport:4.1.61.Final'
+
+    // Database drivers
+    implementation 'net.sourceforge.jtds:jtds:1.2.2'
+    implementation 'org.postgresql:postgresql:42.7.3'
+
+    // Caching
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.2.0'
+
+    // Logging
+    implementation 'log4j:log4j:1.2.17'
+    implementation 'org.apache.logging.log4j:log4j-api:2.16.0'
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation 'org.slf4j:slf4j-log4j12:1.7.32'
+
+    // AspectJ
+    implementation 'org.aspectj:aspectjrt:1.8.2'
+
+    // Joda Time
+    implementation 'joda-time:joda-time:2.8.1'
+
+    // FreeMarker
+    implementation 'org.freemarker:freemarker:2.3.9'
+
+    // Display/UI tags
+    implementation 'javax.servlet:jstl:1.1.2'
+    implementation 'taglibs:standard:1.1.2'
+
+    // Email & Activation
+    implementation 'javax.activation:activation:1.1'
+    implementation 'javax.mail:javax.mail-api:1.4.6'
+
+    // XML
+    implementation 'xerces:xercesImpl:2.6.2'
+    implementation 'xml-apis:xml-apis:1.3.04'
+
+    // JTA
+    implementation 'javax.transaction:jta:1.1'
+
+    // Excel
+    implementation 'net.sourceforge.jexcelapi:jxl:2.6.12'
+
+    // Prometheus metrics
+    implementation 'io.prometheus:prometheus-metrics-core:1.2.1'
+    implementation 'io.prometheus:prometheus-metrics-config:1.2.1'
+    implementation 'io.prometheus:prometheus-metrics-exporter-common:1.2.1'
+    implementation 'io.prometheus:prometheus-metrics-exporter-servlet-javax:1.2.1'
+    implementation 'io.prometheus:prometheus-metrics-exposition-formats:1.2.1'
+    implementation 'io.prometheus:prometheus-metrics-instrumentation-jvm:1.3.6'
+    implementation 'io.prometheus:prometheus-metrics-model:1.2.1'
+    implementation 'io.prometheus:prometheus-metrics-shaded-protobuf:1.2.1'
+    implementation 'io.prometheus:prometheus-metrics-tracer-initializer:1.2.1'
+
+    // --- Flat dependencies (libs/ folder) ---
+    implementation name: 'struts'
+    implementation name: 'struts-legacy'
+    implementation name: 'struts-flow-0.2'
+    implementation name: 'cos'
+    implementation name: 'uploadbean'
+    implementation name: 'uploadPackage'
+    implementation name: 'fileupload'
+    implementation name: 'ehcache-1.1'
+    implementation name: 'quartz'
+    implementation name: 'hibernate3'
+    implementation name: 'jaas'
+    implementation name: 'jgs-quartz-0.2.1-dev'
+    implementation name: 'jgs-struts-0.3-dev'
+    implementation name: 'aws-swf-build-tools-1.1'
+    implementation name: 'commons-beanutils'
+    implementation name: 'msbase'
+    implementation name: 'msutil'
+    implementation name: 'mail'
+    implementation name: 'displaytag-2.4.0'
+    implementation name: 'ion-java-1.0.2'
+
+    // --- Test dependencies ---
+    testImplementation 'org.apache.ant:ant-junit:1.10.15'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:3.11.2'
+    testImplementation 'net.bytebuddy:byte-buddy:1.11.3'
+    testImplementation 'org.objenesis:objenesis:3.2'
+    testImplementation 'org.hamcrest:hamcrest-core:1.3'
 }
 
 clean {
-    delete 'build', 'testresult', 'deploy'
+    delete 'build', 'testresult', 'deploy', 'testreport'
 
 }
