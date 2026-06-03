@@ -216,7 +216,7 @@
 	-->
 	<target name="run_junit_tests" depends="compile-tests" description="Run JUnit tests">
 		<mkdir dir="testreport/xml" />
-		<junit printsummary="yes" haltonfailure="no" showoutput="yes" fork="yes">
+		<junit printsummary="yes" haltonfailure="no" showoutput="yes" fork="no">
 			<classpath refid="test_classpath" />
 			<formatter type="plain" usefile="false" />
 			<formatter type="xml" />

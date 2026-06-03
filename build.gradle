@@ -7,20 +7,8 @@
 
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
-    id 'application'
-}
-
-repositories {
-    // Use Maven Central for resolving dependencies.
-    mavenCentral()
-}
-
-dependencies {
-    // Use JUnit test framework.
-    testImplementation libs.junit
-
-    // This dependency is used by the application.
-    implementation libs.guava
+    id 'java'
+    id 'war'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -30,7 +18,50 @@ java {
     }
 }
 
-application {
-    // Define the main class for the application.
-    mainClass = 'org.example.App'
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+repositories {
+    // Use Maven Central for resolving dependencies.
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'WEB-INF/src'
+        }
+    }
+    test {
+        java {
+            srcDir 'test'
+        }
+    }
+}
+
+configurations {
+    antClasspath
+}
+
+dependencies {
+    antClasspath 'org.apache.ant:ant-junit:1.10.15'
+    antClasspath 'org.apache.ant:ant-junit4:1.10.15'
+}
+
+ant.properties['ant.home'] = '.'
+ant.importBuild('build.xml') { antTargetName -> 'ant-' + antTargetName }
+
+// Make ant-junit available to Ant's classloader
+configurations.antClasspath.files.each { file ->
+    ant.project.class.classLoader.addURL(file.toURI().toURL())
+}
+
+clean {
+    delete 'build', 'testresult', 'deploy'
+
 }
