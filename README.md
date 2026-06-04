@@ -8,13 +8,13 @@ This is a legacy application maintained by Tactical Products team.
 
 
 ##Dependencies
-- [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
-- [Tomcat 8](https://tomcat.apache.org/download-80.cgi)
-- [Ant](http://ant.apache.org/bindownload.cgi)
+- [JDK 11](https://www.oracle.com/java/technologies/downloads/#java11)
+- [Tomcat 9](https://hub.docker.com/layers/library/tomcat/9.0.107-jdk11-temurin-jammy/images/sha256-2fc302f23c98fbd06cc69d9bf35a486fff0b43ab03bbc68906cf8825ff51c6f0)
+- [Gradle 9.5.0](https://gradle.org/releases/#9.5.0)
 
 ###For local development
 
-- Virtual machine (eg. Virtual box or Parallel Desktop)
+- Docker
 - Windows 8 or 10
 - SQL Server 2012 Express
 
