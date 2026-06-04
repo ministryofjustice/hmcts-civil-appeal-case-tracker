@@ -1,108 +1,95 @@
-#Case tracker
+# Case tracker
 
-A public facing service written in Java. The public use the service to track civil appeal cases.
+A public-facing service written in Java. The public use the service to track civil appeal cases.
 
-This is a legacy application maintained by Tactical Products team.
+This is a legacy application maintained by the DTS Legacy team.
 
-
-
-
-##Dependencies
+## Dependencies
 - [JDK 11](https://www.oracle.com/java/technologies/downloads/#java11)
-- [Tomcat 9](https://hub.docker.com/layers/library/tomcat/9.0.107-jdk11-temurin-jammy/images/sha256-2fc302f23c98fbd06cc69d9bf35a486fff0b43ab03bbc68906cf8825ff51c6f0)
 - [Gradle 9.5.0](https://gradle.org/releases/#9.5.0)
+- [Docker](https://www.docker.com)
+- [PostgreSQL](https://www.postgresql.org/) (recommended via Docker for local development)
+- [Node.js / npm](https://www.npmjs.com) (only required for frontend asset builds)
 
-###For local development
+## Local development
 
-- Docker
-- Windows 8 or 10
-- SQL Server 2012 Express
+The project no longer requires Ant for local development. It now uses the Gradle wrapper and Docker for build and runtime.
 
-###For frontend
-- [NPM 4.0+](https://www.npmjs.com)
-- [Gulp.js](http://www.gulpjs.com)
-
-##Setting up
-
-###Install Ant
-Ant can be installed quiet easily using [Homebrew](http://brew.sh/)
-
-```
-$ brew install ant
-```
-Check ant has installed properly by running ```ant```. If you see the following after running ```ant``` then you know it has been installed successfully
-
-```
-$ ant
-Buildfile: build.xml does not exist!
-Build failed
-```
-####Setup environment variables for build process
-
-You will need the following information to substitue in the scripts below :
-
-- **/path/to/tomcat**  path to you systems Tomcat installation 
-- **connection-string** is the connection string to your database and tables for the service to use
-- **connection-username** is the database username
-- **connection-password** is the database users password
-
-```
-$ echo 'export TOMCAT_PATH="/path/to/tomcat"' >>~/.bash_profile
-$ echo 'export DEV_CASE_TRACKER_URL="connection-string"' >> ~/.bash_profile
-$ echo 'export DEV_CASE_TRACKER_USER="connection-username"' >> ~/.bash_profile
-$ echo 'export DEV_CASE_TRACKER_PWD="connection-password"' >> ~/.bash_profile
-```
-
-If you plan on deploying to staging and production you will need to run the following:
-
-```
-$ echo 'export STAGE_CASE_TRACKER_URL="connection-string"' >> ~/.bash_profile
-$ echo 'export STAGE_CASE_TRACKER_USER="connection-username"' >> ~/.bash_profile
-$ echo 'export STAGE_CASE_TRACKER_PWD="connection-password"' >> ~/.bash_profile
-
-$ echo 'export LIVE_CASE_TRACKER_URL="connection-string"' >> ~/.bash_profile
-$ echo 'export LIVE_CASE_TRACKER_USER="connection-username"' >> ~/.bash_profile
-$ echo 'export LIVE_CASE_TRACKER_PWD="connection-password"' >> ~/.bash_profile
-
-```
-
-Now run it so its available in your current terminal
-
-```
-$ source ~/.bash_profile
-```
-
-###Get the source code
-Clone this repository
+### Clone the repository
 
 ```
 $ git clone git@github.com:ministryofjustice/hmcts-civil-appeal-case-tracker.git
+$ cd hmcts-civil-appeal-case-tracker
 ```
 
-Next change the directory to the new project
+### Build and package
+
+Use the included helper script to build the WAR and Docker image:
 
 ```
-$ cd hmcts-civil-appeal-case-tracker.git
+$ ./build.sh
 ```
 
-###Front-end development
+If you want to run the commands manually:
 
-Install Node js (version 4) using homebrew
+```
+$ ./gradlew clean test war
+$ docker build -t cact .
+```
 
-First install and setup Gulp and the dependencies
+### Run the container
+
+The Docker image runs Tomcat and serves the application on port `8080` inside the container.
+
+```
+$ docker run -p 80:8080 cact
+```
+
+The application will then be available at `http://localhost/8080`.
+
+## Database setup
+
+For local development, the easiest option is to run Postgres in Docker:
+
+```
+$ docker run --name case-tracker-db -e POSTGRES_USER=appuser -e POSTGRES_PASSWORD=apppassword -e POSTGRES_DB=case_tracker -p 5432:5432 -d postgres:14
+```
+
+If you prefer to install Postgres locally instead, download it from [postgresql.org](https://www.postgresql.org/download/).
+
+If you need to connect the app to a database, pass database environment variables when starting the container:
+
+```
+$ docker run -e DB_HOST=... -e DB_PORT=... -e DB_USER=... -e DB_PASSWORD=... -p 80:8080 cact
+```
+
+### Helpful scripts
+
+- `./build.sh` — runs `./gradlew clean test war` and then builds the Docker image.
+- `./run-against-dev-db.sh` — helper script that pulls DB credentials from AWS ECS task definitions and starts the image.
+- `./run-against-staging-db.sh` — similar helper for staging.
+
+## Frontend asset build
+
+If you are making frontend changes, install npm dependencies and use the existing Gulp setup:
 
 ```
 $ npm install
 ```
-This should setup Gulp and all its tasks
 
+Available Gulp commands:
 
-|   Command	|  Description 	|
-|---	|---	|
-| gulp | Runs the default taks which performs all the below tasks in the order they appear below(except lint)|
-| gulp delete  	| Deletes the build/assets folder i.e the compiled CSS and JS. 	|
-| gulp minify  	| Minifies all the css files and addes them to the build/assets folder  	|
-|   gulp uglify	|  Minifies all the Javascript files and addes them to the build/assets folder 	|
-| gulp lint  	| Checkes the Javascript to ensure the it meets specific rules  	|
-| gulp watch  	| Whats the CSS and JS source folders and if any thing changes it runs either minify or uglify tasks 	|
-|   	|   	|
+| Command | Description |
+|---|---|
+| `gulp` | Build CSS and JS assets via default task |
+| `gulp delete` | Delete compiled assets under `build/assets` |
+| `gulp minify` | Minify CSS files into `build/assets` |
+| `gulp uglify` | Minify JavaScript files into `build/assets` |
+| `gulp lint` | Run JavaScript linting checks |
+| `gulp watch` | Watch source CSS/JS and rebuild on changes |
+
+## Notes
+
+- The project builds a WAR file at `deploy/CACT.war` and the Docker image copies it into Tomcat.
+- The Docker image is based on `tomcat:9.0.107-jdk11-temurin-jammy`.
+- There is no need to install a local Tomcat instance for running the container.
