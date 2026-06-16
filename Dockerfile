@@ -1,4 +1,4 @@
-FROM tomcat:9.0.107-jdk11-temurin-jammy
+FROM tomcat:9.0.118-jdk11-temurin-jammy
 
 ENV CATALINA_OPTS="-Xmx512M -XX:MaxMetaspaceSize=256m"
 
