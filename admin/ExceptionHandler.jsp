@@ -48,7 +48,7 @@
 
     <script language="JavaScript" type="text/javascript" src="js/cal.js"></script>
     <script language="JavaScript" type="text/javascript" src="js/sort.js"></script>
-    <script language="JavaScript" type="text/javascript" src="js/jquery.js"></script>
+    <script language="JavaScript" type="text/javascript" src="js/jquery-3.7.1.min.js"></script>
     <script language="JavaScript" type="text/javascript" src="js/dg.js"></script>
     <script language="JavaScript" type="text/javascript" src="js/complextable.js"></script>
     <script language="JavaScript" type="text/javascript" src="js/print.js"></script>
