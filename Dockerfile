@@ -1,6 +1,5 @@
 FROM tomcat:9.0.119-jdk21-temurin-jammy
 
-ENV CATALINA_OPTS="-Xmx512M -XX:MaxMetaspaceSize=256m"
 
 RUN rm -rf  /usr/local/tomcat/webapps/{ROOT,examples,host-manager,manager,docs} \
     && mkdir -p /file/
