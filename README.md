@@ -7,72 +7,22 @@ This is a legacy application maintained by Tactical Products team.
 
 
 
-##Dependencies
-- [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
-- [Tomcat 8](https://tomcat.apache.org/download-80.cgi)
+## Dependencies
+- [JDK 21](https://www.oracle.com/java/technologies/downloads/#java21)
+- [Tomcat 9](https://hub.docker.com/_/tomcat?tag=jre21-temurin-jammy)
 - [Ant](http://ant.apache.org/bindownload.cgi)
 
-###For local development
+### For local development
 
-- Virtual machine (eg. Virtual box or Parallel Desktop)
-- Windows 8 or 10
-- SQL Server 2012 Express
+- Docker
+- Postgres14 (recommended via Docker for local development)
 
-###For frontend
+### For frontend
 - [NPM 4.0+](https://www.npmjs.com)
 - [Gulp.js](http://www.gulpjs.com)
 
-##Setting up
+## Setting up
 
-###Install Ant
-Ant can be installed quiet easily using [Homebrew](http://brew.sh/)
-
-```
-$ brew install ant
-```
-Check ant has installed properly by running ```ant```. If you see the following after running ```ant``` then you know it has been installed successfully
-
-```
-$ ant
-Buildfile: build.xml does not exist!
-Build failed
-```
-####Setup environment variables for build process
-
-You will need the following information to substitue in the scripts below :
-
-- **/path/to/tomcat**  path to you systems Tomcat installation 
-- **connection-string** is the connection string to your database and tables for the service to use
-- **connection-username** is the database username
-- **connection-password** is the database users password
-
-```
-$ echo 'export TOMCAT_PATH="/path/to/tomcat"' >>~/.bash_profile
-$ echo 'export DEV_CASE_TRACKER_URL="connection-string"' >> ~/.bash_profile
-$ echo 'export DEV_CASE_TRACKER_USER="connection-username"' >> ~/.bash_profile
-$ echo 'export DEV_CASE_TRACKER_PWD="connection-password"' >> ~/.bash_profile
-```
-
-If you plan on deploying to staging and production you will need to run the following:
-
-```
-$ echo 'export STAGE_CASE_TRACKER_URL="connection-string"' >> ~/.bash_profile
-$ echo 'export STAGE_CASE_TRACKER_USER="connection-username"' >> ~/.bash_profile
-$ echo 'export STAGE_CASE_TRACKER_PWD="connection-password"' >> ~/.bash_profile
-
-$ echo 'export LIVE_CASE_TRACKER_URL="connection-string"' >> ~/.bash_profile
-$ echo 'export LIVE_CASE_TRACKER_USER="connection-username"' >> ~/.bash_profile
-$ echo 'export LIVE_CASE_TRACKER_PWD="connection-password"' >> ~/.bash_profile
-
-```
-
-Now run it so its available in your current terminal
-
-```
-$ source ~/.bash_profile
-```
-
-###Get the source code
 Clone this repository
 
 ```
@@ -85,7 +35,19 @@ Next change the directory to the new project
 $ cd hmcts-civil-appeal-case-tracker.git
 ```
 
-###Front-end development
+From the root, run this command to build the project via Ant docker container, then build the Case Tracker docker image.
+
+```
+./build.sh
+```
+
+If you need to connect the app to a database, pass database environment variables when starting the container:
+
+```
+$ docker run -e DB_HOST=... -e DB_PORT=... -e DB_USER=... -e DB_PASSWORD=... -p 80:8080 cact
+```
+
+### Front-end development
 
 Install Node js (version 4) using homebrew
 
