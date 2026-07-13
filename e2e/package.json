@@ -1,0 +1,17 @@
+{
+  "name": "e2e",
+  "private": true,
+  "packageManager": "yarn@4.17.1",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^26.1.1",
+    "playwright": "^1.61.1",
+    "typescript": "^7.0.2"
+  }
+}

@@ -1,0 +1,18 @@
+node_modules/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
+# Playwright
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
