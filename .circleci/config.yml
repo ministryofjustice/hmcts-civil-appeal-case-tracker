@@ -271,7 +271,7 @@ workflows:
             branches:
               only: /^RST-.*/
           requires:
-            - build-dev
+            - build-and-test-dev
 
       ### PREPROD ###
       - build:
