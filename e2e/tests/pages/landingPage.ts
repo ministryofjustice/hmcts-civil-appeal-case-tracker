@@ -9,7 +9,7 @@ class LandingPage {
     private readonly text: string;
 
     constructor() {
-        this.url = 'https://casetracker.justice.gov.uk/';
+        this.url = 'http://localhost:8080/';
         this.title = `heading`;
         this.text = `#Content .holder`;
     }

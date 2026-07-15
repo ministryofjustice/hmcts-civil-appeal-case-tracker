@@ -4,19 +4,15 @@ import searchPage_content from '../content/searchPage_content';
 // import axeTest from '../accessibilityTestHelper';
 
 class SearchPage {
-    private readonly url: string;
     private readonly title: string;
     private readonly text: string;
 
     constructor() {
-        this.url = 'https://casetracker.justice.gov.uk/search.jsp';
         this.title = `heading`;
         this.text = `#Content .holder`;
     }
 
     async checkPageLoads(page: Page): Promise<void> {
-        await page.goto(this.url);
-
         // Check elements of the page
         await Promise.all([
             expect(page.getByRole(this.title as 'heading', { level: 1 })).toContainText(searchPage_content.pageTitle),
@@ -30,6 +26,18 @@ class SearchPage {
     async searchFor(page: Page, searchTerm: string): Promise<void> {
         await page.locator('#search').fill(searchTerm);
         await page.getByRole('button', { name: 'Search' }).click();
+    }
+
+    async searchByTitle(page: Page, title: string): Promise<void> {
+        await this.searchFor(page, title);
+    }
+
+    async searchByCaseReference(page: Page, caseReference: string): Promise<void> {
+        await this.searchFor(page, caseReference);
+    }
+
+    async selectRecordAndContinueOn(page: Page, caseReference: string): Promise<void> {
+        await page.getByRole('link', { name: caseReference, exact: true }).click();
     }
 
     async goBack(page: Page): Promise<void> {
