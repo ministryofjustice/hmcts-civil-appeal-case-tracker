@@ -1,4 +1,10 @@
 import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
+import path from 'path';
+
+// Loads e2e/.env into process.env before anything below
+dotenv.config({ path: path.resolve(__dirname, '.env') });
+
 module.exports = defineConfig({
   testDir: "./tests",
   /* Run tests in files in parallel */

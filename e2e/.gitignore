@@ -16,3 +16,6 @@ playwright/.cache/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Local secrets (ADMIN_USER / ADMIN_PASS etc.) - never commit
+.env
