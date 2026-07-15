@@ -23,6 +23,9 @@ module.exports = defineConfig({
 // The number of tests that can run in parallel
   reporter: process.env.CI ? "html" : "html",
 // How the tests will be reported, see playwright.dev reporters for more.
+  use: {
+    baseURL: process.env.BASE_URL || "http://localhost:8080",
+  },
   projects: [
     {
       name: "chromium",

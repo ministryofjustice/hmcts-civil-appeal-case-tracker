@@ -9,7 +9,7 @@ class LandingPage {
     private readonly text: string;
 
     constructor() {
-        this.url = 'http://localhost:8080/';
+        this.url = '/';
         this.title = `heading`;
         this.text = `#Content .holder`;
     }
