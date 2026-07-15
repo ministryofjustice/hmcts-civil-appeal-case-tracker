@@ -50,12 +50,13 @@ jobs:
             - run:
                 name: Start Postgres container for tests
                 command: |
+                  docker network create cact-test-net
                   docker run -d \
                     --name cact-postgres \
+                    --network cact-test-net \
                     -e POSTGRES_USER=cact_user \
                     -e POSTGRES_PASSWORD=cact_password \
                     -e POSTGRES_DB=cact \
-                    -p 5432:5432 \
                     postgres:16
             - run:
                 name: Wait for Postgres and apply database schema
@@ -66,8 +67,8 @@ jobs:
             - run:
                 name: Start app container
                 command: |
-                  docker run -d --name cact-app -p 8080:8080 \
-                    -e DB_HOST=host.docker.internal \
+                  docker run -d --name cact-app --network cact-test-net -p 8080:8080 \
+                    -e DB_HOST=cact-postgres \
                     -e DB_PORT=5432 \
                     -e DB_USER=cact_user \
                     -e DB_PASSWORD=cact_password \
