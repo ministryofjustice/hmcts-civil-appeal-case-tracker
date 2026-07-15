@@ -67,7 +67,7 @@ jobs:
                 name: Start app container
                 command: |
                   docker run -d --name cact-app -p 8080:8080 \
-                    -e DB_HOST=cact-postgres \
+                    -e DB_HOST=host.docker.internal \
                     -e DB_PORT=5432 \
                     -e DB_USER=cact_user \
                     -e DB_PASSWORD=cact_password \
@@ -254,7 +254,7 @@ workflows:
     jobs:
       ### DEV ###
       - build:
-          name: build-dev
+          name: build-and-test-dev
           env_name: DEV
           ecr_endpoint: ${ECR_ENDPOINT_DEV}
           context:
