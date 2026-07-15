@@ -13,6 +13,13 @@ jobs:
     executor: aws-ecr/default
     machine:
       image: ubuntu-2204:edge
+    docker:
+      - image: postgres:16
+        environment:
+          POSTGRES_USER=cact_user
+          POSTGRES_PASSWORD=cact_password
+          POSTGRES_DB=cact
+
     steps:
       - checkout
       - when:
