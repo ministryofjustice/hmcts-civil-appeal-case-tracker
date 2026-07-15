@@ -64,6 +64,28 @@ jobs:
                   docker cp files/postgres-setup.sql cact-postgres:/postgres-setup.sql
                   docker exec cact-postgres psql -U cact_user -d cact -f /postgres-setup.sql
             - run:
+                name: Start app container
+                command: |
+                  docker run -d --name cact-app -p 8080:8080 \
+                    -e DB_HOST=cact-postgres \
+                    -e DB_PORT=5432 \
+                    -e DB_USER=cact_user \
+                    -e DB_PASSWORD=cact_password \
+                    -e DB_NAME=cact \
+                    -e ADMIN_USER=$ADMIN_USER \
+                    -e ADMIN_PASS=$ADMIN_PASSWORD \
+                    -e ENVIRONMENT=dev \
+                    civil-appeal-case-tracker:${CIRCLE_SHA1}
+            - run:
+                name: Wait for app to be ready
+                command: |
+                  timeout 90 bash -c 'until curl -sf http://localhost:8080/health; do echo "waiting for app..."; sleep 3; done'
+            - run:
+                name: Run smoke tests
+                command: |
+                  chmod +x bin/smoke-test.sh
+                  BASE_URL=http://localhost:8080 bin/smoke-test.sh
+            - run:
                 name: Tag and push images to repo
                 command: |
                   login="$(aws ecr get-login-password --region eu-west-2)"
