@@ -97,16 +97,20 @@ jobs:
                   - playwright-browsers-v1-{{ checksum "e2e/yarn.lock" }}
                   - playwright-browsers-v1-
             - run:
-                name: Run Playwright e2e tests
+                name: Install Playwright
                 working_directory: e2e
-                environment:
-                  BASE_URL: http://localhost:8080
-                  ADMIN_USER: $ADMIN_USER
-                  ADMIN_PASS: $ADMIN_PASSWORD
                 command: |
                   corepack enable
                   yarn install --immutable
                   yarn playwright install --with-deps chromium
+            - run:
+                name: Run Playwright e2e tests
+                working_directory: e2e
+                environment:
+                  BASE_URL: http://localhost:8080
+                command: |
+                  export ADMIN_USER="$ADMIN_USER"
+                  export ADMIN_PASS="$ADMIN_PASSWORD"
                   yarn playwright test --project=chromium
             - save_cache:
                 key: deps-yarn-v1-{{ checksum "e2e/yarn.lock" }}-{{ arch }}
