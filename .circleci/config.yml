@@ -86,6 +86,43 @@ jobs:
                 command: |
                   chmod +x bin/smoke-test.sh
                   BASE_URL=http://localhost:8080 bin/smoke-test.sh
+            - restore_cache:
+                keys:
+                  - deps-yarn-v1-{{ checksum "e2e/yarn.lock" }}-{{ arch }}
+                  - deps-yarn-v1-{{ checksum "e2e/yarn.lock" }}
+                  - deps-yarn-v1-
+            - restore_cache:
+                keys:
+                  - playwright-browsers-v1-{{ checksum "e2e/yarn.lock" }}-{{ arch }}
+                  - playwright-browsers-v1-{{ checksum "e2e/yarn.lock" }}
+                  - playwright-browsers-v1-
+            - run:
+                name: Run Playwright e2e tests
+                working_directory: e2e
+                environment:
+                  BASE_URL: http://localhost:8080
+                  ADMIN_USER: $ADMIN_USER
+                  ADMIN_PASS: $ADMIN_PASSWORD
+                command: |
+                  corepack enable
+                  yarn install --immutable
+                  yarn playwright install --with-deps chromium
+                  yarn playwright test --project=chromium
+            - save_cache:
+                key: deps-yarn-v1-{{ checksum "e2e/yarn.lock" }}-{{ arch }}
+                paths:
+                  - e2e/node_modules
+            - save_cache:
+                key: playwright-browsers-v1-{{ checksum "e2e/yarn.lock" }}-{{ arch }}
+                paths:
+                  - ~/.cache/ms-playwright
+            - run:
+                name: Show app container logs
+                when: on_fail
+                command: docker logs cact-app || true
+            - store_artifacts:
+                path: e2e/playwright-report
+                destination: playwright-report
             - run:
                 name: Tag and push images to repo
                 command: |
