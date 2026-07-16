@@ -1,7 +1,6 @@
 import { Page } from 'playwright';
 import { expect } from '@playwright/test';
 import landingPage_content from '../content/landingPage_content';
-// import axeTest from '../accessibilityTestHelper';
 
 class LandingPage {
     private readonly url: string;
@@ -29,7 +28,6 @@ class LandingPage {
             expect(page.locator(this.text)).toContainText(landingPage_content.liText3),
 
         ]);
-        // await axeTest(this.page);
     }
 
     async continueOn(page: Page): Promise<void> {

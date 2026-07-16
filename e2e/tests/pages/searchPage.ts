@@ -1,7 +1,6 @@
 import { Page } from 'playwright';
 import { expect } from '@playwright/test';
 import searchPage_content from '../content/searchPage_content';
-// import axeTest from '../accessibilityTestHelper';
 
 class SearchPage {
     private readonly title: string;
@@ -20,7 +19,6 @@ class SearchPage {
             expect(page.locator(this.text)).toContainText(searchPage_content.pText1),
 
         ]);
-        // await axeTest(this.page);
     }
 
     async searchFor(page: Page, searchTerm: string): Promise<void> {
