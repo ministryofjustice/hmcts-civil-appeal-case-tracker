@@ -5,6 +5,17 @@ __metadata:
   version: 10
   cacheKey: 10c0
 
+"@axe-core/playwright@npm:^4.12.1":
+  version: 4.12.1
+  resolution: "@axe-core/playwright@npm:4.12.1"
+  dependencies:
+    axe-core: "npm:~4.12.1"
+  peerDependencies:
+    playwright-core: ">= 1.0.0"
+  checksum: 10c0/7a52498c8a09f7427581473ee9253b986efca7c61870187f5c64a1d04c4e4db43d4f26b0cf7650f75840ce7a7d69c7d07547ef76eb93704fa927a4fcf4020139
+  languageName: node
+  linkType: hard
+
 "@isaacs/fs-minipass@npm:^4.0.0":
   version: 4.0.1
   resolution: "@isaacs/fs-minipass@npm:4.0.1"
@@ -181,6 +192,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axe-core@npm:~4.12.1":
+  version: 4.12.1
+  resolution: "axe-core@npm:4.12.1"
+  checksum: 10c0/03438bd98cef38ad57554feea0d8de21705001db2655c27e0c33ff55e16dd7d6f49c28fb420dc93f7532e68ff363c0953056a5836e6f47068f193eb1765c7db7
+  languageName: node
+  linkType: hard
+
 "chownr@npm:^3.0.0":
   version: 3.0.0
   resolution: "chownr@npm:3.0.0"
@@ -199,6 +217,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "e2e@workspace:."
   dependencies:
+    "@axe-core/playwright": "npm:^4.12.1"
     "@playwright/test": "npm:^1.61.1"
     "@types/node": "npm:^26.1.1"
     dotenv: "npm:^17.4.2"
