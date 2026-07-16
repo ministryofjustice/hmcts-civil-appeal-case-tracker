@@ -27,3 +27,5 @@ CREATE TABLE IF NOT EXISTS db_calander
   track_line7   VARCHAR(255),
   track_line8   VARCHAR(255)
 );
+
+CREATE SEQUENCE IF NOT EXISTS hibernate_sequence START WITH 1 INCREMENT BY 1;
