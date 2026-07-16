@@ -111,7 +111,16 @@ jobs:
                 command: |
                   export ADMIN_USER="$ADMIN_USER"
                   export ADMIN_PASS="$ADMIN_PASSWORD"
-                  yarn playwright test --project=chromium
+                  yarn test:e2e
+            - run:
+                name: Run Playwright accessibility tests
+                working_directory: e2e
+                environment:
+                  BASE_URL: http://localhost:8080
+                command: |
+                  export ADMIN_USER="$ADMIN_USER"
+                  export ADMIN_PASS="$ADMIN_PASSWORD"
+                  yarn test:accessibility
             - save_cache:
                 key: deps-yarn-v1-{{ checksum "e2e/yarn.lock" }}-{{ arch }}
                 paths:
