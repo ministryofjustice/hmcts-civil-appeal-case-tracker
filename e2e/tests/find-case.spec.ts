@@ -10,7 +10,7 @@ test.describe('User journey to find case details',  { tag: '@e2e' }, () => {
         await createCaseInDatabaseFromCsv();
     });
 
-    test('Find a case via calendar and go to Summary Case Details', async ({page}) => {
+    test('View summary of all applications or appeals by calendar and go to Summary Case Details', async ({page}) => {
         const landingPage: LandingPage = new LandingPage();
         await landingPage.checkPageLoads(page);
         await landingPage.continueOn(page);
@@ -24,6 +24,38 @@ test.describe('User journey to find case details',  { tag: '@e2e' }, () => {
         const casePage: CaseDetailsPage = new CaseDetailsPage();
         await casePage.checkPageLoads(page);
         await casePage.checkCaseDetails(page, details.caseDetails.caseDetails2);
+    });
+
+    test('Find a case via case title and go to Summary Case Details', async ({page}) => {
+        const landingPage: LandingPage = new LandingPage();
+        await landingPage.checkPageLoads(page);
+        await landingPage.continueOn(page);
+
+        const searchPage = new SearchPage();
+        await searchPage.checkPageLoads(page);
+        await searchPage.searchByTitle(page, details.searchCaseTitle.caseTitle1);
+        await searchPage.search(page);
+        await searchPage.selectRecordAndContinueOn(page, details.caseDetails.caseDetails1.reference);
+
+        const casePage: CaseDetailsPage = new CaseDetailsPage();
+        await casePage.checkPageLoads(page);
+        await casePage.checkCaseDetails(page, details.caseDetails.caseDetails1);
+    });
+
+    test('Find a case via case reference and go to Summary Case Details', async ({page}) => {
+        const landingPage: LandingPage = new LandingPage();
+        await landingPage.checkPageLoads(page);
+        await landingPage.continueOn(page);
+
+        const searchPage = new SearchPage();
+        await searchPage.checkPageLoads(page);
+        await searchPage.searchByCaseReference(page, details.searchCaseReference.caseRef3);
+        await searchPage.search(page);
+        await searchPage.selectRecordAndContinueOn(page, details.searchCaseReference.caseRef3);
+
+        const casePage: CaseDetailsPage = new CaseDetailsPage();
+        await casePage.checkPageLoads(page);
+        await casePage.checkCaseDetails(page, details.caseDetails.caseDetails3);
     });
 
 });
