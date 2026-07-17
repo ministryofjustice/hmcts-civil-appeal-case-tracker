@@ -108,6 +108,7 @@
 
                                     <form name="frmSubmit" id="frmSubmit" action="search.do"><br/>
                                         <p>
+                                            <label for="search" class="access">Search by date, case number or title</label>
                                             <input type="text" id="search" name="search" size="20" value=""/>
                                             <a href="Javascript:ShowCalendar('search',2008,2030,'dd/mmm/yyyy');">
                                                 <img src="images/cal.jpg" alt="calendar" width="65" height="16"

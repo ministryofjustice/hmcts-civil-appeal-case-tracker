@@ -1,0 +1,25 @@
+{
+  "name": "e2e",
+  "private": true,
+  "packageManager": "yarn@4.17.1",
+  "scripts": {
+    "test": "playwright test --project chromium --headed",
+    "test:e2e": "playwright test --grep @e2e --project chromium",
+    "test:accessibility": "playwright test --grep @accessibility --project chromium",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "test:landingPage": "playwright test tests/find-case.spec.ts --project chromium --headed",
+    "test:firefox": "playwright test --project firefox --headed",
+    "test:webkit": "playwright test --project webkit --headed",
+    "test:all": "playwright test --headed",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^26.1.1",
+    "dotenv": "^17.4.2",
+    "playwright": "^1.61.1",
+    "typescript": "^7.0.2"
+  }
+}
