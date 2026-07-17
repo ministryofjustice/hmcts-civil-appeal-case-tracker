@@ -118,6 +118,7 @@ jobs:
                 working_directory: e2e
                 environment:
                   BASE_URL: http://localhost:8080
+                  PLAYWRIGHT_HTML_REPORT: playwright-report/e2e
                 command: |
                   export ADMIN_USER="$ADMIN_USER"
                   export ADMIN_PASS="$ADMIN_PASSWORD"
@@ -127,6 +128,7 @@ jobs:
                 working_directory: e2e
                 environment:
                   BASE_URL: http://localhost:8080
+                  PLAYWRIGHT_HTML_REPORT: playwright-report/accessibility
                 command: |
                   export ADMIN_USER="$ADMIN_USER"
                   export ADMIN_PASS="$ADMIN_PASSWORD"
