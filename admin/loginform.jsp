@@ -83,10 +83,10 @@
                             <p>Please enter your username and details below. </p>
 
                             <form method="post" action="validateLogin.do">
-                                <p>User ID: </p>
-                                <p><input size="20" name="userid" type="text"/></p>
-                                <p>Password:</p>
-                                <p><input size="20" name="password" type="password"/></p>
+                                <p><label for="userid">User ID: </label></p>
+                                <p><input size="20" id="userid" name="userid" type="text"/></p>
+                                <p><label for="password">Password:</label></p>
+                                <p><input size="20" id="password" name="password" type="password"/></p>
                                 <p><input type="submit" value="Submit" name="SubmitBtn"/>&nbsp;<input type="reset"
                                                                                                       value="Reset"
                                                                                                       name="B2"/></p>
