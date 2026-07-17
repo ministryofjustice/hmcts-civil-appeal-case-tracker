@@ -106,8 +106,8 @@
                             <h2>Case Tracker Administration</h2>
 
                             <form action="simpleUpload.do" method="post" enctype="multipart/form-data" id="upform">
-                                <p>Select a file to upload :</p>
-                                <p><input type="file" name="uploadfile" size="50"/></p>
+                                <p><label for="uploadfile">Select a file to upload :</label></p>
+                                <p><input type="file" id="uploadfile" name="uploadfile" size="50"/></p>
                                 <p>
                                     <input type="hidden" name="todo" value="upload"/>&nbsp;
                                     <input type="submit" name="Submit" value="Upload Form"/>&nbsp;
