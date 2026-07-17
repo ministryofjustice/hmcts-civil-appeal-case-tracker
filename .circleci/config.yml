@@ -69,8 +69,8 @@ jobs:
                 name: Wait for Postgres and apply database schema
                 command: |
                   timeout 60 bash -c 'until docker exec cact-postgres pg_isready -U cact_user -d cact; do echo "waiting for postgres..."; sleep 2; done'
-                  docker cp files/postgres-setup.sql cact-postgres:/postgres-setup.sql
-                  docker exec cact-postgres psql -U cact_user -d cact -f /postgres-setup.sql
+                  docker cp files/setup.sql cact-postgres:/setup.sql
+                  docker exec cact-postgres psql -U cact_user -d cact -f /setup.sql
             - run:
                 name: Start app container
                 command: |
