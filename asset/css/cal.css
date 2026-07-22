@@ -1,7 +1,0 @@
-/* CSS Document */
-
-.Calendar{background-color: White;}
-a:hover {background-color: 999; color:fff;}
-td,select,.CalButton,.SmallFont{Font-Family: verdana; Font-Size: 9pt; Color:black; Text-Decoration:none;}
-
-.CalButtonToday{Color:007cc6;}
