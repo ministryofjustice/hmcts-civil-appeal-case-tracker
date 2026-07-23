@@ -40,7 +40,7 @@ public class ScheduledCsvImportService {
         this.s3BucketClient = s3BucketClient;
     }
 
-    @Scheduled(cron = "0 0 1 * * *")
+    @Scheduled(cron = "${app.csv-import.cron}")
     public void run() {
         // Generates random wait time so that the tasks dont upload simultaneously
         // causing a duplication of data
