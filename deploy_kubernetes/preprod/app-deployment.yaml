@@ -78,6 +78,13 @@ spec:
                 -XX:HeapDumpPath=/app/logs
                 -XX:+ExitOnOutOfMemoryError
                 -Xlog:gc*:file=/app/logs/gc.log:time,uptime:filecount=5,filesize=10M
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 30
           readinessProbe:
             httpGet:
               path: /health
