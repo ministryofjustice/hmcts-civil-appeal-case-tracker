@@ -13,6 +13,9 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
@@ -91,20 +94,29 @@ public class ScheduledCsvImportService {
             return false;
         }
 
-        // Legacy relied on the JVM default locale for the month names; pinning
-        // Locale.UK so a different container locale can't break the parse.
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy", Locale.UK);
-        Date yesterday = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000L);
-        String yesterdayStr = sdf.format(yesterday);
-
         try {
-            Date lastUpdatedDate = sdf.parse(lastUpdated);
-            Date yesterdayDate = sdf.parse(yesterdayStr);
-            boolean isUpdatedYesterday = lastUpdatedDate.equals(yesterdayDate);
+            DateTimeFormatter formatter =
+                    DateTimeFormatter.ofPattern("dd-MMM-yyyy", Locale.UK);
+
+            LocalDate lastUpdatedDate =
+                    LocalDate.parse(lastUpdated, formatter);
+
+            LocalDate yesterday =
+                    LocalDate.now().minusDays(1);
+
+            boolean isUpdatedYesterday =
+                    lastUpdatedDate.equals(yesterday);
+
             LOGGER.info("Is updated yesterday: {}", isUpdatedYesterday);
+
             return isUpdatedYesterday;
-        } catch (ParseException e) {
-            LOGGER.error("Error parsing date: {}", e.getMessage());
+
+        } catch (DateTimeParseException e) {
+            LOGGER.error(
+                    "Error parsing last updated date: {}",
+                    lastUpdated,
+                    e
+            );
             return false;
         }
     }
