@@ -8,7 +8,7 @@ class AdminLoginPage {
     private readonly text: string;
 
     constructor() {
-        this.url = '/loginform.do';
+        this.url = '/admin/login';
         this.title = `heading`;
         this.text = `#Content .holder`;
     }
