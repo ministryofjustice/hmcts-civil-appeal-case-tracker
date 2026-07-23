@@ -34,3 +34,7 @@ management:
         include: health,prometheus
 
 app:
+  admin:
+    user: ${ADMIN_USER:}
+    password: ${ADMIN_PASS:}
+  s3-bucket-name: ${S3_BUCKET_NAME:}
