@@ -52,26 +52,13 @@
                         <div class="holder">
                             <h2>Case Tracker Administration</h2>
 
-                            <form action="/admin/upload" method="post" enctype="multipart/form-data" id="upform">
-                                <p><label for="uploadfile">Select a file to upload :</label></p>
-                                <p><input type="file" id="uploadfile" name="uploadfile" size="50"/></p>
-                                <p>
-                                    <input type="hidden" name="todo" value="upload"/>&nbsp;
-                                    <input type="submit" name="Submit" value="Upload Form"/>&nbsp;
-                                    <input type="reset" name="Reset" value="Cancel"/>
-                                </p>
+                            <form th:action="@{/admin/upload}" method="post" enctype="multipart/form-data" id="upform">
+                                <p><label for="uploadFile">Select a CSV file to import:</label></p>
+                                <p><input type="file" id="uploadFile" name="uploadFile" accept=".csv"/></p>
+                                <p><input type="submit" value="Upload and import"/></p>
                             </form>
 
-                            <ul>
-                                <th:block th:if="${uploadedFile != null}">
-                                    <p><strong>Uploaded file :</strong> <th:block th:text="${uploadedFile}"/></p>
-                                </th:block>
-                            </ul>
-
-                            <br/>
-
-                            <p><a href="/admin/import">Click here to add data in database</a></p>
-                            <th:block th:if="${msg != null}" th:text="${msg}"/>
+                            <p th:if="${msg}" th:text="${msg}"></p>
 
                             <p><a href="/admin/logout">Logout</a></p>
                         </div>
