@@ -65,7 +65,7 @@ spec:
                 secretKeyRef:
                   name: case-tracker-csv-upload-login
                   key: admin_pass
-            - name: CATALINA_OPTS
+            - name: JAVA_TOOL_OPTIONS
               value: >-
                 -Xms2048m -Xmx2048m
                 -XX:+UseG1GC
@@ -75,10 +75,9 @@ spec:
                 -XX:MaxDirectMemorySize=256m
                 -Xss512k
                 -XX:+HeapDumpOnOutOfMemoryError
-                -XX:HeapDumpPath=/usr/local/tomcat/logs
+                -XX:HeapDumpPath=/app/logs
                 -XX:+ExitOnOutOfMemoryError
-                -Xlog:gc*:file=/usr/local/tomcat/logs/gc.log:time,uptime:filecount=5,filesize=10M
-                -Dorg.apache.jasper.runtime.JspFactoryImpl.USE_POOL=false
+                -Xlog:gc*:file=/app/logs/gc.log:time,uptime:filecount=5,filesize=10M
           readinessProbe:
             httpGet:
               path: /health
