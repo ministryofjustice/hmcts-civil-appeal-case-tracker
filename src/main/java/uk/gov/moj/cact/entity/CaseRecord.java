@@ -9,11 +9,13 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "db_calander")
 @AllArgsConstructor
+@NoArgsConstructor
 @Setter
 @Getter
 public class CaseRecord {
