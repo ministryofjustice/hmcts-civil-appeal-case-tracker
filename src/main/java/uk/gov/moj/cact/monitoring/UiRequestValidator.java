@@ -19,6 +19,7 @@ public class UiRequestValidator {
         String userAgent = request.getHeader("User-Agent");
 
         // Explicit override parameter - most reliable signal
+        // UI users can add ?ui=true to a bookmarked URL if needed
         if ("true".equalsIgnoreCase(uiParam)) {
             return true;
         }
@@ -26,6 +27,7 @@ public class UiRequestValidator {
             return false;
         }
 
+        // Definite non-UI signals
         if (accept != null && accept.contains("application/json")) {
             return false;
         }
@@ -47,6 +49,7 @@ public class UiRequestValidator {
             return true;
         }
 
+        // Accept header contains text/html - likely a browser
         if (accept != null && accept.contains("text/html")) {
             return true;
         }
