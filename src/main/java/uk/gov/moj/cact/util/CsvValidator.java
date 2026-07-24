@@ -1,10 +1,13 @@
-package com.calander.util;
+package uk.gov.moj.cact.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.HashSet;
+
 import java.util.Set;
 
+/**
+ * Ported unchanged from the legacy com.calander.util.CsvValidator.
+ */
 public class CsvValidator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CsvValidator.class);
@@ -12,23 +15,20 @@ public class CsvValidator {
     private static final int MAX_COLUMNS = 67;
     private static final int EXPECTED_IMPORT_COLUMNS = 25;
 
-    // Columns with varchar(50)
-    private static final Set<Integer> VARCHAR50_COLUMNS = new HashSet<Integer>() {{
-        add(0);
-        add(1);
-        add(8);
-        add(14);
-    }};
+    // Columns backed by varchar(50)
+    private static final Set<Integer> VARCHAR50_COLUMNS = Set.of(0, 1, 8, 14);
+
+    private CsvValidator() {
+    }
 
     /**
      * Cleans and validates the first 25 columns of the row.
-     * Returns a new array with sanitized values for import, or null if row is too short.
+     * Returns a new array with sanitized values, or null if the row is invalid.
      */
     public static String[] cleanRow(String[] row, int rowNumber) {
 
         if (row.length < EXPECTED_IMPORT_COLUMNS) {
             LOGGER.error("Row {} has only {} columns, expected {}", rowNumber, row.length, EXPECTED_IMPORT_COLUMNS);
-
         }
 
         if (row.length > MAX_COLUMNS) {
@@ -43,7 +43,7 @@ public class CsvValidator {
             String value = row[i] != null ? row[i] : "";
 
             // Remove BOM
-            if (rowNumber == 0 && i == 0 && value.startsWith("\uFEFF")) {
+            if (rowNumber == 0 && i == 0 && value.startsWith("﻿")) {
                 LOGGER.warn("BOM detected and removed at row {}, column {}", rowNumber, i);
                 value = value.substring(1);
             }
@@ -66,8 +66,8 @@ public class CsvValidator {
                 value = value.substring(0, limit);
             }
 
-            if ( (i > EXPECTED_IMPORT_COLUMNS) && (!value.isEmpty())) {
-                LOGGER.warn("Row {} column {} has data for Tracking Lines",rowNumber, i);
+            if (i > EXPECTED_IMPORT_COLUMNS && !value.isEmpty()) {
+                LOGGER.warn("Row {} column {} has data for Tracking Lines", rowNumber, i);
             }
 
             sanitized[i] = value;
@@ -75,4 +75,5 @@ public class CsvValidator {
 
         return sanitized;
     }
+
 }
