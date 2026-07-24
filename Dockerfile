@@ -1,19 +1,16 @@
-FROM tomcat:9.0.118-jdk11-temurin-jammy
+FROM eclipse-temurin:21-jre-jammy
 
-ENV CATALINA_OPTS="-Xmx512M -XX:MaxMetaspaceSize=256m"
+RUN adduser --disabled-password app -u 1001 \
+    && mkdir -p /app/uploads /app/logs \
+    && chown -R 1001:1001 /app
 
-RUN rm -rf  /usr/local/tomcat/webapps/{ROOT,examples,host-manager,manager,docs} \
-    && mkdir -p /file/
+# Admin CSV uploads land here; per-pod ephemeral, same as the legacy
+# HMCSFormUpload directory inside the exploded WAR.
+ENV UPLOAD_DIR=/app/uploads
 
-COPY --chown=1001:1001 "deploy/CACT.war" /usr/local/tomcat/webapps/ROOT.war
-COPY --chown=1001:1001 context.xml /usr/local/tomcat/conf/context.xml
-
-# Modify web.xml to insert the error code config before </web-app>
-COPY deploy_assets/error-snippet.xml /tmp/error-snippet.xml
-
-RUN sed -i "/<\/web-app>/i $(cat /tmp/error-snippet.xml)" $CATALINA_HOME/conf/web.xml && \
-    rm /tmp/error-snippet.xml
-
-RUN adduser --disabled-password tomcat -u 1001 && chown -R tomcat:tomcat /usr/local/tomcat
+COPY --chown=1001:1001 build/libs/cact.jar /app/
 
 USER 1001
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "/app/cact.jar"]

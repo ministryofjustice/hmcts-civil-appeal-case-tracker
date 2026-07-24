@@ -27,16 +27,28 @@ jobs:
       - aws-cli/setup:
           role_arn: << parameters.ecr_role_var >>
           region: $ECR_REGION
+      - restore_cache:
+          keys:
+            - deps-gradle-v1-{{ checksum "build.gradle" }}
+            - deps-gradle-v1-
       - run:
-          name: Build and Test
+          name: Test
           command: |
-            docker run --mount type=bind,source="$(pwd)",target=/dockerrun/ perrit/apache-ant ant -buildfile /dockerrun/ clean build-and-test war
+            ./gradlew test
       - run:
-          name: Verify WAR file
+          name: Build
           command: |
-            ls -l deploy/
-            if [ ! -f deploy/CACT.war ]; then
-              echo "CACT.war not found in deploy directory"
+            ./gradlew --no-daemon clean build
+      - save_cache:
+          key: deps-gradle-v1-{{ checksum "build.gradle" }}
+          paths:
+            - ~/.gradle-docker
+      - run:
+          name: Verify boot jar
+          command: |
+            ls -l build-gradle/libs/
+            if ! ls build-gradle/libs/*.jar >/dev/null 2>&1; then
+              echo "Boot jar not found in build-gradle/libs"
               exit 1
             fi
       - run:
@@ -47,9 +59,9 @@ jobs:
             docker build -f Dockerfile.maintenance -t civil-appeal-case-tracker-maintenance:${CIRCLE_SHA1} .
             docker image ls
       - store_test_results:
-          path: testreport/xml
+          path: build-gradle/test-results/test
       - store_artifacts:
-          path: testreport
+          path: build-gradle/reports/tests/test
           destination: test-results
       - when:
           condition: << parameters.run_smoke_test >>

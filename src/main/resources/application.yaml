@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: civil-appeal-case-tracker
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:cact}
+    username: ${DB_USER:cact_user}
+    password: ${DB_PASSWORD:cact_password}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 15m
+  error:
+    whitelabel:
+      enabled: false
+
+management:
+  endpoints:
+    web:
+      base-path: /
+      path-mapping:
+        health: health
+        prometheus: metrics
+      exposure:
+        include: health,prometheus
+
+app:
+  admin:
+    user: ${ADMIN_USER:}
+    password: ${ADMIN_PASS:}
+  s3-bucket-name: ${S3_BUCKET_NAME:}
+  csv-import:
+    cron: "0 0 1 * * *"
