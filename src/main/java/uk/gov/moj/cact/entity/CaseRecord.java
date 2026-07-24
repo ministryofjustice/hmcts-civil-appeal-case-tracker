@@ -7,10 +7,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 @Entity
 @Table(name = "db_calander")
@@ -100,4 +106,15 @@ public class CaseRecord {
 
     @Column(name = "track_line8")
     private String trackLine8;
+
+    @Transient
+    public List<String> getTrackingLines() {
+        return Stream.of(trackLine1, trackLine2, trackLine3, trackLine4,
+                        trackLine5, trackLine6, trackLine7, trackLine8)
+                .filter(Objects::nonNull)
+                .flatMap(column -> Arrays.stream(column.split("\n")))
+                .map(String::trim)
+                .filter(line -> !line.isEmpty())
+                .toList();
+    }
 }

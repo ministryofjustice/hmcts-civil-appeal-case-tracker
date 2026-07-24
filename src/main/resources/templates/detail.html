@@ -103,14 +103,7 @@
                                         <div class="formblock underline">
                                             <h3>Tracking Information:</h3>
                                             <p>
-                                                <th:block th:text="${detail.trackLine1}"/>
-                                                <th:block th:text="${detail.trackLine2}"/>
-                                                <th:block th:text="${detail.trackLine3}"/>
-                                                <th:block th:text="${detail.trackLine4}"/>
-                                                <th:block th:text="${detail.trackLine5}"/>
-                                                <th:block th:text="${detail.trackLine6}"/>
-                                                <th:block th:text="${detail.trackLine7}"/>
-                                                <th:block th:text="${detail.trackLine8}"/>
+                                                <th:block th:each="line : ${detail.trackingLines}"><span th:text="${line}"></span><br/></th:block>
                                             </p>
                                         </div>
 
