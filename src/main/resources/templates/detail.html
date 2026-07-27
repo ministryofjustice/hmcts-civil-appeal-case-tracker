@@ -71,20 +71,20 @@
                                                 <p><strong>Title:</strong>&nbsp;<th:block th:text="${detail.title1}"/></p>
                                                 <p><strong>Type:</strong>&nbsp;<th:block th:text="${detail.type}"/></p>
                                                 <p>
-                                                    <strong>Appeal / Application:</strong>
-                                                    <th:block th:text="${detail.lcJudge}"/>
-                                                    <th:block th:text="${detail.lcourt}"/>
-                                                    <th:block th:text="${detail.nature}"/>
+                                                    <strong>Appeal / Application:</strong><br/>
+                                                    <th:block th:if="${!#strings.isEmpty(detail.lcJudge)}"><span th:text="${detail.lcJudge}"></span><br/></th:block>
+                                                    <th:block th:if="${!#strings.isEmpty(detail.lcourt)}"><span th:text="${detail.lcourt}"></span><br/></th:block>
+                                                    <th:block th:if="${!#strings.isEmpty(detail.nature)}"><span th:text="${detail.nature}"></span><br/></th:block>
                                                 </p>
                                                 <p><strong>Hearing Status:</strong>&nbsp;<th:block
                                                         th:text="${detail.headingStatus}"/>
                                                 </p>
                                                 <p><strong>Venue:</strong>&nbsp;<th:block th:text="${detail.venue}"/></p>
                                                 <p>
-                                                    <strong>Constitution:</strong>
-                                                    <th:block th:text="${detail.judge1}"/>
-                                                    <th:block th:text="${detail.judge2}"/>
-                                                    <th:block th:text="${detail.judge3}"/>
+                                                    <strong>Constitution:</strong><br/>
+                                                    <th:block th:if="${!#strings.isEmpty(detail.judge1)}"><span th:text="${detail.judge1}"></span><br/></th:block>
+                                                    <th:block th:if="${!#strings.isEmpty(detail.judge2)}"><span th:text="${detail.judge2}"></span><br/></th:block>
+                                                    <th:block th:if="${!#strings.isEmpty(detail.judge3)}"><span th:text="${detail.judge3}"></span><br/></th:block>
                                                 </p>
                                             </div>
                                         </div>
@@ -103,6 +103,7 @@
                                         <div class="formblock underline">
                                             <h3>Tracking Information:</h3>
                                             <p>
+                                                <br/>
                                                 <th:block th:each="line : ${detail.trackingLines}"><span th:text="${line}"></span><br/></th:block>
                                             </p>
                                         </div>
