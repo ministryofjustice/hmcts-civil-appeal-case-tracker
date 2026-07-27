@@ -67,7 +67,7 @@ check_redirect "Legacy search page redirects"    "/search.jsp"                  
 check_redirect "Legacy search action redirects"  "/search.do?search=a"                  "/search?search=a"
 check_redirect "Legacy case detail redirects"    "/getDetail.do?case_id=DOES-NOT-EXIST" "/case/DOES-NOT-EXIST"
 check_redirect "Legacy admin login redirects"    "/loginform.do"                        "/admin/login"
-check_redirect "Legacy admin dataDump redirects"   "/datadump.do"                       "/admin/import"
+check_redirect "Legacy admin dataDump redirects"   "/dumpData.do"                       "/admin/import"
 
 echo
 if [ "$FAILED" -ne 0 ]; then
