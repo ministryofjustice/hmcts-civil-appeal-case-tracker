@@ -53,9 +53,13 @@
                             <h2>Case Tracker Administration</h2>
 
                             <form th:action="@{/admin/upload}" method="post" enctype="multipart/form-data" id="upform">
-                                <p><label for="uploadFile">Select a CSV file to import:</label></p>
+                                <p><label for="uploadFile">Select a CSV file to upload:</label></p>
                                 <p><input type="file" id="uploadFile" name="uploadFile" accept=".csv"/></p>
-                                <p><input type="submit" value="Upload and import"/></p>
+                                <p>
+                                    <input type="submit" name="submit" value="Upload and Import"/>
+                                    <input type="reset" name="reset" value="Cancel"/>
+                                </p>
+
                             </form>
 
                             <p th:if="${msg}" th:text="${msg}"></p>

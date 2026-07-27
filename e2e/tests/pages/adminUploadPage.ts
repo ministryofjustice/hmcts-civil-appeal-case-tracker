@@ -18,20 +18,19 @@ class AdminUploadPage {
             expect(page.getByRole(this.title as 'heading', { level: 1 })).toContainText(adminUploadPage_content.pageTitle),
             expect(page.getByRole(this.title as 'heading', { level: 2 })).toContainText(adminUploadPage_content.sectionHeading),
             expect(page.locator(this.text)).toContainText(adminUploadPage_content.selectFileText),
-            expect(page.locator('input[name="uploadfile"]')).toBeVisible(),
-            expect(page.locator('input[name="Submit"]')).toBeVisible(),
-            expect(page.locator('input[name="Reset"]')).toBeVisible(),
-            expect(page.getByRole('link', { name: 'Click here to add data in database'})).toBeVisible()
+            expect(page.locator('input[name="uploadFile"]')).toBeVisible(),
+            expect(page.locator('input[name="submit"]')).toBeVisible(),
+            expect(page.locator('input[name="reset"]')).toBeVisible()
         ]);
     }
 
     async uploadFile(page: Page, filePath: string): Promise<void> {
-        await page.locator('input[name="uploadfile"]').setInputFiles(filePath);
-        await page.getByRole('button', { name: 'Upload Form' }).click();
+        await page.locator('input[name="uploadFile"]').setInputFiles(filePath);
+
     }
 
     async importIntoDatabase(page: Page): Promise<void> {
-        await page.getByRole('link', { name: 'Click here to add data in database' }).click();
+        await page.getByRole('button', { name: 'Upload and Import' }).click();
     }
 
     async checkImportMessage(page: Page, expectedMessage: string): Promise<void> {
