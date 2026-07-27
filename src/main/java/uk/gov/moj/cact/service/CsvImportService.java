@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.cact.entity.CaseRecord;
+import uk.gov.moj.cact.exception.CsvImportException;
 import uk.gov.moj.cact.repository.CaseRecordRepository;
 import uk.gov.moj.cact.util.CaseRecordMapper;
 import uk.gov.moj.cact.util.CsvValidator;
@@ -36,9 +37,10 @@ public class CsvImportService {
     /**
      * Replaces every row in db_calander with the contents of the given CSV and
      * returns the number of rows imported.
+     * @throws CsvImportException if the CSV cannot be read or contains an invalid row
      */
     @Transactional
-    public int replaceDatabase(Reader csvContent) throws IOException, CsvValidationException {
+    public int replaceDatabase(Reader csvContent) {
         List<CaseRecord> records = parse(csvContent);
 
         LOGGER.info("Replacing db_calander contents with {} imported rows", records.size());
@@ -47,7 +49,7 @@ public class CsvImportService {
         return repository.saveAll(records).size();
     }
 
-    private List<CaseRecord> parse(Reader csvContent) throws IOException, CsvValidationException {
+    private List<CaseRecord> parse(Reader csvContent) {
         List<CaseRecord> records = new ArrayList<>();
 
         try (CSVReader reader = new CSVReader(csvContent)) {
@@ -60,10 +62,17 @@ public class CsvImportService {
                 if (CsvValidator.cleanRow(row, rowNumber) == null) {
                     LOGGER.error("Skipping row {}", rowNumber);
                 } else {
-                    records.add(CaseRecordMapper.setProperties(row));
+                    try {
+                        records.add(CaseRecordMapper.setProperties(row));
+                    } catch (IllegalArgumentException ex) {
+                        throw new CsvImportException(
+                                "CSV row " + rowNumber + " could not be mapped", ex);
+                    }
                 }
                 rowNumber++;
             }
+        } catch (IOException | CsvValidationException ex) {
+            throw new CsvImportException("CSV could not be read", ex);
         }
         return records;
     }
