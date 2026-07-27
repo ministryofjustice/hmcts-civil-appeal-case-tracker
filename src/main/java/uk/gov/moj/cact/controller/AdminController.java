@@ -1,6 +1,5 @@
 package uk.gov.moj.cact.controller;
 
-import com.opencsv.exceptions.CsvValidationException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import uk.gov.moj.cact.exception.CsvImportException;
 import uk.gov.moj.cact.service.CsvImportService;
 
 import java.io.IOException;
@@ -101,7 +101,9 @@ public class AdminController {
             int rowCount = csvImportService.replaceDatabase(reader);
             LOGGER.info("Imported {} rows from {}", rowCount, fileName);
             redirectAttributes.addFlashAttribute("msg",rowCount + " rows imported from " + fileName);
-        } catch (IOException | CsvValidationException e) {
+        } catch (IOException | CsvImportException e) {
+            // Bad upload a admin's issue, not the server. Friendly message rather than a 500. CsvImportException covers
+            // an unreadable file and an invalid row.
             LOGGER.error("CSV import failed for {}", fileName, e);
             redirectAttributes.addFlashAttribute("msg",
                     "Import failed: the file could not be read. Check the format and try again.");
