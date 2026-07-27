@@ -1,9 +1,12 @@
 package uk.gov.moj.cact.service;
 
+import io.micrometer.core.annotation.Counted;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import uk.gov.moj.cact.exception.CsvImportException;
 import uk.gov.moj.cact.repository.CaseRecordRepository;
 
 import java.io.BufferedReader;
@@ -11,12 +14,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
@@ -24,38 +24,49 @@ import java.util.Random;
 public class ScheduledCsvImportService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledCsvImportService.class);
-    private static final int MAX_JITTER_SECONDS = 3600;
-
 
     private final CsvImportService csvImportService;
     private final CaseRecordRepository repository;
     private final S3BucketClient s3BucketClient;
+    private final int maxJitterSeconds;
     private final Random random = new Random();
 
     public ScheduledCsvImportService(CsvImportService csvImportService,
-                                     CaseRecordRepository repository, S3BucketClient s3BucketClient
+                                     CaseRecordRepository repository,
+                                     S3BucketClient s3BucketClient,
+                                     @Value("${app.csv-import.max-jitter-seconds:3600}") int maxJitterSeconds
     ) {
         this.csvImportService = csvImportService;
         this.repository = repository;
         this.s3BucketClient = s3BucketClient;
+        this.maxJitterSeconds = maxJitterSeconds;
     }
 
+    /**
+     * Scheduled entry point for the nightly refresh.
+     */
     @Scheduled(cron = "${app.csv-import.cron}")
+    @Counted(value = "scheduled_task_exceptions", recordFailuresOnly = true)
     public void run() {
-        // Generates random wait time so that the tasks dont upload simultaneously
-        // causing a duplication of data
-        int waitSeconds = random.nextInt(MAX_JITTER_SECONDS);
+        // Random wait so replicas don't import simultaneously and duplicate data
+        int waitSeconds = maxJitterSeconds > 0 ? random.nextInt(maxJitterSeconds) : 0;
         LOGGER.info("Cron job running! Waiting {} seconds before import", waitSeconds);
         try {
             Thread.sleep(waitSeconds * 1000L);
         } catch (InterruptedException e) {
-            LOGGER.error("Cron job: thread interrupted: ", e);
             Thread.currentThread().interrupt();
+            LOGGER.warn("Scheduled CSV import interrupted before it started");
             return;
         }
         downloadCsvAndReplaceDatabase();
+        LOGGER.info("Scheduler Finished");
     }
 
+    /**
+     * Downloads the published CSV and replaces the table contents with it.
+     *
+     * @throws CsvImportException if the download or import fails
+     */
     public void downloadCsvAndReplaceDatabase() {
         try {
             LOGGER.info("Checking if database was updated today");
@@ -72,17 +83,11 @@ public class ScheduledCsvImportService {
                                  StandardCharsets.UTF_8))) {
 
                 int rowCount = csvImportService.replaceDatabase(reader);
-
-                LOGGER.info(
-                        "Success: {} rows added in database",
-                        rowCount
-                );
+                LOGGER.info("Success: {} rows added in database", rowCount);
             }
         } catch (Exception ex) {
-            LOGGER.error("Exception occurred during CSV import: ", ex);
-            LOGGER.error("Import Failed: {}", ex.getMessage());
+            throw new CsvImportException("CSV import failed", ex);
         }
-        LOGGER.info("Scheduler Finished");
     }
 
     boolean isLastUpdatedYesterday() {

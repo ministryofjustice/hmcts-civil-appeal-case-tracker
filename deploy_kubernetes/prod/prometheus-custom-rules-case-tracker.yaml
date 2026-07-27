@@ -9,22 +9,27 @@ spec:
   groups:
     - name: application-rules
       rules:
+        # Uses the built-in Actuator/Micrometer request metric rather than a
+        # custom counter: a 5xx response is by definition an unhandled
+        # exception, and the exception/uri labels come for free.
         - alert: application_exception_alert
-          expr: increase(app_exceptions_total{namespace="civil-appeal-case-tracker-prod"}[5m]) > 0
+          expr: increase(http_server_requests_seconds_count{namespace="civil-appeal-case-tracker-prod",status=~"5.."}[5m]) > 0
           for: 0m
           labels:
             severity: civil-appeal-case-tracker-prod
           annotations:
-            message: "civil-appeal-case-tracker-prod has an unhandled exception ({{ $labels.exception_class }}) in {{ $labels.location }} on pod {{ $labels.pod }}"
+            message: "civil-appeal-case-tracker-prod has an unhandled exception ({{ $labels.exception }}) in {{ $labels.uri }} on pod {{ $labels.pod }}"
             runbook_url: "http://my-support-docs"
             dashboard_url: "http://my-dashboard"
 
-        - alert: application_error_log_alert
-          expr: increase(app_error_logs_total{namespace="civil-appeal-case-tracker-prod"}[5m]) > 0
+        # Scheduled tasks have no HTTP request, so application_exception_alert
+        # cannot see them fail. Counter comes from @Counted(recordFailuresOnly).
+        - alert: scheduled_task_exception_alert
+          expr: increase(scheduled_task_exceptions_total{namespace="civil-appeal-case-tracker-prod"}[1h]) > 0
           for: 0m
           labels:
             severity: civil-appeal-case-tracker-prod
           annotations:
-            message: "civil-appeal-case-tracker-prod has an ERROR log entry from ({{ $labels.source }}) on pod {{ $labels.pod }}"
+            message: "civil-appeal-case-tracker-prod scheduled task {{ $labels.method }} failed ({{ $labels.exception }}) on pod {{ $labels.pod }} - case data may be stale"
             runbook_url: "http://my-support-docs"
             dashboard_url: "http://my-dashboard"
