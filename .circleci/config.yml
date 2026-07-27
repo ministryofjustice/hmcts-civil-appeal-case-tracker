@@ -46,9 +46,9 @@ jobs:
       - run:
           name: Verify boot jar
           command: |
-            ls -l build-gradle/libs/
-            if ! ls build-gradle/libs/*.jar >/dev/null 2>&1; then
-              echo "Boot jar not found in build-gradle/libs"
+            ls -l build/libs/
+            if ! ls build/libs/*.jar >/dev/null 2>&1; then
+              echo "Boot jar not found in build/libs"
               exit 1
             fi
       - run:
