@@ -52,6 +52,10 @@ dependencies {
 
 ext['testcontainers.version'] = '1.21.3'
 
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8'
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }

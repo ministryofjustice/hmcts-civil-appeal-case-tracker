@@ -12,6 +12,8 @@ public class CsvValidator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CsvValidator.class);
 
+    private static final String BOM = "\uFEFF";
+
     private static final int MAX_COLUMNS = 67;
     private static final int EXPECTED_IMPORT_COLUMNS = 25;
 
@@ -43,7 +45,7 @@ public class CsvValidator {
             String value = row[i] != null ? row[i] : "";
 
             // Remove BOM
-            if (rowNumber == 0 && i == 0 && value.startsWith("﻿")) {
+            if (rowNumber == 0 && i == 0 && value.startsWith(BOM)) {
                 LOGGER.warn("BOM detected and removed at row {}, column {}", rowNumber, i);
                 value = value.substring(1);
             }
