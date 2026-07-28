@@ -53,7 +53,13 @@
                             <h2>Login Form</h2>
                             <p>Please enter your username and details below. </p>
 
-                            <form method="post" action="/admin/login">
+                            <p th:if="${param.error}">
+                                <span style="font-size: medium; font-family: Verdana, Arial, Helvetica, sans-serif; color: red; "><strong>Invalid Login</strong>.</span>
+                                You may not be authorised to enter this site.
+                            </p>
+                            <p th:if="${param.logout}">You have been logged out.</p>
+
+                            <form method="post" th:action="@{/admin/login}">
                                 <p><label for="userid">User ID: </label></p>
                                 <p><input size="20" id="userid" name="userid" type="text"/></p>
                                 <p><label for="password">Password:</label></p>
