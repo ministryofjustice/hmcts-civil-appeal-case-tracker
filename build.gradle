@@ -24,35 +24,32 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
-	implementation 'org.flywaydb:flyway-database-postgresql'
-	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
-	implementation 'com.github.ben-manes.caffeine:caffeine'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.5.RELEASE'
+	implementation 'com.github.ben-manes.caffeine:caffeine:3.2.4'
 	implementation 'com.opencsv:opencsv:5.10'
 
-	compileOnly 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok:1.18.46'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
-	runtimeOnly 'org.postgresql:postgresql'
+	runtimeOnly 'io.micrometer:micrometer-registry-prometheus:1.17.0'
+	runtimeOnly 'org.postgresql:postgresql:42.7.11'
 
-	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok:1.18.46'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-thymeleaf-test'
-	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
-	testImplementation 'org.springframework.security:spring-security-test'
-	testImplementation 'org.testcontainers:junit-jupiter'
-	testImplementation 'org.testcontainers:postgresql'
-	testCompileOnly 'org.projectlombok:lombok'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	testAnnotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+	testImplementation 'org.springframework.security:spring-security-test:7.1.0'
+	testImplementation 'org.testcontainers:junit-jupiter:1.21.3'
+	testImplementation 'org.testcontainers:postgresql:1.21.3'
+	testCompileOnly 'org.projectlombok:lombok:1.18.46'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher:6.0.3'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.46'
 }
-
-ext['testcontainers.version'] = '1.21.3'
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
@@ -60,6 +57,18 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	exclude '**/*IT.class'
+}
+
+tasks.register('integrationTest', Test) {
+	description = 'Runs integration tests - Requires Docker.'
+	group = 'verification'
+	useJUnitPlatform()
+	testClassesDirs = sourceSets.test.output.classesDirs
+	classpath = sourceSets.test.runtimeClasspath
+	include '**/*IT.class'
+	systemProperty 'cact.schema.sql', file('files/setup.sql').absolutePath
+	shouldRunAfter tasks.named('test')
 }
 
 tasks.named('jar') {

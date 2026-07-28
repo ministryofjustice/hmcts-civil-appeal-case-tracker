@@ -32,9 +32,13 @@ jobs:
             - deps-gradle-v1-{{ checksum "build.gradle" }}
             - deps-gradle-v1-
       - run:
-          name: Test
+          name: Unit Test
           command: |
             ./gradlew test
+      - run:
+          name: Integration Test
+          command: |
+            ./gradlew integrationTest
       - run:
           name: Build
           command: |
