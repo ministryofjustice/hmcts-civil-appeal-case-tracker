@@ -26,7 +26,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class CountedConfigurationTest {
+public class CountedConfigTest {
 
     @Mock
     private CaseRecordRepository repository;
@@ -39,7 +39,7 @@ public class CountedConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(AopAutoConfiguration.class))
-            .withUserConfiguration(CountedConfiguration.class)
+            .withUserConfiguration(CountedConfig.class)
             .withBean(MeterRegistry.class, SimpleMeterRegistry::new);
 
     @Test

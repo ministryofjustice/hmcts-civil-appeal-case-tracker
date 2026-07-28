@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * Requires org.aspectj:aspectjweaver on the classpath
  */
 @Configuration
-public class CountedConfiguration {
+public class CountedConfig {
 
     @Bean
     public CountedAspect countedAspect(MeterRegistry registry) {
