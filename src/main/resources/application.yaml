@@ -46,3 +46,7 @@ app:
   s3-bucket-name: ${S3_BUCKET_NAME:}
   csv-import:
     cron: "0 0 1 * * *"
+  rate-limit:
+    max-requests: 20
+    window: 60s
+    max-tracked-ips: 10000
