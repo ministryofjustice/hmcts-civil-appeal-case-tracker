@@ -9,9 +9,6 @@ spec:
   groups:
     - name: application-rules
       rules:
-        # Uses the built-in Actuator/Micrometer request metric rather than a
-        # custom counter: a 5xx response is by definition an unhandled
-        # exception, and the exception/uri labels come for free.
         - alert: application_exception_alert
           expr: increase(http_server_requests_seconds_count{namespace="civil-appeal-case-tracker-preprod",status=~"5.."}[5m]) > 0
           for: 0m
@@ -30,6 +27,6 @@ spec:
           labels:
             severity: civil-appeal-case-tracker-preprod
           annotations:
-            message: "civil-appeal-case-tracker-preprod scheduled task {{ $labels.method }} failed ({{ $labels.exception }}) on pod {{ $labels.pod }} - case data may be stale"
+            message: "civil-appeal-case-tracker-preprod scheduled task {{ $labels.method }} failed ({{ $labels.exception }}) on pod {{ $labels.pod }}"
             runbook_url: "http://my-support-docs"
             dashboard_url: "http://my-dashboard"

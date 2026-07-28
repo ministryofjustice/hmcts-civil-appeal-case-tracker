@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * Registers Micrometer's CountedAspect so that @Counted can work.
- * Requires org.aspectj:aspectjweaver on the classpath
+ * Requires 'org.springframework.boot:spring-boot-starter-aspectj'
  */
 @Configuration
 public class CountedConfig {

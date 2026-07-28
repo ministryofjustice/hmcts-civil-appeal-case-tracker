@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Fast, browser-free sanity checks against a running app instance - run this
+# before the Playwright e2e suite so a badly broken deploy (wrong DB creds,
+# JAR not deployed, static assets missing) fails in seconds
 set -uo pipefail
 
 BASE_URL="${BASE_URL:-http://localhost:8080}"
