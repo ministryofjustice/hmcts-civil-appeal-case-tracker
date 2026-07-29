@@ -5,11 +5,13 @@ how to run it, and what's still manual.
 
 ## At a glance
 
-| Layer | Tool | Location | Tag | Runs in CI |
-|---|---|---|---|---|
-| Smoke | Bash/curl | `bin/smoke-test.sh` | - | Yes (before e2e suites, DEV build) |
-| End-to-end (UI) | Playwright | `e2e/tests/*.spec.ts` | `@e2e` | Yes |
-| Accessibility | Playwright + axe-core | `e2e/tests/accessibility.spec.ts` | `@accessibility` | Yes |
+| Layer            | Tool                   | Location                         | Tag | Runs in CI |
+|------------------|------------------------|----------------------------------|---|---|
+| Unit tests       | Junit                  | `src/test`                       | - | Yes  |
+| Integration test | Junit + testcontainers | `src/test`                       | - | Yes  |
+| Smoke            | Bash/curl              | `bin/smoke-test.sh`              | - | Yes (before e2e suites, DEV build) |
+| End-to-end (UI)  | Playwright             | `e2e/tests/*.spec.ts`            | `@e2e` | Yes |
+| Accessibility    | Playwright + axe-core  | `e2e/tests/accessibility.spec.ts` | `@accessibility` | Yes |
 
 
 ## Running the suites locally

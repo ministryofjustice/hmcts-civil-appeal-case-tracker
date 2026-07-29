@@ -1,108 +1,150 @@
-#Case tracker
+# Case Tracker for Civil Appeals
 
-A public facing service written in Java. The public use the service to track civil appeal cases.
+A public-facing service that lets the public track civil appeal cases in the Court of Appeal,
+Civil Division. Cases can be searched by hearing date, case number or title. An admin screen
+allows a CSV of case data to be uploaded and imported, and a nightly job refreshes the data
+from a published CSV.
 
-This is a legacy application maintained by Tactical Products team.
+Maintained by the DTS Legacy Support team.
 
+Originally a Struts 1.x / Ant / Tomcat application, now migrated to Spring Boot.
 
+## Tech stack
 
+| | |
+|---|---|
+| Language | Java 21 |
+| Framework | Spring Boot 4.1 (embedded Tomcat, Spring MVC, Spring Security) |
+| Views | Thymeleaf |
+| Persistence | Spring Data JPA / Hibernate |
+| Database | PostgreSQL |
+| Build | Gradle (wrapper included) |
+| Packaging | Executable jar (`build/libs/cact.jar`) on `eclipse-temurin:21-jre-jammy` |
+| Deployment | Kubernetes on MOJ Cloud Platform, via CircleCI |
 
-##Dependencies
-- [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
-- [Tomcat 8](https://tomcat.apache.org/download-80.cgi)
-- [Ant](http://ant.apache.org/bindownload.cgi)
+## Requirements
 
-###For local development
+- JDK 21
+- Docker (for a local Postgres, and for the integration tests)
+- Node.js and Yarn, only if you are running the Playwright suites (see [TESTING.md](TESTING.md))
 
-- Virtual machine (eg. Virtual box or Parallel Desktop)
-- Windows 8 or 10
-- SQL Server 2012 Express
+## Configuration
 
-###For frontend
-- [NPM 4.0+](https://www.npmjs.com)
-- [Gulp.js](http://www.gulpjs.com)
+All configuration is supplied by environment variables. The defaults in `application.yaml` are
+for local development only.
 
-##Setting up
+| Variable | Default         | Purpose |
+|---|-----------------|---|
+| `DB_HOST` | `localhost`     | Postgres host |
+| `DB_PORT` | `5432`          | Postgres port |
+| `DB_NAME` | `cact`          | Database name |
+| `DB_USER` | `cact_user`     | Database user |
+| `DB_PASSWORD` | `cact_password` | Database password |
+| `ADMIN_USER` | `admin`         | Username for the admin screens |
+| `ADMIN_PASS` | `pass`          | Password for the admin screens |
+| `S3_BUCKET_NAME` | `test`          | Bucket holding `data.csv` for the nightly import |
 
-###Install Ant
-Ant can be installed quiet easily using [Homebrew](http://brew.sh/)
+In the deployed environments these come from Kubernetes secrets — see
+`deploy_kubernetes/<env>/app-deployment.yaml`.
 
-```
-$ brew install ant
-```
-Check ant has installed properly by running ```ant```. If you see the following after running ```ant``` then you know it has been installed successfully
+The schema is **not** managed by the application (`spring.jpa.hibernate.ddl-auto: validate`, and
+there is no Flyway). It must exist before the app starts; the DDL is `files/setup.sql`.
 
-```
-$ ant
-Buildfile: build.xml does not exist!
-Build failed
-```
-####Setup environment variables for build process
+## Running locally
 
-You will need the following information to substitue in the scripts below :
+Start a Postgres and apply the schema:
 
-- **/path/to/tomcat**  path to you systems Tomcat installation 
-- **connection-string** is the connection string to your database and tables for the service to use
-- **connection-username** is the database username
-- **connection-password** is the database users password
-
-```
-$ echo 'export TOMCAT_PATH="/path/to/tomcat"' >>~/.bash_profile
-$ echo 'export DEV_CASE_TRACKER_URL="connection-string"' >> ~/.bash_profile
-$ echo 'export DEV_CASE_TRACKER_USER="connection-username"' >> ~/.bash_profile
-$ echo 'export DEV_CASE_TRACKER_PWD="connection-password"' >> ~/.bash_profile
-```
-
-If you plan on deploying to staging and production you will need to run the following:
-
-```
-$ echo 'export STAGE_CASE_TRACKER_URL="connection-string"' >> ~/.bash_profile
-$ echo 'export STAGE_CASE_TRACKER_USER="connection-username"' >> ~/.bash_profile
-$ echo 'export STAGE_CASE_TRACKER_PWD="connection-password"' >> ~/.bash_profile
-
-$ echo 'export LIVE_CASE_TRACKER_URL="connection-string"' >> ~/.bash_profile
-$ echo 'export LIVE_CASE_TRACKER_USER="connection-username"' >> ~/.bash_profile
-$ echo 'export LIVE_CASE_TRACKER_PWD="connection-password"' >> ~/.bash_profile
-
+```bash
+docker run -d --name cact-postgres -p 5433:5432 \
+  -e POSTGRES_USER=cact_user -e POSTGRES_PASSWORD=cact_password -e POSTGRES_DB=cact \
+  postgres:16
+docker cp files/setup.sql cact-postgres:/setup.sql
+docker exec cact-postgres psql -U cact_user -d cact -f /setup.sql
 ```
 
-Now run it so its available in your current terminal
+Run the app:
 
-```
-$ source ~/.bash_profile
-```
-
-###Get the source code
-Clone this repository
-
-```
-$ git clone git@github.com:ministryofjustice/hmcts-civil-appeal-case-tracker.git
+```bash
+./gradlew bootRun
 ```
 
-Next change the directory to the new project
+It starts on <http://localhost:8080>. To load some data, sign in at `/admin/login` with
+`admin` / `pass` and upload `data.csv`.
 
+## Building
+
+```bash
+./gradlew build          # compile, run unit tests, produce build/libs/cact.jar
+./gradlew bootJar        # jar only
 ```
-$ cd hmcts-civil-appeal-case-tracker.git
+
+Docker image:
+
+```bash
+./gradlew bootJar
+docker build -t civil-appeal-case-tracker .
 ```
 
-###Front-end development
+## Testing
 
-Install Node js (version 4) using homebrew
+| Command | What it runs |
+|---|---|
+| `./gradlew test` | Unit tests. Integration tests (`*IT`) are excluded. |
+| `./gradlew integrationTest` | Integration tests only. **Requires Docker** (Testcontainers). |
+| `bin/smoke-test.sh` | Curl checks against a running instance (`BASE_URL`, default `http://localhost:8080`). |
 
-First install and setup Gulp and the dependencies
+`integrationTest` is not wired into `check`/`build`, so a normal build does not
+need Docker.
 
-```
-$ npm install
-```
-This should setup Gulp and all its tasks
+For the Playwright end-to-end and accessibility suites, see [TESTING.md](TESTING.md).
 
+## URLs
 
-|   Command	|  Description 	|
-|---	|---	|
-| gulp | Runs the default taks which performs all the below tasks in the order they appear below(except lint)|
-| gulp delete  	| Deletes the build/assets folder i.e the compiled CSS and JS. 	|
-| gulp minify  	| Minifies all the css files and addes them to the build/assets folder  	|
-|   gulp uglify	|  Minifies all the Javascript files and addes them to the build/assets folder 	|
-| gulp lint  	| Checkes the Javascript to ensure the it meets specific rules  	|
-| gulp watch  	| Whats the CSS and JS source folders and if any thing changes it runs either minify or uglify tasks 	|
-|   	|   	|
+| Path | Purpose |
+|---|---|
+| `/` | Landing page |
+| `/search` | Search form and results |
+| `/case/{caseNo}` | Case detail |
+| `/admin/login` | Admin sign-in |
+| `/admin/upload` | Upload and import a CSV |
+| `/admin/logout` | Sign out |
+| `/health` | Actuator health — used by the Kubernetes probes |
+| `/metrics` | Prometheus scrape endpoint |
+
+The legacy Struts URLs (`/search.jsp`, `/search.do`, `/getDetail.do`, `/loginform.do`,
+`/dumpData.do`, `/invalidate.do`) permanently redirect to their replacements, so existing
+bookmarks and external links keep working.
+
+## Behaviour worth knowing
+
+- **Rate limiting** — non-browser traffic to `/search` and `/case/**` is limited to 20 requests
+  per 60 seconds per IP, per pod (`app.rate-limit.*`). Browsers are never limited. Exceeding the
+  limit returns 429.
+- **Nightly import** — a scheduled job at 01:00 downloads `data.csv` from the S3 bucket over
+  HTTPS and replaces the table contents. Each thread waits a random interval of up to an hour
+  and skips the import if the data is already current, so threads do not duplicate the work.
+- **Admin uploads** are imported directly from the request. A bad file produces a friendly
+  message, and the existing data is left untouched.
+
+## Monitoring
+
+`/metrics` exposes Prometheus metrics. Alerting rules live in
+`deploy_kubernetes/<env>/prometheus-custom-rules-case-tracker.yaml`:
+
+- `application_exception_alert` — fires on 5xx responses (`http_server_requests_seconds_count`)
+- `scheduled_task_exception_alert` — fires when the nightly import fails
+  (`scheduled_task_exceptions_total`, from Micrometer's `@Counted`)
+
+The scheduled job has no HTTP request, so the first alert cannot see it fail — which is why the
+second one exists.
+
+## CI/CD
+
+CircleCI (`.circleci/config.yml`) builds the jar, runs the tests, builds the Docker images,
+runs the smoke and Playwright suites, pushes to ECR and deploys with `kubectl`.
+
+| Branch | Environment | Gate |
+|---|---|---|
+| `RST-*` | dev | automatic |
+| `staging` | preprod | manual approval |
+| `main` | prod | manual approval |

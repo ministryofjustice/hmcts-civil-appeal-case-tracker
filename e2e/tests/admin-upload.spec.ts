@@ -20,6 +20,6 @@ test.describe('Admin Upload',  { tag: '@e2e' }, () => {
         await uploadPage.checkPageLoads(page);
         await uploadPage.uploadFile(page, path.join(__dirname, 'data', 'CASE_TRACKER.csv'));
         await uploadPage.importIntoDatabase(page);
-        await uploadPage.checkImportMessage(page, '10 rows added in database');
+        await uploadPage.checkImportMessage(page, '10 rows imported from CASE_TRACKER.csv');
     });
 });

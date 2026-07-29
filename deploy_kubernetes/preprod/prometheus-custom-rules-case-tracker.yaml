@@ -10,21 +10,23 @@ spec:
     - name: application-rules
       rules:
         - alert: application_exception_alert
-          expr: increase(app_exceptions_total{namespace="civil-appeal-case-tracker-preprod"}[5m]) > 0
+          expr: increase(http_server_requests_seconds_count{namespace="civil-appeal-case-tracker-preprod",status=~"5.."}[5m]) > 0
           for: 0m
           labels:
             severity: civil-appeal-case-tracker-preprod
           annotations:
-            message: "civil-appeal-case-tracker-preprod has an unhandled exception ({{ $labels.exception_class }}) in {{ $labels.location }} on pod {{ $labels.pod }}"
+            message: "civil-appeal-case-tracker-preprod has an unhandled exception ({{ $labels.exception }}) in {{ $labels.uri }} on pod {{ $labels.pod }}"
             runbook_url: "http://my-support-docs"
             dashboard_url: "http://my-dashboard"
 
-        - alert: application_error_log_alert
-          expr: increase(app_error_logs_total{namespace="civil-appeal-case-tracker-preprod"}[5m]) > 0
+        # Scheduled tasks have no HTTP request, so application_exception_alert
+        # cannot see them fail. Counter comes from @Counted(recordFailuresOnly).
+        - alert: scheduled_task_exception_alert
+          expr: increase(scheduled_task_exceptions_total{namespace="civil-appeal-case-tracker-preprod"}[1h]) > 0
           for: 0m
           labels:
             severity: civil-appeal-case-tracker-preprod
           annotations:
-            message: "civil-appeal-case-tracker-preprod has an ERROR log entry from ({{ $labels.source }}) on pod {{ $labels.pod }}"
+            message: "civil-appeal-case-tracker-preprod scheduled task {{ $labels.method }} failed ({{ $labels.exception }}) on pod {{ $labels.pod }}"
             runbook_url: "http://my-support-docs"
             dashboard_url: "http://my-dashboard"

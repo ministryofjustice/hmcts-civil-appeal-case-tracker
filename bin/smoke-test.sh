@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Fast, browser-free sanity checks against a running app instance - run this
 # before the Playwright e2e suite so a badly broken deploy (wrong DB creds,
-# WAR not deployed, static assets missing) fails in seconds instead of after
-# installing Yarn deps and Chromium.
+# JAR not deployed, static assets missing) fails in seconds
 set -uo pipefail
 
 BASE_URL="${BASE_URL:-http://localhost:8080}"
@@ -40,13 +39,38 @@ check() {
 echo "Running smoke tests against ${BASE_URL}"
 echo
 
-check "Health check"                     "/health"                              200 "OK"
-check "Landing page renders"             "/"                                    200 "Case Tracker for Civil Appeals"
-check "Ways to Search page renders"      "/search.jsp"                          200 "Ways to Search"
-check "Admin login page renders"         "/loginform.do"                        200 "Login Form"
-check "Static assets are served"         "/asset/css/dg.css"                    200 "" "text/css"
-check "Search reaches the database"      "/search.do?search=a"                  200
-check "Unknown case handled gracefully"  "/getDetail.do?case_id=DOES-NOT-EXIST" 200
+check_redirect() {
+    local name="$1"
+    local path="$2"
+    local expected_location="$3"
+    local status location
+    status="$(curl -sS -o /dev/null -w "%{http_code}" "${BASE_URL}${path}")"
+    location="$(curl -sS -o /dev/null -w "%{redirect_url}" "${BASE_URL}${path}")"
+
+    if [ "$status" != "301" ]; then
+        echo "FAIL: $name - expected status 301, got $status (${BASE_URL}${path})"
+        FAILED=1
+    elif [ "$location" != "${BASE_URL}${expected_location}" ]; then
+        echo "FAIL: $name - expected redirect to ${expected_location}, got ${location}"
+        FAILED=1
+    else
+        echo "PASS: $name"
+    fi
+}
+
+check "Health check"                     "/health"                          200 "UP"
+check "Landing page renders"             "/"                                200 "Case Tracker for Civil Appeals"
+check "Ways to Search page renders"      "/search"                          200 "Ways to Search"
+check "Admin login page renders"         "/admin/login"                     200 "Login Form"
+check "Static assets are served"         "/asset/css/dg.css"                200 "" "text/css"
+check "Search reaches the database"      "/search?search=a"                 200
+check "Unknown case handled gracefully"  "/case/DOES-NOT-EXIST"             200
+
+check_redirect "Legacy search page redirects"    "/search.jsp"                          "/search"
+check_redirect "Legacy search action redirects"  "/search.do?search=a"                  "/search?search=a"
+check_redirect "Legacy case detail redirects"    "/getDetail.do?case_id=DOES-NOT-EXIST" "/case/DOES-NOT-EXIST"
+check_redirect "Legacy admin login redirects"    "/loginform.do"                        "/admin/login"
+check_redirect "Legacy admin dataDump redirects"   "/dumpData.do"                       "/admin/import"
 
 echo
 if [ "$FAILED" -ne 0 ]; then
