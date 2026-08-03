@@ -92,23 +92,29 @@
                                                       th:if="${totalResults == 1}">One item found.</span>
                                                 <span class="pagebanner"
                                                       th:if="${totalResults > 1 and totalPages == 1}"
-                                                      th:text="${totalResults} + ' items found, displaying all items.'"></span>
+                                                      th:text="${#numbers.formatInteger(totalResults, 1, 'COMMA')} + ' items found, displaying all items.'"></span>
                                                 <span class="pagebanner"
                                                       th:if="${totalPages > 1}"
-                                                      th:text="${totalResults} + ' items found, displaying ' + ${startIndex} + ' to ' + ${endIndex} + '.'"></span>
+                                                      th:text="${#numbers.formatInteger(totalResults, 1, 'COMMA')} + ' items found, displaying ' + ${startIndex} + ' to ' + ${endIndex} + '.'"></span>
                                                 <span class="pagelinks" th:if="${totalPages == 1}"><strong>1</strong></span>
-                                                <span class="pagelinks" th:if="${totalPages > 1}">
-                                                    <th:block th:each="p : ${#numbers.sequence(1, totalPages)}">
-                                                        <strong th:if="${p == page}" th:text="${p}"></strong><th:block
-                                                            th:if="${p != page}"><a
+                                                <!--/* Mirrors displaytag's pager: First/Prev, a sliding window of
+                                                       page links, then Next/Last. The outer links render as plain
+                                                       text when already on the first or last page. */-->
+                                                <span class="pagelinks" th:if="${totalPages > 1}"><th:block
+                                                        th:if="${page > 1}">[<a
+                                                        th:href="@{/search(search=${searchString}, page=1)}">First</a>/<a
+                                                        th:href="@{/search(search=${searchString}, page=${page - 1})}">Prev</a>]</th:block><th:block
+                                                        th:unless="${page > 1}">[First/Prev]</th:block>
+                                                    <th:block th:each="p, it : ${pageWindow}"><strong
+                                                            th:if="${p == page}" th:text="${p}"></strong><a
+                                                            th:unless="${p == page}"
                                                             th:href="@{/search(search=${searchString}, page=${p})}"
-                                                            th:text="${p}"></a></th:block><th:block
-                                                            th:if="${p < totalPages}">, </th:block>
-                                                    </th:block>
-                                                    <th:block th:if="${hasNextPage}">
-                                                        [<a th:href="@{/search(search=${searchString}, page=${page + 1})}">Next</a>]
-                                                    </th:block>
-                                                </span>
+                                                            th:text="${p}"></a><th:block
+                                                            th:unless="${it.last}">, </th:block></th:block>
+                                                    <th:block th:if="${page < totalPages}">[<a
+                                                            th:href="@{/search(search=${searchString}, page=${page + 1})}">Next</a>/<a
+                                                            th:href="@{/search(search=${searchString}, page=${totalPages})}">Last</a>]</th:block><th:block
+                                                            th:unless="${page < totalPages}">[Next/Last]</th:block></span>
                                                 <table class="table" id="result">
                                                     <thead>
                                                     <tr>

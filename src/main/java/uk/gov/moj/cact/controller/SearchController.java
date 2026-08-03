@@ -15,6 +15,7 @@ import uk.gov.moj.cact.repository.CaseRecordRepository;
 
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 @Controller
 public class SearchController {
@@ -22,10 +23,13 @@ public class SearchController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
 
     private static final Pattern SEARCH_PATTERN = Pattern.compile("^[A-Za-z0-9_, \\-\\)\\(\\.]++$");
-    private static final int UI_MAX_RESULTS = 100;
+    private static final int UI_MAX_RESULTS = 1000;
     private static final int UI_PAGE_SIZE = 15;
     private static final int API_DEFAULT_PAGE_SIZE = 15;
     private static final int API_MAX_PAGE_SIZE = 50;
+
+    /** Page links shown at once - displaytag's default group size. */
+    private static final int UI_PAGE_LINKS = 8;
 
     private final CaseRecordRepository repository;
 
@@ -55,14 +59,19 @@ public class SearchController {
             int totalPages = Math.max((int) Math.ceil((double) total / UI_PAGE_SIZE), 1);
             page = Math.min(page, totalPages);
 
+            int startIndex = (page - 1) * UI_PAGE_SIZE + 1;
+
             List<CaseRecord> results = total == 0
                     ? List.of()
                     : repository.search(like, PageRequest.of(page - 1, UI_PAGE_SIZE)).getContent();
 
+            int roomLeft = (int) Math.max(0, total - startIndex + 1);
+            if (results.size() > roomLeft) {
+                results = results.subList(0, roomLeft);
+            }
+
             LOGGER.info("[UI] Returned <{}> of <{}> rows for search <{}> page={}",
                     results.size(), total, searchString, page);
-
-            int startIndex = (page - 1) * UI_PAGE_SIZE + 1;
             model.addAttribute("uiMode", true);
             model.addAttribute("results", results);
             model.addAttribute("totalResults", total);
@@ -71,6 +80,7 @@ public class SearchController {
             model.addAttribute("startIndex", startIndex);
             model.addAttribute("endIndex", startIndex + results.size() - 1);
             model.addAttribute("hasNextPage", page < totalPages);
+            model.addAttribute("pageWindow", pageWindow(page, totalPages));
             model.addAttribute("searchString", searchString);
             return "search";
         }
@@ -110,6 +120,20 @@ public class SearchController {
         model.addAttribute("page", page);
         model.addAttribute("pageSize", pageSize);
         return "search";
+    }
+
+    /**
+     * The page numbers to show at once. Legacy displaytag showed a sliding
+     * window of 8 rather than every page, which matters at the 1000-result cap
+     * where listing all 67 pages would be unusable.
+     */
+    private static List<Integer> pageWindow(int page, int totalPages) {
+        if (totalPages <= UI_PAGE_LINKS) {
+            return IntStream.rangeClosed(1, totalPages).boxed().toList();
+        }
+        int start = Math.max(1,
+                Math.min(page - (UI_PAGE_LINKS / 2 - 1), totalPages - UI_PAGE_LINKS + 1));
+        return IntStream.rangeClosed(start, start + UI_PAGE_LINKS - 1).boxed().toList();
     }
 
     private static int parsePage(String pageParam) {
