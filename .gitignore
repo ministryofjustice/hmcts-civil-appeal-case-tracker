@@ -1,26 +1,38 @@
-#ignore build files
-build/*
-#ignore deploy
-deploy/*
-*.iml
-#Ignore compiled code
-WEB-INF/classes/au/*
-WEB-INF/classes/com/*
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-#ignore NPM modules
-node_modules/*
-
-#Ignore IDE FILES
-.idea/*
-WEB-INF/WEB-INF.iml
+### STS ###
+.apt_generated
 .classpath
+.factorypath
 .project
+.settings
+.springBeans
+.sts4-cache
+!**/src/main/**/bin/
+!**/src/test/**/bin/
 
-#Ignore Thumbs.db files
-Thumbs.db
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
 
-out/*
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
 
-testreport/*
+### VS Code ###
+.vscode/
 
 .DS_Store
