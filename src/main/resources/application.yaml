@@ -28,6 +28,7 @@ server:
   servlet:
     session:
       timeout: 15m
+      tracking-modes: cookie
 
 management:
   endpoints:
