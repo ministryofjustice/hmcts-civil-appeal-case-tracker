@@ -71,6 +71,7 @@ check_redirect "Legacy search action redirects"  "/search.do?search=a"          
 check_redirect "Legacy case detail redirects"    "/getDetail.do?case_id=DOES-NOT-EXIST" "/case/DOES-NOT-EXIST"
 check_redirect "Legacy admin login redirects"    "/loginform.do"                        "/admin/login"
 check_redirect "Legacy admin dataDump redirects"   "/dumpData.do"                       "/admin/import"
+check_redirect "Legacy jsessionid URL redirects"    "/getDetail.do;jsessionid=0E3FBB1014815D2F27D5E83607FD44D1?case_id=DOES-NOT-EXIST" "/case/DOES-NOT-EXIST"
 
 echo
 if [ "$FAILED" -ne 0 ]; then

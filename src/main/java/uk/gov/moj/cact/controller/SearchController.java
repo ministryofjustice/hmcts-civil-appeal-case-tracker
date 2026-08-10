@@ -137,21 +137,25 @@ public class SearchController {
     }
 
     private static int parsePage(String pageParam) {
-        if (pageParam != null) {
-            try {
-                return Math.max(Integer.parseInt(pageParam), 1);
-            } catch (NumberFormatException ignored) {
-                // fall through to default, as legacy did
-            }
+        if (pageParam == null || pageParam.isBlank()) {
+            return 1;
         }
-        return 1;
+        try {
+            return Math.max(Integer.parseInt(pageParam.trim()), 1);
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Ignoring unparseable page <{}>", pageParam);
+            return 1;
+        }
     }
 
     private static int parsePageSize(String sizeParam) {
+        if (sizeParam == null || sizeParam.isBlank()) {
+            return API_DEFAULT_PAGE_SIZE;
+        }
         try {
-            return Math.clamp(Integer.parseInt(sizeParam), 1, API_MAX_PAGE_SIZE);
-        } catch (RuntimeException e) {
-            LOGGER.warn("getPageSize Exception: ", e);
+            return Math.clamp(Integer.parseInt(sizeParam.trim()), 1, API_MAX_PAGE_SIZE);
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Ignoring unparseable pageSize <{}>", sizeParam);
             return API_DEFAULT_PAGE_SIZE;
         }
     }
