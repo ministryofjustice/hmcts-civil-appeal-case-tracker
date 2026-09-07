@@ -15,14 +15,14 @@ import uk.gov.moj.cact.service.CsvImportService;
 import uk.gov.moj.cact.service.S3BucketClient;
 import uk.gov.moj.cact.service.ScheduledCsvImportService;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,13 +37,16 @@ public class CountedConfigTest {
     @Mock
     private CsvImportService csvImportService;
 
+    private static final DateTimeFormatter CSV_DATE_FORMAT =
+            DateTimeFormatter.ofPattern("dd-MMM-yyyy", Locale.ENGLISH);
+
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(AopAutoConfiguration.class))
             .withUserConfiguration(CountedConfig.class)
             .withBean(MeterRegistry.class, SimpleMeterRegistry::new);
 
     @Test
-    void recordsCounterWhenScheduledTaskThrows() {
+    void shouldIncrementRecordsCounterWhenScheduledTaskThrows() {
         contextRunner
                 .withBean(ScheduledCsvImportService.class, this::failingImportService)
                 .run(context -> {
@@ -64,7 +67,7 @@ public class CountedConfigTest {
     }
 
     @Test
-    void doesNotRecordCounterWhenScheduledTaskSucceeds() {
+    void shouldNotRecordCounterWhenScheduledTaskSucceeds() {
         contextRunner
                 .withBean(ScheduledCsvImportService.class, this::skippingImportService)
                 .run(context -> {
@@ -77,27 +80,15 @@ public class CountedConfigTest {
     }
 
     private ScheduledCsvImportService failingImportService() {
-        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(today()));
+        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(LocalDate.now().format(CSV_DATE_FORMAT)));
         when(s3BucketClient.downloadCsv()).thenThrow(new IllegalStateException("S3 unavailable"));
 
-        return new ScheduledCsvImportService(csvImportService, repository, s3BucketClient, 0);
+        return new ScheduledCsvImportService(csvImportService, repository, s3BucketClient, 0, Clock.systemDefaultZone());
     }
 
     private ScheduledCsvImportService skippingImportService() {
-        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(yesterday()));
+        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(LocalDate.now().minusDays(1).format(CSV_DATE_FORMAT)));
 
-        return new ScheduledCsvImportService(csvImportService, repository, mock(S3BucketClient.class), 0);
-    }
-
-    private static String today() {
-        return format(new Date());
-    }
-
-    private static String yesterday() {
-        return format(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000L));
-    }
-
-    private static String format(Date date) {
-        return new SimpleDateFormat("dd-MMM-yyyy", Locale.UK).format(date);
+        return new ScheduledCsvImportService(csvImportService, repository, s3BucketClient, 0, Clock.systemDefaultZone());
     }
 }

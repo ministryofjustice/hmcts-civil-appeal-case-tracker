@@ -3,8 +3,10 @@ package uk.gov.moj.cact.service;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -26,6 +28,10 @@ import uk.gov.moj.cact.repository.CaseRecordRepository;
 @ExtendWith(MockitoExtension.class)
 public class ScheduledCsvImportServiceTest {
 
+    // Pinned for deterministic testing and to cover the September "Sep" CSV regression.
+    private static final LocalDate TEST_DATE = LocalDate.of(2026, 9, 7);
+    private static final DateTimeFormatter CSV_DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MMM-yyyy", Locale.ENGLISH);
+
     @Mock
     private CaseRecordRepository repository;
 
@@ -35,58 +41,34 @@ public class ScheduledCsvImportServiceTest {
     @Mock
     private S3BucketClient s3BucketClient;
 
+    private final Clock clock = fixedClockOn(TEST_DATE);
+
     private ScheduledCsvImportService scheduledCsvImportService;
 
     @BeforeEach
     void setUp() {
         // jitter 0 so run() doesn't sleep during tests
         scheduledCsvImportService = new ScheduledCsvImportService(
-                csvImportService, repository, s3BucketClient, 0);
+                csvImportService, repository, s3BucketClient, 0, clock);
     }
 
     @Test
     void shouldReturnTrueWhenLastUpdatedWasYesterday() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy", Locale.UK);
-        Date today = new Date();
-        Date yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+        LocalDate yesterday = TEST_DATE.minusDays(1);
 
-        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(sdf.format(yesterday)));
+        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(yesterday.format(CSV_DATE_FORMAT)));
         assertTrue(scheduledCsvImportService.isLastUpdatedYesterday());
     }
 
     @Test
     void shouldReturnFalseWhenLastUpdatedWasToday() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy", Locale.UK);
-        Date today = new Date();
-        Date yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(TEST_DATE.format(CSV_DATE_FORMAT)));
 
-
-        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(sdf.format(today)));
-        assertFalse(scheduledCsvImportService.isLastUpdatedYesterday());
-    }
-
-    @Test
-    void testIsLastUpdatedYesterday() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy", Locale.UK);
-        Date today = new Date();
-        Date yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
-
-        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(sdf.format(yesterday)));
-        assertTrue(scheduledCsvImportService.isLastUpdatedYesterday());
-
-        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(sdf.format(today)));
-        assertFalse(scheduledCsvImportService.isLastUpdatedYesterday());
-
-        when(repository.findMaxLastUpdated()).thenReturn(Optional.empty());
         assertFalse(scheduledCsvImportService.isLastUpdatedYesterday());
     }
 
     @Test
     void shouldReturnFalseWhenNoLastUpdatedDateExists() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy", Locale.UK);
-        Date today = new Date();
-        Date yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
-
         when(repository.findMaxLastUpdated()).thenReturn(Optional.empty());
         assertFalse(scheduledCsvImportService.isLastUpdatedYesterday());
     }
@@ -95,16 +77,14 @@ public class ScheduledCsvImportServiceTest {
     void shouldReturnFalseWhenLastUpdatedDateIsInvalid() {
         when(repository.findMaxLastUpdated()).thenReturn(Optional.of("invalid-date"));
 
-        boolean result = scheduledCsvImportService.isLastUpdatedYesterday();
-        assertFalse(result);
+        assertFalse(scheduledCsvImportService.isLastUpdatedYesterday());
     }
 
     @Test
     void shouldSkipImportWhenDatabaseWasUpdatedYesterday() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy", Locale.UK);
-        Date yesterday = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000L);
+        LocalDate yesterday = TEST_DATE.minusDays(1);
 
-        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(sdf.format(yesterday)));
+        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(yesterday.format(CSV_DATE_FORMAT)));
         scheduledCsvImportService.downloadCsvAndReplaceDatabase();
 
         verify(s3BucketClient, never()).downloadCsv();
@@ -112,12 +92,14 @@ public class ScheduledCsvImportServiceTest {
     }
 
     @Test
-    void shouldDownloadCsvAndReplaceDatabase() throws Exception {
-        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(
-                new SimpleDateFormat("dd-MMM-yyyy", Locale.UK)
-                        .format(new Date())));
+    void shouldDownloadCsvAndReplaceDatabase() {
+        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(TEST_DATE.format(CSV_DATE_FORMAT)));
 
-        String csvContent = "id,name\n" + "1,John\n" + "2,Jane\n";
+        String csvContent = """
+                id,name
+                1,John
+                2,Jane
+                """;
         InputStream inputStream = new ByteArrayInputStream(csvContent.getBytes(StandardCharsets.UTF_8));
 
         when(s3BucketClient.downloadCsv()).thenReturn(inputStream);
@@ -131,9 +113,7 @@ public class ScheduledCsvImportServiceTest {
 
     @Test
     void shouldNotImportWhenS3DownloadFails() {
-        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(
-                new SimpleDateFormat("dd-MMM-yyyy", Locale.UK)
-                        .format(new Date())));
+        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(TEST_DATE.format(CSV_DATE_FORMAT)));
 
         when(s3BucketClient.downloadCsv()).thenThrow(new RuntimeException("S3 download failed"));
 
@@ -145,8 +125,7 @@ public class ScheduledCsvImportServiceTest {
 
     @Test
     void shouldLetImportFailureThrowSoItCanBeCounted() {
-        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(
-                new SimpleDateFormat("dd-MMM-yyyy", Locale.UK).format(new Date())));
+        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(TEST_DATE.format(CSV_DATE_FORMAT)));
         when(s3BucketClient.downloadCsv()).thenThrow(new IllegalStateException("S3 unavailable"));
 
         assertThrows(CsvImportException.class, () -> scheduledCsvImportService.run());
@@ -154,8 +133,7 @@ public class ScheduledCsvImportServiceTest {
 
     @Test
     void shouldNotThrowFromRunWhenImportSucceeds() {
-        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(
-                new SimpleDateFormat("dd-MMM-yyyy", Locale.UK).format(new Date())));
+        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(TEST_DATE.format(CSV_DATE_FORMAT)));
         when(s3BucketClient.downloadCsv()).thenReturn(
                 new ByteArrayInputStream("a,b\n1,2\n".getBytes(StandardCharsets.UTF_8)));
         when(csvImportService.replaceDatabase(org.mockito.ArgumentMatchers.any())).thenReturn(2);
@@ -163,5 +141,35 @@ public class ScheduledCsvImportServiceTest {
         scheduledCsvImportService.run();
 
         verify(csvImportService).replaceDatabase(org.mockito.ArgumentMatchers.any());
+    }
+
+    @Test
+    void shouldParseTheSeptemberAbbreviationUsedByTheCsv() {
+        when(repository.findMaxLastUpdated()).thenReturn(Optional.of("06-Sep-2026"));
+
+        assertTrue(scheduledCsvImportService.isLastUpdatedYesterday());
+    }
+
+    @Test
+    void shouldReturnFalseWhenLastUpdatedDateIsBlank() {
+        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(" "));
+
+        assertFalse(scheduledCsvImportService.isLastUpdatedYesterday());
+    }
+
+    @Test
+    void shouldThrowWhenCsvImportFails() {
+        when(repository.findMaxLastUpdated()).thenReturn(Optional.of(TEST_DATE.format(CSV_DATE_FORMAT)));
+
+        when(s3BucketClient.downloadCsv()).thenReturn(new ByteArrayInputStream("a,b\n1,2\n".getBytes(StandardCharsets.UTF_8)));
+
+        when(csvImportService.replaceDatabase(org.mockito.ArgumentMatchers.any())).thenThrow(new RuntimeException("Import failed"));
+
+        assertThrows(CsvImportException.class,
+                () -> scheduledCsvImportService.downloadCsvAndReplaceDatabase());
+    }
+
+    private static Clock fixedClockOn(LocalDate today) {
+        return Clock.fixed(today.atStartOfDay(ZoneOffset.UTC).toInstant(), ZoneOffset.UTC);
     }
 }
