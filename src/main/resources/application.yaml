@@ -47,6 +47,7 @@ app:
   s3-bucket-name: ${S3_BUCKET_NAME:}
   csv-import:
     cron: "0 * * * * *"
+    max-jitter-seconds: 10
   rate-limit:
     max-requests: 20
     window: 60s
