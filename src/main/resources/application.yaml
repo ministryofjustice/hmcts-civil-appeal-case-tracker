@@ -46,7 +46,7 @@ app:
     password: ${ADMIN_PASS:}
   s3-bucket-name: ${S3_BUCKET_NAME:}
   csv-import:
-    cron: "0 0 1 * * *"
+    cron: "0 * * * * *"
   rate-limit:
     max-requests: 20
     window: 60s
