@@ -14,8 +14,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 import java.util.Random;
@@ -25,21 +27,30 @@ public class ScheduledCsvImportService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledCsvImportService.class);
 
+    private static final DateTimeFormatter LAST_UPDATED_FORMAT =
+            new DateTimeFormatterBuilder()
+                    .parseCaseInsensitive()
+                    .appendPattern("dd-MMM-yyyy")
+                    .toFormatter(Locale.ENGLISH);
+
     private final CsvImportService csvImportService;
     private final CaseRecordRepository repository;
     private final S3BucketClient s3BucketClient;
     private final int maxJitterSeconds;
+    private final Clock clock;
     private final Random random = new Random();
 
     public ScheduledCsvImportService(CsvImportService csvImportService,
                                      CaseRecordRepository repository,
                                      S3BucketClient s3BucketClient,
-                                     @Value("${app.csv-import.max-jitter-seconds:3600}") int maxJitterSeconds
+                                     @Value("${app.csv-import.max-jitter-seconds:3600}") int maxJitterSeconds,
+                                     Clock clock
     ) {
         this.csvImportService = csvImportService;
         this.repository = repository;
         this.s3BucketClient = s3BucketClient;
         this.maxJitterSeconds = maxJitterSeconds;
+        this.clock = clock;
     }
 
     /**
@@ -69,12 +80,12 @@ public class ScheduledCsvImportService {
      */
     public void downloadCsvAndReplaceDatabase() {
         try {
-            LOGGER.info("Checking if database was updated today");
+            LOGGER.info("Checking if database was updated yesterday");
             if (isLastUpdatedYesterday()) {
-                LOGGER.info("Database already updated today. Skipping CSV import.");
+                LOGGER.info("Database already contains the latest CSV update. Skipping CSV import.");
                 return;
             }
-            LOGGER.info("Database not updated today. Proceeding with CSV import.");
+            LOGGER.info("Database does not contain the latest CSV update. Proceeding with CSV import.");
 
             try (InputStream inputStream = s3BucketClient.downloadCsv();
                  BufferedReader reader = new BufferedReader(
@@ -92,36 +103,21 @@ public class ScheduledCsvImportService {
 
     boolean isLastUpdatedYesterday() {
         String lastUpdated = repository.findMaxLastUpdated().orElse(null);
-        LOGGER.info("Last updated date from database: {}", lastUpdated);
 
-        if (lastUpdated == null) {
+        if (lastUpdated == null || lastUpdated.isBlank()) {
             LOGGER.info("No last updated date found in database");
             return false;
         }
 
+        LOGGER.info("Last updated date from database: {}", lastUpdated);
+
         try {
-            DateTimeFormatter formatter =
-                    DateTimeFormatter.ofPattern("dd-MMM-yyyy", Locale.UK);
-
-            LocalDate lastUpdatedDate =
-                    LocalDate.parse(lastUpdated, formatter);
-
-            LocalDate yesterday =
-                    LocalDate.now().minusDays(1);
-
-            boolean isUpdatedYesterday =
-                    lastUpdatedDate.equals(yesterday);
-
-            LOGGER.info("Is updated yesterday: {}", isUpdatedYesterday);
-
-            return isUpdatedYesterday;
+            LocalDate lastUpdatedDate = LocalDate.parse(lastUpdated, LAST_UPDATED_FORMAT);
+            LocalDate yesterday = LocalDate.now(clock).minusDays(1);
+            return lastUpdatedDate.equals(yesterday);
 
         } catch (DateTimeParseException e) {
-            LOGGER.error(
-                    "Error parsing last updated date: {}",
-                    lastUpdated,
-                    e
-            );
+            LOGGER.error("Error parsing last updated date: {}. Update will proceed", lastUpdated, e);
             return false;
         }
     }
