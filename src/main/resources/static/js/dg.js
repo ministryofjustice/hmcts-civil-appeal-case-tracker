@@ -1,72 +1,48 @@
 /*Thanks to Alistapart*/
 
 function setActiveStyleSheet(title) {
-  var i, a, main;
-  for(i=0; (a = document.getElementsByTagName("link")[i]); i++) {
-	if(a.getAttribute("rel").indexOf("style") != -1 && a.getAttribute("title")) {
-	  a.disabled = true;
-	  if(a.getAttribute("title") == title) a.disabled = false;
+	var html = document.documentElement;
+
+	if (title !== "Standard" &&
+		title !== "Larger" &&
+		title !== "Largest") {
+		title = "Standard";
 	}
-  }
+
+	html.classList.remove("text-larger", "text-largest");
+
+	if (title === "Larger") {
+		html.classList.add("text-larger");
+	} else if (title === "Largest") {
+		html.classList.add("text-largest");
+	}
+
+	saveTextSize(title);
 }
 
-function getActiveStyleSheet() {
-  var i, a;
-  for(i=0; (a = document.getElementsByTagName("link")[i]); i++) {
-	if(a.getAttribute("rel").indexOf("style") != -1 && a.getAttribute("title") && !a.disabled) return a.getAttribute("title");
-  }
-  return null;
+function getSavedTextSize() {
+	try {
+		return localStorage.getItem("textSize") || "Standard";
+	} catch (e) {
+		return "Standard";
+	}
 }
 
-function getPreferredStyleSheet() {
-  var i, a;
-  for(i=0; (a = document.getElementsByTagName("link")[i]); i++) {
-	if(a.getAttribute("rel").indexOf("style") != -1
-	   && a.getAttribute("rel").indexOf("alt") == -1
-	   && a.getAttribute("title")
-	   ) return a.getAttribute("title");
-  }
-  return null;
+function saveTextSize(title) {
+	try {
+		localStorage.setItem("textSize", title);
+	} catch (e) {
+		// Ignore storage errors
+	}
 }
 
-function createCookie(name,value) {
-  document.cookie = name+"="+value+"; path=/";
-}
+$(document).ready(function(){
 
-function readCookie(name) {
-  var nameEQ = name + "=";
-  var ca = document.cookie.split(';');
-  for(var i=0;i < ca.length;i++) {
-	var c = ca[i];
-	while (c.charAt(0)==' ') c = c.substring(1,c.length);
-	if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-  }
-  return null;
-}
-
-window.onload = function(e) {
-  var cookie = readCookie("style");
-  var title = cookie ? cookie : getPreferredStyleSheet();
-  setActiveStyleSheet(title);
-}
-
-window.onunload = function(e) {
-  var title = getActiveStyleSheet();
-  createCookie("style", title);
-}
-
-var cookie = readCookie("style");
-var title = cookie ? cookie : getPreferredStyleSheet();
-setActiveStyleSheet(title);
-
-
-$(document).ready(function(){						   
-						   
 	$(".pagehelp").prepend("<a href='#'>Show help</a>");
 	$(".pagehelp > div").addClass("access");
-	$(".pagehelp > a").click( function() { 
+	$(".pagehelp > a").click( function() {
 		$(this).next("div").toggleClass('show');
-		});	
+	});
 	var links = $(".pagehelp > a");
 	var strongs = $(".pagehelp > div > p > strong");
 	var link;
@@ -79,55 +55,62 @@ $(document).ready(function(){
 		var temp2 = "<span class='access'> "+strong.innerHTML+"</span>"
 		$(link).append(temp2);
 	}
-	
+
 	$(".pagehelp > a").toggle(
 		function() {
 			var temp3 = $(this).children();
 			$(this).text("Hide help");
 			var temp4 = "<span class='access'> "+temp3[0].innerHTML+"</span>";
 			$(this).append(temp4);},
-			function() {
+		function() {
 			var temp3 = $(this).children();
 			$(this).text("Show help");
 			var temp4 = "<span class='access'> "+temp3[0].innerHTML+"</span>";
 			$(this).append(temp4);}
 	);
-	
-	function TakesCookies() {
-		var GetsCookie = (navigator.cookieEnabled);
-		if(typeof navigator.cookieEnabled=="undefined" && !cookieEnabled) {
-			document.cookie = "SampleCookie";
-			GetsCookie = (document.cookie.indexOf("SampleCookie")!=-1)
-		}
-		return GetsCookie;
-	}
-	
-	if(TakesCookies()) $("#TextSize").html("<p>Resize text:</p> <ul><li><a href=\"#standard\" onclick=\"setActiveStyleSheet('Standard'); return false;\"><span class='access'>Resize text to standard </span>A</a></li><li class='medium'><a href=\"#larger\" onclick=\"setActiveStyleSheet('Larger'); return false;\"><span class='access'>Resize text to larger </span>A</a></li><li class='large'><a href=\"#largest\" onclick=\"setActiveStyleSheet('Largest'); return false; \"><span class='access'>Resize text to largest </span>A</a></li></ul>");
-	
-	var sizes= $("#TextSize > ul > li > a");	
-	var size;
-	$("#TextSize > ul > li > a").click( 
-		function() { 
-			for (var i=0;i < sizes.length;i++) {
-				size = sizes[i];
-				size.className='';
-			}
-			this.className='active';
-		}
+
+	$("#TextSize").html(
+		"<p>Resize text:</p>" +
+		"<ul>" +
+		"<li>" +
+		"<a href=\"#standard\" data-text-size=\"Standard\">" +
+		"<span class=\"access\">Resize text to standard </span>A" +
+		"</a>" +
+		"</li>" +
+		"<li class=\"medium\">" +
+		"<a href=\"#larger\" data-text-size=\"Larger\">" +
+		"<span class=\"access\">Resize text to larger </span>A" +
+		"</a>" +
+		"</li>" +
+		"<li class=\"large\">" +
+		"<a href=\"#largest\" data-text-size=\"Largest\">" +
+		"<span class=\"access\">Resize text to largest </span>A" +
+		"</a>" +
+		"</li>" +
+		"</ul>"
 	);
-	
-	if(title) {
-		if(title=="Standard") sizes[0].className="active";
-		if(title=="Larger") sizes[1].className="active";
-		if(title=="Largest") sizes[2].className="active";
-		if(title=="null") sizes[0].className="active";
-	}
-	else {
-		sizes[0].className="active";
-	}
-	
+
+	var savedTextSize = getSavedTextSize();
+	setActiveStyleSheet(savedTextSize);
+
+	$("#TextSize").on("click", "a[data-text-size]", function(event) {
+		event.preventDefault();
+		var title = $(this).data("text-size");
+		setActiveStyleSheet(title);
+
+		$("#TextSize a[data-text-size]").removeClass("active");
+		$(this).addClass("active");
+	});
+
+	$("#TextSize a[data-text-size]").each(function() {
+		$(this).toggleClass(
+			"active",
+			$(this).data("text-size") === savedTextSize
+		);
+	});
+
 	$(".close").css({display:"block"}).addClass("right function").append("<span class='tl'></span><span class='tr'><span></span></span><a href='#' onclick='closeWindow();'>Close<span class='access'> window</span></a><span class='bl'></span><span class='br'></span>");
-	
+
 	$(".newwindow").click(addVariable);
 });
 
