@@ -1,5 +1,3 @@
-/*Thanks to Alistapart*/
-
 var TEXT_SIZES = {
 	"Standard": "",
 	"Larger": "text-larger",
