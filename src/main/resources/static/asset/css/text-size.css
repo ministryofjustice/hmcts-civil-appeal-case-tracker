@@ -1,0 +1,12 @@
+/* v3.3 */
+@media screen,print {
+    html.text-larger body {
+        font-size:80%;
+    }
+}
+
+@media screen,print {
+    html.text-largest body {
+        font-size:94%;
+    }
+}

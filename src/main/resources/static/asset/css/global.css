@@ -27,7 +27,8 @@
 	.tr, .br {right:0;}
 	.close {display:none;}
 	.listFix {margin:2em 4em 2em 4em}
-	.listFix li { font-size:12px; margin-top: 1em; margin-bottom: 1em;}
+	.listFix li { font-size:1.2em; margin-top: 1em; margin-bottom: 1em;}
+	input, select {font-size:1.1em;}
 }
 @media print {
 	* {margin:0;padding:0;}

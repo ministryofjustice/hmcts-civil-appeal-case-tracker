@@ -1,72 +1,47 @@
-/*Thanks to Alistapart*/
+var TEXT_SIZES = {
+	"Standard": "",
+	"Larger": "text-larger",
+	"Largest": "text-largest"
+};
 
-function setActiveStyleSheet(title) {
-  var i, a, main;
-  for(i=0; (a = document.getElementsByTagName("link")[i]); i++) {
-	if(a.getAttribute("rel").indexOf("style") != -1 && a.getAttribute("title")) {
-	  a.disabled = true;
-	  if(a.getAttribute("title") == title) a.disabled = false;
+var TEXT_SIZE_KEY = "textSize";
+
+function getSavedTextSize() {
+	try {
+		var size = localStorage.getItem(TEXT_SIZE_KEY);
+		return TEXT_SIZES.hasOwnProperty(size) ? size : "Standard";
+	} catch (e) {
+		return "Standard";
 	}
-  }
 }
 
-function getActiveStyleSheet() {
-  var i, a;
-  for(i=0; (a = document.getElementsByTagName("link")[i]); i++) {
-	if(a.getAttribute("rel").indexOf("style") != -1 && a.getAttribute("title") && !a.disabled) return a.getAttribute("title");
-  }
-  return null;
+function saveTextSize(size) {
+	try {
+		localStorage.setItem(TEXT_SIZE_KEY, size);
+	} catch (e) {
+	}
 }
 
-function getPreferredStyleSheet() {
-  var i, a;
-  for(i=0; (a = document.getElementsByTagName("link")[i]); i++) {
-	if(a.getAttribute("rel").indexOf("style") != -1
-	   && a.getAttribute("rel").indexOf("alt") == -1
-	   && a.getAttribute("title")
-	   ) return a.getAttribute("title");
-  }
-  return null;
+function applyTextSize(size) {
+	var html = document.documentElement;
+	html.classList.remove("text-larger", "text-largest");
+	if (TEXT_SIZES[size]) {
+		html.classList.add(TEXT_SIZES[size]);
+	}
 }
 
-function createCookie(name,value) {
-  document.cookie = name+"="+value+"; path=/";
-}
+applyTextSize(getSavedTextSize());
 
-function readCookie(name) {
-  var nameEQ = name + "=";
-  var ca = document.cookie.split(';');
-  for(var i=0;i < ca.length;i++) {
-	var c = ca[i];
-	while (c.charAt(0)==' ') c = c.substring(1,c.length);
-	if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-  }
-  return null;
-}
+// Setting existing old browser cookies to expire immediately. To be removed in next release
+document.cookie = "style=; path=/; max-age=0";
 
-window.onload = function(e) {
-  var cookie = readCookie("style");
-  var title = cookie ? cookie : getPreferredStyleSheet();
-  setActiveStyleSheet(title);
-}
+$(document).ready(function(){
 
-window.onunload = function(e) {
-  var title = getActiveStyleSheet();
-  createCookie("style", title);
-}
-
-var cookie = readCookie("style");
-var title = cookie ? cookie : getPreferredStyleSheet();
-setActiveStyleSheet(title);
-
-
-$(document).ready(function(){						   
-						   
 	$(".pagehelp").prepend("<a href='#'>Show help</a>");
 	$(".pagehelp > div").addClass("access");
-	$(".pagehelp > a").click( function() { 
+	$(".pagehelp > a").click( function() {
 		$(this).next("div").toggleClass('show');
-		});	
+	});
 	var links = $(".pagehelp > a");
 	var strongs = $(".pagehelp > div > p > strong");
 	var link;
@@ -79,55 +54,60 @@ $(document).ready(function(){
 		var temp2 = "<span class='access'> "+strong.innerHTML+"</span>"
 		$(link).append(temp2);
 	}
-	
+
 	$(".pagehelp > a").toggle(
 		function() {
 			var temp3 = $(this).children();
 			$(this).text("Hide help");
 			var temp4 = "<span class='access'> "+temp3[0].innerHTML+"</span>";
 			$(this).append(temp4);},
-			function() {
+		function() {
 			var temp3 = $(this).children();
 			$(this).text("Show help");
 			var temp4 = "<span class='access'> "+temp3[0].innerHTML+"</span>";
 			$(this).append(temp4);}
 	);
-	
-	function TakesCookies() {
-		var GetsCookie = (navigator.cookieEnabled);
-		if(typeof navigator.cookieEnabled=="undefined" && !cookieEnabled) {
-			document.cookie = "SampleCookie";
-			GetsCookie = (document.cookie.indexOf("SampleCookie")!=-1)
-		}
-		return GetsCookie;
-	}
-	
-	if(TakesCookies()) $("#TextSize").html("<p>Resize text:</p> <ul><li><a href=\"#standard\" onclick=\"setActiveStyleSheet('Standard'); return false;\"><span class='access'>Resize text to standard </span>A</a></li><li class='medium'><a href=\"#larger\" onclick=\"setActiveStyleSheet('Larger'); return false;\"><span class='access'>Resize text to larger </span>A</a></li><li class='large'><a href=\"#largest\" onclick=\"setActiveStyleSheet('Largest'); return false; \"><span class='access'>Resize text to largest </span>A</a></li></ul>");
-	
-	var sizes= $("#TextSize > ul > li > a");	
-	var size;
-	$("#TextSize > ul > li > a").click( 
-		function() { 
-			for (var i=0;i < sizes.length;i++) {
-				size = sizes[i];
-				size.className='';
-			}
-			this.className='active';
-		}
-	);
-	
-	if(title) {
-		if(title=="Standard") sizes[0].className="active";
-		if(title=="Larger") sizes[1].className="active";
-		if(title=="Largest") sizes[2].className="active";
-		if(title=="null") sizes[0].className="active";
-	}
-	else {
-		sizes[0].className="active";
-	}
-	
+
+	// Buttons with aria-pressed so screen readers announce which size is selected
+	$("#TextSize")
+		.attr({ "role": "group", "aria-labelledby": "TextSizeLabel" })
+		.html(
+			"<p id=\"TextSizeLabel\">Resize text:</p>" +
+			"<ul>" +
+			"<li>" +
+			"<button type=\"button\" data-text-size=\"Standard\">" +
+			"<span class=\"access\">Resize text to standard </span>A" +
+			"</button>" +
+			"</li>" +
+			"<li class=\"medium\">" +
+			"<button type=\"button\" data-text-size=\"Larger\">" +
+			"<span class=\"access\">Resize text to larger </span>A" +
+			"</button>" +
+			"</li>" +
+			"<li class=\"large\">" +
+			"<button type=\"button\" data-text-size=\"Largest\">" +
+			"<span class=\"access\">Resize text to largest </span>A" +
+			"</button>" +
+			"</li>" +
+			"</ul>"
+		);
+
+	var savedTextSize = getSavedTextSize();
+	$("#TextSize button[data-text-size]").each(function() {
+		$(this).attr("aria-pressed", String($(this).data("text-size") === savedTextSize));
+	});
+
+	$("#TextSize").on("click", "button[data-text-size]", function() {
+		var size = $(this).data("text-size");
+		applyTextSize(size);
+		saveTextSize(size);
+
+		$("#TextSize button[data-text-size]").attr("aria-pressed", "false");
+		$(this).attr("aria-pressed", "true");
+	});
+
 	$(".close").css({display:"block"}).addClass("right function").append("<span class='tl'></span><span class='tr'><span></span></span><a href='#' onclick='closeWindow();'>Close<span class='access'> window</span></a><span class='bl'></span><span class='br'></span>");
-	
+
 	$(".newwindow").click(addVariable);
 });
 
