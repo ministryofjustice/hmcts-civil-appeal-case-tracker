@@ -1,40 +1,41 @@
 /*Thanks to Alistapart*/
 
-function setActiveStyleSheet(title) {
-	var html = document.documentElement;
+var TEXT_SIZES = {
+	"Standard": "",
+	"Larger": "text-larger",
+	"Largest": "text-largest"
+};
 
-	if (title !== "Standard" &&
-		title !== "Larger" &&
-		title !== "Largest") {
-		title = "Standard";
-	}
-
-	html.classList.remove("text-larger", "text-largest");
-
-	if (title === "Larger") {
-		html.classList.add("text-larger");
-	} else if (title === "Largest") {
-		html.classList.add("text-largest");
-	}
-
-	saveTextSize(title);
-}
+var TEXT_SIZE_KEY = "textSize";
 
 function getSavedTextSize() {
 	try {
-		return localStorage.getItem("textSize") || "Standard";
+		var size = localStorage.getItem(TEXT_SIZE_KEY);
+		return TEXT_SIZES.hasOwnProperty(size) ? size : "Standard";
 	} catch (e) {
 		return "Standard";
 	}
 }
 
-function saveTextSize(title) {
+function saveTextSize(size) {
 	try {
-		localStorage.setItem("textSize", title);
+		localStorage.setItem(TEXT_SIZE_KEY, size);
 	} catch (e) {
-		// Ignore storage errors
 	}
 }
+
+function applyTextSize(size) {
+	var html = document.documentElement;
+	html.classList.remove("text-larger", "text-largest");
+	if (TEXT_SIZES[size]) {
+		html.classList.add(TEXT_SIZES[size]);
+	}
+}
+
+applyTextSize(getSavedTextSize());
+
+// Setting existing old browser cookies to expire immediately. To be removed in next release
+document.cookie = "style=; path=/; max-age=0";
 
 $(document).ready(function(){
 
@@ -69,44 +70,42 @@ $(document).ready(function(){
 			$(this).append(temp4);}
 	);
 
-	$("#TextSize").html(
-		"<p>Resize text:</p>" +
-		"<ul>" +
-		"<li>" +
-		"<a href=\"#standard\" data-text-size=\"Standard\">" +
-		"<span class=\"access\">Resize text to standard </span>A" +
-		"</a>" +
-		"</li>" +
-		"<li class=\"medium\">" +
-		"<a href=\"#larger\" data-text-size=\"Larger\">" +
-		"<span class=\"access\">Resize text to larger </span>A" +
-		"</a>" +
-		"</li>" +
-		"<li class=\"large\">" +
-		"<a href=\"#largest\" data-text-size=\"Largest\">" +
-		"<span class=\"access\">Resize text to largest </span>A" +
-		"</a>" +
-		"</li>" +
-		"</ul>"
-	);
+	// Buttons with aria-pressed so screen readers announce which size is selected
+	$("#TextSize")
+		.attr({ "role": "group", "aria-labelledby": "TextSizeLabel" })
+		.html(
+			"<p id=\"TextSizeLabel\">Resize text:</p>" +
+			"<ul>" +
+			"<li>" +
+			"<button type=\"button\" data-text-size=\"Standard\">" +
+			"<span class=\"access\">Resize text to standard </span>A" +
+			"</button>" +
+			"</li>" +
+			"<li class=\"medium\">" +
+			"<button type=\"button\" data-text-size=\"Larger\">" +
+			"<span class=\"access\">Resize text to larger </span>A" +
+			"</button>" +
+			"</li>" +
+			"<li class=\"large\">" +
+			"<button type=\"button\" data-text-size=\"Largest\">" +
+			"<span class=\"access\">Resize text to largest </span>A" +
+			"</button>" +
+			"</li>" +
+			"</ul>"
+		);
 
 	var savedTextSize = getSavedTextSize();
-	setActiveStyleSheet(savedTextSize);
-
-	$("#TextSize").on("click", "a[data-text-size]", function(event) {
-		event.preventDefault();
-		var title = $(this).data("text-size");
-		setActiveStyleSheet(title);
-
-		$("#TextSize a[data-text-size]").removeClass("active");
-		$(this).addClass("active");
+	$("#TextSize button[data-text-size]").each(function() {
+		$(this).attr("aria-pressed", String($(this).data("text-size") === savedTextSize));
 	});
 
-	$("#TextSize a[data-text-size]").each(function() {
-		$(this).toggleClass(
-			"active",
-			$(this).data("text-size") === savedTextSize
-		);
+	$("#TextSize").on("click", "button[data-text-size]", function() {
+		var size = $(this).data("text-size");
+		applyTextSize(size);
+		saveTextSize(size);
+
+		$("#TextSize button[data-text-size]").attr("aria-pressed", "false");
+		$(this).attr("aria-pressed", "true");
 	});
 
 	$(".close").css({display:"block"}).addClass("right function").append("<span class='tl'></span><span class='tr'><span></span></span><a href='#' onclick='closeWindow();'>Close<span class='access'> window</span></a><span class='bl'></span><span class='br'></span>");
