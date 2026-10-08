@@ -1,33 +1,26 @@
-FROM tomcat:9.0.118-jre8-temurin-jammy
+FROM alpine:3.22
+
+ARG KUBECTL_VERSION=v1.35.8
 
 # Install required dependencies
-RUN apt-get update && \
-    apt-get install -y apt-transport-https gnupg2 curl jq && \
-    rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache bash ca-certificates jq
 
 # Download and install kubectl
-RUN curl -LO https://dl.k8s.io/release/v1.26.0/bin/linux/amd64/kubectl && \
-    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
-    rm kubectl
+RUN wget -q -O /usr/local/bin/kubectl \
+        "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" && \
+        chmod 0755 /usr/local/bin/kubectl
 
-RUN /bin/bash -c 'tar xzv -C /usr/local/bin/ -f <(\
-    curl -sL $(\
-        curl -sL https://api.github.com/repos/ministryofjustice/cloud-platform-cli/releases/latest \
-        | jq -r ".assets[] | select(.browser_download_url | match(\"linux_amd64\")) | .browser_download_url"\
-    )\
-)'
+WORKDIR /monitor
 
 # Add bash script to the image
-COPY awk.monitor-app-pods /usr/local/tomcat/awk.monitor-app-pods
+COPY awk.monitor-app-pods /monitor/awk.monitor-app-pods
 
-# Make the script executable
-RUN chmod +x /usr/local/tomcat/awk.monitor-app-pods
-
-# Create a non-root user
-RUN adduser --disabled-password tomcat -u 1001 && \
-    chown -R tomcat:tomcat /usr/local/tomcat
+# Create a non-root user and Make the script executable
+RUN chmod +x /monitor/awk.monitor-app-pods && \
+    adduser --disabled-password --uid 1001 monitor && \
+    chown -R monitor:monitor /monitor
 
 USER 1001
 
 # Set the default command to run monitoring script
-CMD ["/bin/bash", "/usr/local/tomcat/awk.monitor-app-pods"]
+CMD ["/bin/bash", "/monitor/awk.monitor-app-pods"]
