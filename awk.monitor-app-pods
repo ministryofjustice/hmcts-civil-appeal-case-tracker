@@ -24,7 +24,7 @@ while true; do
             echo "Waiting for $POD to reach ContainersReady state (up to 100 seconds)" >> monitor.log
             counter=0
             while [ $counter -lt 20 ]; do
-                READY=$(kubectl -n $NS get -o json pod $POD | jq 'select(.status.conditions[] | .type == "ContainersReady") | .status.conditions[2].status')
+                READY=$(kubectl -n $NS get -o json pod $POD | jq '.status.conditions[] | select(.type == "ContainersReady") | .status')
                 if [ "$READY" = "\"True\"" ]; then
                     echo "$POD is ready....exiting while" >> monitor.log
                     break
