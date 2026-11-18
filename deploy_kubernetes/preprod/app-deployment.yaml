@@ -65,6 +65,7 @@ spec:
                 secretKeyRef:
                   name: case-tracker-csv-upload-login
                   key: admin_pass
+            # -XX:-UseBASE64Intrinsics mitigates CVE-2026-114938 until the base image has Temurin 21.0.13.1+2 or later. Remove it then.
             - name: JAVA_TOOL_OPTIONS
               value: >-
                 -Xms2048m -Xmx2048m
@@ -78,6 +79,7 @@ spec:
                 -XX:HeapDumpPath=/app/logs
                 -XX:+ExitOnOutOfMemoryError
                 -Xlog:gc*:file=/app/logs/gc.log:time,uptime:filecount=5,filesize=10M
+                -XX:-UseBASE64Intrinsics
           startupProbe:
             httpGet:
               path: /health
